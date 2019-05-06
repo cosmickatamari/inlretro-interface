@@ -8,11 +8,15 @@ INL Retro firmware 2.3.x
 The LUA files in this repository have been updated and are not the original files included in INL-retro-progdump github repository last commited April 2019 from https://gitlab.com/InfiniteNesLives/INL-retro-progdump.
 
 The file inlretro.lua needs to be located in the directory: .\host\scripts
+
 File edited by Timothy Pritchett
+
 https://gitlab.com/InfiniteNesLives/INL-retro-progdump/issues/10
 
 The file v2proto_hirom.lua needs to be located in the directory: .\host\scripts\snes
+
 File edited by Zack Carey
+
 https://gitlab.com/InfiniteNesLives/INL-retro-progdump/issues/18
 
 The CMD file needs to be located in the .\host directory to fully function.
