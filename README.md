@@ -4,7 +4,6 @@ Command Line Interface (CLI) for INLretro Dumper-Programmer
 https://www.infiniteneslives.com/inlretro.php
 
 ---
----
 
 Written Using:
 
