@@ -3,45 +3,26 @@
 Command Line Interface (CLI) for INLretro Dumper-Programmer
 https://www.infiniteneslives.com/inlretro.php
 
----
-
 Written Using:
 
-* Windows 10 (build 1803)
+* Windows 11 24H2
+* PowerShell 7.5.3
 * INL Retro firmware 2.3.x
 
 ---
 
-The LUA files in this repository have been updated and **are not the original files** included in INL-retro-progdump github repository last commited April 2019 from https://gitlab.com/InfiniteNesLives/INL-retro-progdump.
+As of 9/15/2025, Nintendo Entertainment System section is configured and going through testing.
 
-* The CMD file needs to be located in the **.\host** directory.
-* The file inlretro.lua needs to be located in the **.\host\scripts** directory.
-* The file v2proto_hirom.lua needs to be located in the **.\host\scripts\snes** directory.
-
-inlretro.lua edited by Timothy Pritchett -- https://gitlab.com/InfiniteNesLives/INL-retro-progdump/issues/10
-v2proto_hirom.lua edited by Zack Carey -- https://gitlab.com/InfiniteNesLives/INL-retro-progdump/issues/18
-
----
-
-The file will create the needed ignore and games folders.
-Validation is set to make sure null cartridge names aren't passed (files with spaces are allowed).
-The SRAM (save file) is also automatically dumped.
-
----
-
-At this time, 05/05/2019, only SNES is built out and in testing, even though menus for the other systems appear.
-
-- [ ] Nintendo
+Project Checklist:
+- [ ] Nintendo Entertainment System
 
 - [ ] Famicom
 
-- [x] Super Nintendo
-
-- [x] Super Famicom
-
-- [ ] Nintendo 64
+- [ ] Super Nintendo Entertainment System
 
 - [ ] Super Famicom
+
+- [ ] Nintendo 64
 
 - [ ] Sega Genesis / Mega Drive
 
@@ -51,4 +32,18 @@ At this time, 05/05/2019, only SNES is built out and in testing, even though men
 
 ---
 
-Any issues, please let me know with screenshots. While this is simply a frontend, it's purpose is to make sure correct dumping of cartridges occurs.
+The LUA files in this repository have been updated and **are not the original files** included in INL-retro-progdump github repository last commited April 2019 from https://gitlab.com/InfiniteNesLives/INL-retro-progdump.
+
+* The PowerShell file (ps1) needs to be located in the **.\host** directory.
+* The file inlretro.lua needs to be located in the **.\host\scripts** directory.
+* The file v2proto_hirom.lua needs to be located in the **.\host\scripts\snes** directory.
+
+inlretro.lua edited by Timothy Pritchett -- https://gitlab.com/InfiniteNesLives/INL-retro-progdump/issues/10
+
+v2proto_hirom.lua edited by Zack Carey -- https://gitlab.com/InfiniteNesLives/INL-retro-progdump/issues/18
+
+---
+
+The file will create the needed ignore, games and SRAM folders.
+Validation is set to make sure null cartridge names aren't passed (files with spaces are allowed).
+The SRAM (save file) can also be dumped, if chosen.
