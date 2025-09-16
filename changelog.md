@@ -1,3 +1,8 @@
+2025 () -
+- NES Database opens to a search page based on the name of the cartridge that's entered.
+- Note on ANROM cartridges
+- Language cleanup
+
 2025/09/15 (inlretro-interface-05.ps1) -
 - Script cleanup and optimation around calling the inlretro executable.
 - Addressed wrong NES Mapper references.
