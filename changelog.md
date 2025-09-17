@@ -1,7 +1,10 @@
 2025 () -
 - NES Database opens to a search page based on the name of the cartridge that's entered.
-- Note on ANROM cartridges
-- Language cleanup
+- Note on ANROM cartridges in the powershell script.
+- Language cleanup in the powershell script.
+- hosts/scripts/nes/MMC1.lua was heavily modified due to Final Fantasy (USA) not running after being dumped.
+-   Reset (0x80) > delay > shift in 5 bits (LSB-first). Original script was doing this too fast.
+-   Used control register 0x0E to put MMC1 in 16 KB switchable at $8000 / fixed last bank at $C000.
 
 2025/09/15 (inlretro-interface-05.ps1) -
 - Script cleanup and optimation around calling the inlretro executable.
