@@ -16,6 +16,7 @@ Nintendo Entertainment System (Worked):
 - StarTropics (using MMC3 mapper)
 - Mega Man 6
 - Mega Man 5
+- Darkwing Duck
 
 Nintendo Entertainment System (Not Working):
 - Dragon Warrior (USA) will dump to the correct 80kb file; however will not run. 
