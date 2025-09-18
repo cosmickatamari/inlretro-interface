@@ -17,6 +17,8 @@ Nintendo Entertainment System (Worked):
 - Mega Man 6
 - Mega Man 5
 - Darkwing Duck
+- TaleSpin
+- Adventure Island (after modification to cnrom.lua)
 
 Nintendo Entertainment System (Not Working):
 - Dragon Warrior (USA) will dump to the correct 80kb file; however will not run. 
