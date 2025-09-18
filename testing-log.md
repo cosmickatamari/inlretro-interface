@@ -14,6 +14,8 @@ Nintendo Entertainment System (Worked):
 - Zelda II: The Adventures of Link
 - Ultima: Exodus
 - StarTropics (using MMC3 mapper)
+- Mega Man 6
+- Mega Man 5
 
 Nintendo Entertainment System (Not Working):
 - Dragon Warrior (USA) will dump to the correct 80kb file; however will not run. 
