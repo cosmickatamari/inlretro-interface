@@ -2,9 +2,12 @@
 - NES Database opens to a search page based on the name of the cartridge that's entered.
 - Note on ANROM cartridges in the powershell script.
 - Language cleanup in the powershell script.
-- hosts/scripts/nes/MMC1.lua was heavily modified due to Final Fantasy (USA) not running after being dumped.
+- hosts/scripts/nes/MMC1.lua was modified due to Final Fantasy (USA) not running after being dumped.
 -   Reset (0x80) > delay > shift in 5 bits (LSB-first). Original script was doing this too fast.
 -   Used control register 0x0E to put MMC1 in 16 KB switchable at $8000 / fixed last bank at $C000.
+- hosts/scripts/nes/cnrom.lua was modificed due to Adventure Island (USA) showing grabbled text.
+-   bus-conflict problem during CHR bank selects
+-   dumper was writing a bank number to changing addresses, causing the wrong CHR bank to be hatched.
 
 2025/09/15 (inlretro-interface-05.ps1) -
 - Script cleanup and optimation around calling the inlretro executable.
