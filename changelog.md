@@ -8,6 +8,7 @@
 - hosts/scripts/nes/cnrom.lua was modificed due to Adventure Island (USA) showing grabbled text.
 -   bus-conflict problem during CHR bank selects
 -   dumper was writing a bank number to changing addresses, causing the wrong CHR bank to be hatched.
+- NES Database site with inputted Game Title name will appear in Edge for faster access.
 
 2025/09/15 (inlretro-interface-05.ps1) -
 - Script cleanup and optimation around calling the inlretro executable.
