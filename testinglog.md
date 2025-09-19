@@ -62,17 +62,18 @@ Nintendo Entertainment System (Working):
 - Teenage Mutant Ninja Turtles
 - Super Mario Bros. 3
 - Super Mario Bros. 2
+- Astyanax
+- Tetris (NES)
+- Tetris 2
+- Tiny Toon Adventures
+- Top Gun
+- Willow
 
 Nintendo Entertainment System (Not Working):
-- Dragon Warrior (USA) will dump to the correct 80kb file; however will not run. 
-iNES: PRG=64KB, CHR=16KB, flags6=0x13
-PRG bank CRC32: ['109A62D1', 'E7CA78AD', '3D92F5B9', 'F2F82DE2']
-Vectors (normal order): NMI=$FE67 RESET=$FFD8 IRQ=$FD3A
-
+- Dragon Warrior (USA)
 - The Battle of Olympus
-CPU Crash (green screen)
-Looking like PRG banks aren't switching correctly.
-
 - DuckTales
 - Mega Man 3
 - Super Mario Bros. & Duck Hunt
+CPU Crash (green screen)
+Looking like PRG banks aren't switching correctly.
