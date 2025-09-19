@@ -1,4 +1,4 @@
-Nintendo Entertainment System (Worked):
+Nintendo Entertainment System (Working):
 - Abadox: The Deadly Inner War
 - CastleQuest
 - Crystalis
@@ -19,14 +19,60 @@ Nintendo Entertainment System (Worked):
 - Darkwing Duck
 - TaleSpin
 - Adventure Island (after modification to cnrom.lua)
+- Adventure Island II
+- Adventures of Lolo
+- Arkista's Ring
+- Balloon Fight
+- Battletoads
+- Bucky O'Hare
+- Bubble Bobble
+- Bump 'n' Jump
+- Castlevania
+- Castlevania II: Simon's Quest
+- Castlevania III: Dracula's Curse
+- Chip 'n Dale Rescue Rangers
+- Donkey Kong Classics
+- Dr. Mario
+- Dig Dug II: Trouble in Paradise
+- Digger T. Rock: The Legend of the Lost City
+- Blaster Master
+- Excitebike
+- Faxanadu
+- Felix the Cat
+- Gauntlet II
+- Ice Climber
+- Journey to Silius
+- Kid Icarus
+- Life Force
+- Little Nemo: The Dream Master
+- The Original Mario Bros.
+- Mega Man
+- Mega Man 2
+- Mega Man 4
+- Metroid
+- Paperboy
+- Rad Racer
+- Rad Racer II
+- Rampage
+- R.C. Pro-AM
+- Snake Rattle 'n Roll
+- Solomon's Key
+- Solar Jetman - Hunt for the Golden Warpship
+- Solstice - The Quest for the Staff of Demnos
+- Teenage Mutant Ninja Turtles
+- Super Mario Bros. 3
+- Super Mario Bros. 2
 
 Nintendo Entertainment System (Not Working):
 - Dragon Warrior (USA) will dump to the correct 80kb file; however will not run. 
 iNES: PRG=64KB, CHR=16KB, flags6=0x13
 PRG bank CRC32: ['109A62D1', 'E7CA78AD', '3D92F5B9', 'F2F82DE2']
 Vectors (normal order): NMI=$FE67 RESET=$FFD8 IRQ=$FD3A
-✓ RESET vector plausible in normal order.
 
-CHR size: 16384
-CHR CRC32: B2B56760
-CHR looks uniform? False
+- The Battle of Olympus
+CPU Crash (green screen)
+Looking like PRG banks aren't switching correctly.
+
+- DuckTales
+- Mega Man 3
+- Super Mario Bros. & Duck Hunt
