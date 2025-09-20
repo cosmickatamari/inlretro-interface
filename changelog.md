@@ -9,6 +9,12 @@
 -   bus-conflict problem during CHR bank selects
 -   dumper was writing a bank number to changing addresses, causing the wrong CHR bank to be hatched.
 - NES Database site with inputted Game Title name will appear in Edge for faster access.
+- hosts/scripts/nes/mhrom.lua is a new mapper which was made for the Super Mario Bros. + Duck Hunt multicart.
+-   MHROM and GXROM are actually the same mapper (iNES mapper 66) - they're just different names for the same hardware.
+-   Another fork of the project here has a modification to the GxROM mapper - https://gitlab.com/kevinms/INL-retro-progdump/-/blob/d936b8eac92c3206f13301a7df1ac5dd36699938/host/scripts/nes/gxrom.lua
+-   Had to make some changes based off of it in order to get a functional dump of the rom.
+-   inlretro2.lua mapping was modified to point to the new mapper for both MHROM and GxROMs.
+-   Interface UI was also given an update for correct mapping selection.
 
 2025/09/15 (inlretro-interface-05.ps1) -
 - Script cleanup and optimation around calling the inlretro executable.
