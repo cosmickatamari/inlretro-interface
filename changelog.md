@@ -15,6 +15,8 @@
 -   Had to make some changes based off of it in order to get a functional dump of the rom.
 -   inlretro2.lua mapping was modified to point to the new mapper for both MHROM and GxROMs.
 -   Interface UI was also given an update for correct mapping selection.
+-   Interface UI has a festive ASCII art header now!
+-   Interface UI flow and presentation was cleaned up as cart dumping progressed.
 
 2025/09/15 (inlretro-interface-05.ps1) -
 - Script cleanup and optimation around calling the inlretro executable.
