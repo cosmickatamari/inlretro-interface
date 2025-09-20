@@ -2,7 +2,7 @@ Nintendo Entertainment System (Working):
 - Abadox: The Deadly Inner War
 - CastleQuest
 - Crystalis
-- Final Fantasy (after modifications to mmu1.lua)
+- Final Fantasy (after modifications to MMC1 mapper)
 - Legacy of the Wizard
 - Mickey Mousecapade
 - Platoon
@@ -18,7 +18,7 @@ Nintendo Entertainment System (Working):
 - Mega Man 5
 - Darkwing Duck
 - TaleSpin
-- Adventure Island (after modification to cnrom.lua)
+- Adventure Island (after modification to the CNROM mapper)
 - Adventure Island II
 - Adventures of Lolo
 - Arkista's Ring
@@ -68,12 +68,12 @@ Nintendo Entertainment System (Working):
 - Tiny Toon Adventures
 - Top Gun
 - Willow
+- Super Mario Bros. + Duck Hunt (after making a MHROM mapper)
 
 Nintendo Entertainment System (Not Working):
 - Dragon Warrior (USA)
 - The Battle of Olympus
 - DuckTales
 - Mega Man 3
-- Super Mario Bros. & Duck Hunt
 CPU Crash (green screen)
-Looking like PRG banks aren't switching correctly.
+Looking like PRG banks aren't switching correctly or mapper issue.
