@@ -4,23 +4,16 @@
 2. Note on ANROM cartridges in the powershell script.
 3. Language cleanup in the powershell script.
 4. `hosts/scripts/nes/MMC1.lua` was modified due to `Final Fantasy (USA)` not running after being dumped.
-    - Reset (0x80) > delay > shift in 5 bits (LSB-first). Original script was doing this too fast.
-    - Used control register 0x0E to put MMC1 in 16 KB switchable at $8000 / fixed last bank at $C000.
 5. `hosts/scripts/nes/cnrom.lua` was modified due to `Adventure Island (USA)` showing grabbled text.
-    - Bus conflict problem during CHR bank selects
-    - Dumper was writing a bank number to changing addresses, causing the wrong CHR bank to be hatched.
-6. NES Database site with inputted Game Title name will appear in Microsoft Edge for faster access.
-    - Will eventually change it to the default browser for other people.
+``6. NES Database site with inputted Game Title name will appear in Microsoft Edge for faster access.``
 7. `hosts/scripts/nes/mhrom.lua` is a new mapper which was made for the `Super Mario Bros. & Duck Hunt (USA)` multicart.
-    - MHROM and GXROM are essentially the same mapper (iNES mapper 66) - they're just different names from two different vendors for the same hardware.
-    - Another fork of the project has a modification to the GxROM mapper - https://gitlab.com/kevinms/INL-retro-progdump/-/blob/d936b8eac92c3206f13301a7df1ac5dd36699938/host/scripts/nes/gxrom.lua
-    - From the above GxROM mapper, made some changes based off of it in order to get a functional dump of the rom. Mainly issue with bank switching.
-    - Changes were made to the MHROM mapper, leaving the original GTROM mapper unmodified.
 8. `inlretro2.lua` mapping was modified to point to the new mapper for both MHROM and GxROMs.
 9. Interface UI was also given an update for correct mapping selection.
 10. Interface UI has a festive ASCII art header now!
 11. Interface UI flow and presentation was cleaned up as cart dumping progressed.
 12. Moved referenced assets to external JSON files, allows easier modifications of assets when needed.
+13. `hosts/scripts/nes.MMC3.lua` was modified due to incompatibilities with dumping Mega Man 3 which. Additional changes were needed after Mega Man 3 was working but Astyanax (which previously worked) was no longer functional.
+14. NES database site now will open regardless of end user's default browser and will refocus on the UI without error.
 
 <br/><br/>
 **09/15/2025 `(inlretro-interface-05.ps1)`**
