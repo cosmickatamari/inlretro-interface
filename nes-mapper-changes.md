@@ -26,7 +26,7 @@
 <br/><br/>
 
 ### MHROM:
-*Problem:* Mapper technically didn't exist, only one game for NES used this mapper `Super Mario Bros. & Duck Hunt` multicart `mapper 66 (GxROM/MHROM)`, not plain NROM, like originally assumed. Any attempt at trying `NROM` or `GTROM` would produce the correct sized ROM; however, Mesen would green screen with CPU crash.
+*Problem:* Mapper technically didn't exist, only one game for NES used this mapper `Super Mario Bros. & Duck Hunt` multicart `mapper 66 (GxROM/MHROM)`, not plain NROM, like originally assumed. Any attempt at trying `NROM` or `GTROM` would produce the correct sized ROM; however, Mesen would green screen with CPU crash. 
 
 *Fix:*
 1. Created a new mapper `MHROM.lua`
@@ -39,5 +39,7 @@
     - Added `gxrom = require scripts.nes.mhrom` into `inlretro2.lua`’s mapper table.
     - Can be referenced with `-m GXROM`.
     - PowerShell frontend modified to reflect this change.
-<br/><br/>
+<br/>
 
+Some code was adopted from this fork of the inlretro project from this LUA - https://gitlab.com/kevinms/INL-retro-progdump/-/blob/d936b8eac92c3206f13301a7df1ac5dd36699938/host/scripts/nes/gxrom.lua
+<br/><br/>
