@@ -12,7 +12,7 @@
 10. Interface UI has a festive ASCII art header now!
 11. Interface UI flow and presentation was cleaned up as cart dumping progressed.
 12. Moved referenced assets to external JSON files, allows easier modifications of assets when needed.
-13. `hosts/scripts/nes.MMC3.lua` was modified due to incompatibilities with dumping Mega Man 3 which. Additional changes were needed after Mega Man 3 was working but Astyanax (which previously worked) was no longer functional.
+13. `hosts/scripts/nes.MMC3.lua` was modified due to incompatibilities with dumping Mega Man 3 which. Additional changes were needed after `Mega Man 3 (USA)` was working but `Astyanax (USA)` (which previously worked) was no longer functional.
 14. NES database site now will open regardless of end user's default browser and will refocus on the UI without error.
 
 <br/><br/>
