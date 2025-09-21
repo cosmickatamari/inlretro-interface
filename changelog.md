@@ -15,6 +15,7 @@
     - MHROM and GXROM are essentially the same mapper (iNES mapper 66) - they're just different names from two different vendors for the same hardware.
     - Another fork of the project has a modification to the GxROM mapper - https://gitlab.com/kevinms/INL-retro-progdump/-/blob/d936b8eac92c3206f13301a7df1ac5dd36699938/host/scripts/nes/gxrom.lua
     - From the above GxROM mapper, made some changes based off of it in order to get a functional dump of the rom. Mainly issue with bank switching.
+    - Changes were made to the MHROM mapper, leaving the original GTROM mapper unmodified.
 8. `inlretro2.lua` mapping was modified to point to the new mapper for both MHROM and GxROMs.
 9. Interface UI was also given an update for correct mapping selection.
 10. Interface UI has a festive ASCII art header now!
