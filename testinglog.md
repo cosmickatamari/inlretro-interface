@@ -69,7 +69,7 @@
 
 
 
-### Nintendo Entertainment System (Worked After Mapper Modification):
+### Nintendo Entertainment System (Working - Requiring Mapper Modification):
 1. Final Fantasy *(after modifications to the MMC1 mapper) (confirmed battery save backed up)*
 2. Adventure Island *(after modification to the CNROM mapper)*
 3. Super Mario Bros. + Duck Hunt *(after making a MHROM mapper)*
@@ -83,5 +83,3 @@ Nintendo Entertainment System (Not Working):
     - Dragon Warrior (USA)
     - The Battle of Olympus
     - DuckTales
-    - Mega Man 3
-
