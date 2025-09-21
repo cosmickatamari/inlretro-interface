@@ -71,9 +71,10 @@
 70. Super Mario Bros. + Duck Hunt *(after making a MHROM mapper)*
 
 Nintendo Entertainment System (Not Working):
-- Dragon Warrior (USA)
-- The Battle of Olympus
-- DuckTales
-- Mega Man 3
-    - CPU Crash (green screen).
-    - Looking like PRG banks aren't switching correctly or mapper issue.
+- CPU Crash (green screen).
+- Looking like PRG banks aren't switching correctly or mapper issue.
+    - Dragon Warrior (USA)
+    - The Battle of Olympus
+    - DuckTales
+    - Mega Man 3
+
