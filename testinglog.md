@@ -1,25 +1,25 @@
-### Nintendo Entertainment System (Working):
+### Nintendo Entertainment System (Working - Without Mapper Modification):
 1. Abadox: The Deadly Inner War
 2. CastleQuest
 3. Crystalis
-4. Final Fantasy *(after modifications to the MMC1 mapper) (confirmed battery save backed up)*
-5. Legacy of the Wizard
-6. Mickey Mousecapade
-7. Platoon
-8. Wizards & Warriors
-9. The Legend of Zelda *(confirmed battery save backed up)*
-10. Kirby's Adventure *(confirmed battery save backed up)*
-11. NES Open Tournament Golf *(confirmed battery save backed up)*
-12. Zoda's Revenge: StarTropics II *(using MMC3 mapper) (confirmed battery save backed up)*
-13. Zelda II: The Adventures of Link *(confirmed battery save backed up)*
-14. Ultima: Exodus *(confirmed battery save backed up)*
-15. StarTropics *(using MMC3 mapper) (confirmed battery save backed up)*
+4. Legacy of the Wizard
+5. Mickey Mousecapade
+6. Platoon
+7. Wizards & Warriors
+8. The Legend of Zelda *(confirmed battery save backed up)*
+9. Kirby's Adventure *(confirmed battery save backed up)*
+10. NES Open Tournament Golf *(confirmed battery save backed up)*
+11. Zoda's Revenge: StarTropics II *(using MMC3 mapper) (confirmed battery save backed up)*
+12. Zelda II: The Adventures of Link *(confirmed battery save backed up)*
+13. Ultima: Exodus *(confirmed battery save backed up)*
+14. StarTropics *(using MMC3 mapper) (confirmed battery save backed up)*
+15. Willow
 16. Mega Man 6
 17. Mega Man 5
 18. Darkwing Duck
 19. TaleSpin
-20. Adventure Island *(after modification to the CNROM mapper)*
-21. Adventure Island II
+20. Adventure Island II
+21. Top Gun
 22. Adventures of Lolo
 23. Arkista's Ring
 24. Balloon Fight
@@ -66,9 +66,16 @@
 65. Tetris (NES)
 66. Tetris 2
 67. Tiny Toon Adventures
-68. Top Gun
-69. Willow
-70. Super Mario Bros. + Duck Hunt *(after making a MHROM mapper)*
+
+
+
+### Nintendo Entertainment System (Worked After Mapper Modification):
+1. Final Fantasy *(after modifications to the MMC1 mapper) (confirmed battery save backed up)*
+2. Adventure Island *(after modification to the CNROM mapper)*
+3. Super Mario Bros. + Duck Hunt *(after making a MHROM mapper)*
+4. Mega Man 3 *(after modification to the MMC3 mapper)*
+ 
+
 
 Nintendo Entertainment System (Not Working):
 - CPU Crash (green screen).
