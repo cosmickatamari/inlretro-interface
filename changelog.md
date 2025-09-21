@@ -5,7 +5,7 @@
 3. Language cleanup in the powershell script.
 4. `hosts/scripts/nes/MMC1.lua` was modified due to `Final Fantasy (USA)` not running after being dumped.
 5. `hosts/scripts/nes/cnrom.lua` was modified due to `Adventure Island (USA)` showing grabbled text.
-``6. NES Database site with inputted Game Title name will appear in Microsoft Edge for faster access.``
+6. ~~NES Database site with inputted Game Title name will appear in Microsoft Edge for faster access.~~
 7. `hosts/scripts/nes/mhrom.lua` is a new mapper which was made for the `Super Mario Bros. & Duck Hunt (USA)` multicart.
 8. `inlretro2.lua` mapping was modified to point to the new mapper for both MHROM and GxROMs.
 9. Interface UI was also given an update for correct mapping selection.
