@@ -66,14 +66,16 @@
 65. Tetris (NES)
 66. Tetris 2
 67. Tiny Toon Adventures
+68. Marble Madness
 
 
 
 ### Nintendo Entertainment System (Working - Requiring Mapper Modification):
-1. Final Fantasy *(after modifications to the MMC1 mapper) (confirmed battery save backed up)*
-2. Adventure Island *(after modification to the CNROM mapper)*
-3. Super Mario Bros. + Duck Hunt *(after making a MHROM mapper)*
-4. Mega Man 3 *(after modification to the MMC3 mapper)*
+1. Final Fantasy *(after modifications to the `MMC1` mapper) (confirmed battery save backed up)*
+2. Adventure Island *(after modification to the `CNROM` mapper)*
+3. Super Mario Bros. + Duck Hunt *(after making a `MHROM` mapper)*
+4. Mega Man 3 *(after modification to the `MMC3` mapper)*
+5. DuckTales *(after modification to the `UNROM` mapper)*
  
 
 
@@ -82,4 +84,3 @@ Nintendo Entertainment System (Not Working):
 - Looking like PRG banks aren't switching correctly or mapper issue.
     - Dragon Warrior (USA)
     - The Battle of Olympus
-    - DuckTales
