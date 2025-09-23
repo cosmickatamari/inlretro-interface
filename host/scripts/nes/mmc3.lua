@@ -16,6 +16,57 @@ local mapname = "MMC3"
 
 -- local functions
 
+--Game detection based on actual ROM content analysis
+local function detect_game_type()
+	--Do minimal setup to read from PRG ROM
+	dict.nes("NES_CPU_WR", 0xA001, 0x40)  -- Disable WRAM
+	dict.nes("NES_CPU_WR", 0xA000, 0x00)  -- Set vertical mirroring
+	
+	--Set up basic CHR banks
+	dict.nes("NES_CPU_WR", 0x8000, 0x00)
+	dict.nes("NES_CPU_WR", 0x8001, 0x00)	--2KB @ PPU $0000
+	dict.nes("NES_CPU_WR", 0x8000, 0x01)
+	dict.nes("NES_CPU_WR", 0x8001, 0x02)	--2KB @ PPU $0800
+	
+	--Try to read some bytes from PRG ROM
+	local byte1 = dict.nes("NES_CPU_RD", 0x8000)
+	local byte2 = dict.nes("NES_CPU_RD", 0x8001)
+	local byte3 = dict.nes("NES_CPU_RD", 0x8002)
+	local byte4 = dict.nes("NES_CPU_RD", 0x8003)
+	local byte5 = dict.nes("NES_CPU_RD", 0x8004)
+	
+	print("DEBUG: Read bytes:", string.format("0x%02X 0x%02X 0x%02X 0x%02X 0x%02X", byte1, byte2, byte3, byte4, byte5))
+	
+	--Check for Super Mario 3 signature: 0x4C, 0x00, 0x80 (JMP $8000)
+	if byte1 == 0x4C and byte2 == 0x00 and byte3 == 0x80 then
+		print("DEBUG: Detected Super Mario 3 - using standard approach")
+		return "standard"
+	end
+	
+	--Check for Mega Man 3 signature: Look for common patterns
+	--Mega Man games often have specific patterns
+	if byte1 == 0x20 and byte2 == 0x00 and byte3 == 0x80 then  -- JSR $8000
+		print("DEBUG: Detected Mega Man 3 - using custom approach")
+		return "custom"
+	end
+	
+	--Check for Mega Man 3 actual signature: 0x90 0x90 0x90 0x90 0x98
+	if byte1 == 0x90 and byte2 == 0x90 and byte3 == 0x90 and byte4 == 0x90 and byte5 == 0x98 then
+		print("DEBUG: Detected Mega Man 3 (actual signature) - using custom approach")
+		return "custom"
+	end
+	
+	--Check for other patterns that might indicate Mega Man 3
+	if byte1 == 0x4C and byte2 == 0x00 and byte3 == 0x80 and byte4 == 0x20 then
+		print("DEBUG: Detected possible Mega Man 3 variant - using custom approach")
+		return "custom"
+	end
+	
+	--Default to standard approach for unknown games
+	print("DEBUG: Unknown game - defaulting to standard approach")
+	return "standard"
+end
+
 local function create_header( file, prgKB, chrKB )
 
 	--write_header( file, prgKB, chrKB, mapper, mirroring )
@@ -108,11 +159,6 @@ local function init_mapper( debug )
 	--set mirroring
 	dict.nes("NES_CPU_WR", 0xA000, 0x00)	--bit0 0-vert 1-horiz
 
-	--MMC3B-specific initialization
-	--Clear any pending IRQ
-	dict.nes("NES_CPU_WR", 0xE000, 0x00)	--IRQ disable
-	dict.nes("NES_CPU_WR", 0xE001, 0x00)	--IRQ acknowledge
-
 
 	--$8000-9FFE even
 	--MMC3 bank select:
@@ -139,27 +185,26 @@ local function init_mapper( debug )
 	--                              1: two 2 KB banks at $1000-$1FFF, 
 	--                                 four 1 KB banks at $0000-$0FFF)
 
-	--Set up CHR-ROM banks for proper data access
-	--CHR banks should be set to sequential values to access actual CHR-ROM data
+	--For CHR-ROM flash writes, use lower 4KB (PT0) for writting data & upper 4KB (PT1) for commands
 	dict.nes("NES_CPU_WR", 0x8000, 0x00)
-	dict.nes("NES_CPU_WR", 0x8001, 0x00)	--2KB @ PPU $0000 (bank 0)
+	dict.nes("NES_CPU_WR", 0x8001, 0x00)	--2KB @ PPU $0000
 
 	dict.nes("NES_CPU_WR", 0x8000, 0x01)
-	dict.nes("NES_CPU_WR", 0x8001, 0x01)	--2KB @ PPU $0800 (bank 1)
+	dict.nes("NES_CPU_WR", 0x8001, 0x02)	--2KB @ PPU $0800
 
-	--Set up 1KB CHR banks for proper data access
+	--use lower half of PT1 for $5555 commands
 	dict.nes("NES_CPU_WR", 0x8000, 0x02)
-	dict.nes("NES_CPU_WR", 0x8001, 0x02)	--1KB @ PPU $1000 (bank 2)
+	dict.nes("NES_CPU_WR", 0x8001, 0x15)	--1KB @ PPU $1000
 	
 	dict.nes("NES_CPU_WR", 0x8000, 0x03)
-	dict.nes("NES_CPU_WR", 0x8001, 0x03)	--1KB @ PPU $1400 (bank 3)
+	dict.nes("NES_CPU_WR", 0x8001, 0x15)	--1KB @ PPU $1400
 
-	--Set up remaining 1KB CHR banks
+	--use upper half of PT1 for $2AAA commands
 	dict.nes("NES_CPU_WR", 0x8000, 0x04)
-	dict.nes("NES_CPU_WR", 0x8001, 0x04)	--1KB @ PPU $1800 (bank 4)
+	dict.nes("NES_CPU_WR", 0x8001, 0x0A)	--1KB @ PPU $1800
 
 	dict.nes("NES_CPU_WR", 0x8000, 0x05)
-	dict.nes("NES_CPU_WR", 0x8001, 0x05)	--1KB @ PPU $1C00 (bank 5)
+	dict.nes("NES_CPU_WR", 0x8001, 0x0A)	--1KB @ PPU $1C00
 
 
 	--For PRG-ROM flash writes:
@@ -274,6 +319,40 @@ local function dump_prgrom( file, rom_size_KB, debug )
 	local KB_per_read = 16
 	local num_reads = rom_size_KB / KB_per_read
 	local read_count = 0
+	local addr_base = 0x08	-- $8000
+	--TODO update to NES_CPU_PAGE instead of NES_CPU_4KB
+
+	while ( read_count < num_reads ) do
+
+		if debug then print( "dump PRG part ", read_count, " of ", num_reads) end
+
+		--select desired bank(s) to dump
+		dict.nes("NES_CPU_WR", 0x8000, 0x06)
+		--the bank is half the size of KB per read so must multiply by 2
+		dict.nes("NES_CPU_WR", 0x8001, read_count*2)	--8KB @ CPU $8000
+
+		dict.nes("NES_CPU_WR", 0x8000, 0x07)
+		--the bank is half the size of KB per read so must multiply by 2 and add 1 for second 8KB
+		dict.nes("NES_CPU_WR", 0x8001, read_count*2+1)	--8KB @ CPU $A000
+
+		--16 = number of KB to dump per loop
+		--0x08 = starting read address A12-15 -> $8000
+		--NESCPU_4KB designate mapper independent read of NES CPU address space
+		--mapper must be 0-15 to designate A12-15
+		dump.dumptofile( file, KB_per_read, addr_base, "NESCPU_4KB", false )
+
+		read_count = read_count + 1
+	end
+
+end
+
+--dump the PRG ROM (custom approach for Mega Man 3 and Astyanax)
+local function dump_prgrom_custom( file, rom_size_KB, debug )
+
+	--PRG-ROM dump 16KB at a time through MMC3 reg6&7 in mode 0
+	local KB_per_read = 16
+	local num_reads = rom_size_KB / KB_per_read
+	local read_count = 0
 	local addr_base = 0x00	-- Try $0000 instead of $8000
 	--TODO update to NES_CPU_PAGE instead of NES_CPU_4KB
 
@@ -297,19 +376,13 @@ local function dump_prgrom( file, rom_size_KB, debug )
 		local test_byte2 = dict.nes("NES_CPU_RD", 0xA000)
 		print("DEBUG: Read $8000=", string.format("0x%02X", test_byte1), "$A000=", string.format("0x%02X", test_byte2))
 
-		--Custom dump function that reads directly from mapped addresses
-		--Read from both $8000-$9FFF and $C000-$DFFF to get complete data
-		--Read 8KB from $8000-$9FFF (bank 6)
-		for i = 0, 8191 do
-			local byte = dict.nes("NES_CPU_RD", 0x8000 + i)
-			file:write(string.char(byte))
-		end
-		
-		--Read 8KB from $A000-$BFFF (bank 7)
-		for i = 0, 8191 do
-			local byte = dict.nes("NES_CPU_RD", 0xA000 + i)
-			file:write(string.char(byte))
-		end
+		--Use the standard dump method instead of direct memory reading
+		--This should work better for Super Mario 3
+		--16 = number of KB to dump per loop
+		--0x08 = starting read address A12-15 -> $8000
+		--NESCPU_4KB designate mapper independent read of NES CPU address space
+		--mapper must be 0-15 to designate A12-15
+		dump.dumptofile( file, KB_per_read, 0x08, "NESCPU_4KB", false )
 
 		read_count = read_count + 1
 	end
@@ -335,12 +408,13 @@ local function dump_chrrom( file, rom_size_KB, debug )
 		dict.nes("NES_CPU_WR", 0x8000, 0x01)
 		dict.nes("NES_CPU_WR", 0x8001, ((read_count*2+1)<<1))	--2KB @ PPU $0800
 
-		--Direct CHR-ROM reading instead of using dump.dumptofile()
-		--Read 4KB (4096 bytes) directly from PPU memory
-		for i = 0, 4095 do
-			local byte = dict.nes("NES_PPU_RD", 0x0000 + i)
-			file:write(string.char(byte))
-		end
+		--4 = number of KB to dump per loop
+		--0x00 = starting read address A10-13 -> $0000
+		--mapper must be 0x00 or 0x04-0x3C to designate A10-13
+		--	bits 7, 6, 1, & 0 CAN NOT BE SET!
+		--	0x04 would designate that A10 is set -> $0400 (the second 1KB PT bank)
+		--	0x20 would designate that A13 is set -> $2000 (first name table)
+		dump.dumptofile( file, KB_per_read, addr_base, "NESPPU_1KB", false )
 
 		read_count = read_count + 1
 	end
@@ -680,16 +754,51 @@ local function process(process_opts, console_opts)
 	if read then
 		print("\nDumping PRG & CHR ROMs...")
 
-		init_mapper_dump()
-
-		file = assert(io.open(dumpfile, "wb"))
-
-		--create header: pass open & empty file & rom sizes
-		create_header(file, prg_size, chr_size)
-
-		--dump cart into file
-		dump_prgrom(file, prg_size, false)
-		dump_chrrom(file, chr_size, false)
+		--Detect game type and use appropriate approach
+		local game_type = detect_game_type()
+		
+		if game_type == "standard" then
+			--Standard approach: Use standard functions
+			print("DEBUG: Using standard approach")
+			init_mapper()
+			
+			file = assert(io.open(dumpfile, "wb"))
+			
+			--Use standard header creation
+			nes.write_header( file, prg_size, chr_size, 4, 0)
+			
+			--Use standard dump functions
+			dump_prgrom(file, prg_size, false)
+			dump_chrrom(file, chr_size, false)
+			
+		elseif game_type == "custom" then
+			--Custom approach: Use custom functions
+			print("DEBUG: Using custom approach")
+			init_mapper_dump()
+			
+			file = assert(io.open(dumpfile, "wb"))
+			
+			--Use custom header creation
+			create_header(file, prg_size, chr_size)
+			
+			--Use custom dump functions
+			dump_prgrom_custom(file, prg_size, false)
+			dump_chrrom(file, chr_size, false)
+			
+		else
+			--Hybrid approach: Use standard init with standard header and dump
+			print("DEBUG: Using hybrid approach")
+			init_mapper()  -- Use standard initialization
+			
+			file = assert(io.open(dumpfile, "wb"))
+			
+			--Use standard header creation
+			nes.write_header( file, prg_size, chr_size, 4, 0)
+			
+			--Use standard dump functions
+			dump_prgrom(file, prg_size, false)
+			dump_chrrom(file, chr_size, false)
+		end
 
 		--close file
 		assert(file:close())
