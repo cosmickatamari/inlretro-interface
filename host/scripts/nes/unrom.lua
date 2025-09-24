@@ -1,232 +1,455 @@
--- UNROM (UxROM / mapper 2) dumper — optimized for DuckTales and similar games
--- Focus: robust PRG dumping with proper bank switching and header generation
--- Requires: scripts.app.dict, scripts.app.nes, scripts.app.dump, scripts.app.buffers
-
--- ==== Portable bitwise AND shim (Lua 5.1/5.2/5.3/LuaJIT) ====
-local BAND
-if _G.bit32 and bit32.band then
-  BAND = bit32.band          -- Lua 5.2+
-elseif _G.bit and bit.band then
-  BAND = bit.band            -- LuaJIT / LuaBitOp
-else
-  -- Pure-Lua fallback
-  BAND = function(a, b)
-    local r, bitv = 0, 1
-    if a < 0 then a = 0 end
-    if b < 0 then b = 0 end
-    while a > 0 or b > 0 do
-      local abit = a % 2
-      local bbit = b % 2
-      if abit == 1 and bbit == 1 then r = r + bitv end
-      a = (a - abit) / 2
-      b = (b - bbit) / 2
-      bitv = bitv * 2
-    end
-    return r
-  end
-end
--- ==== End shim ====
-
--- Module table
+-- create the module's table
 local unrom = {}
 
--- Imports
-local dict    = require "scripts.app.dict"
-local nes     = require "scripts.app.nes"
-local dump    = require "scripts.app.dump"
+-- import required modules
+local dict = require "scripts.app.dict"
+local nes = require "scripts.app.nes"
+local dump = require "scripts.app.dump"
+local flash = require "scripts.app.flash"
 local buffers = require "scripts.app.buffers"
 
--- Mapper name (try both)
-local mapname = (buffers.op_buffer and buffers.op_buffer["UNROM"]) and "UNROM" or "UxROM"
+-- file constants & variables
+local mapname = "UxROM"
 
--- State
-local banktable_base = nil          -- address of contiguous 00..n-1 table in fixed PRG, if present
-local bankaddr_lookup = nil         -- per-value safe write addresses for bus-conflict-safe select
+local banktable_base = nil
+--local banktable_base = 0xE473
+		--Nomolos' bank table is at $CC84
+		--wr_bank_table(0xCC84, 32)
+		--Owlia bank table
+		--wr_bank_table(0xE473, 32)
+		--rushnattack
+		--wr_bank_table(0x8000, 8)
+		--twindragons
+		--wr_bank_table(0xC000, 32)
+		--Armed for Battle
+		--wr_bank_table(0xFD69, 8)
+--local rom_FF_addr = 0x8000
 
--- Header writer - fixed for UNROM (mapper 2)
-local function create_header(file, prgKB, chrKB)
-  local mirroring = nes.detect_mapper_mirroring()
-  local opb = buffers.op_buffer and buffers.op_buffer[mapname] or 0
-  
-  -- Force UNROM mapper (2) and proper flags
-  local flags6 = 0x02  -- Mapper 2 (UNROM)
-  local flags7 = 0x00  -- No special features
-  
-  -- Write NES header
-  file:write(string.char(0x4E, 0x45, 0x53, 0x1A))  -- "NES" + delimiter
-  file:write(string.char(prgKB / 16))              -- PRG-ROM size in 16KB units
-  file:write(string.char(chrKB / 8))               -- CHR-ROM size in 8KB units (0 for CHR-RAM)
-  file:write(string.char(flags6))                  -- Flags 6
-  file:write(string.char(flags7))                  -- Flags 7
-  file:write(string.char(0x00, 0x00, 0x00, 0x00))  -- Flags 8-11
-  file:write(string.char(0x00, 0x00, 0x00, 0x00))  -- Flags 12-15
+
+-- local functions
+
+local function create_header( file, prgKB, chrKB )
+
+	local mirroring = nes.detect_mapper_mirroring()
+
+	--write_header( file, prgKB, chrKB, mapper, mirroring )
+	nes.write_header( file, prgKB, 0, op_buffer[mapname], mirroring)
 end
 
--- Find a contiguous 00..(bank_count-1) table in the fixed bank ($C000-$FFFF).
-local function find_banktable(bank_count)
-  local search_base = 0x0C   -- $C000
-  local KB_search   = 16
-
-  local buf = ""
-  local function sink(data) buf = buf .. data end
-  dump.dumptocallback(sink, KB_search, search_base, "NESCPU_4KB", false)
-
-  local bytes = { buf:byte(1, #buf) }
-  local needed = bank_count
-  for pos = 1, (#bytes - needed + 1) do
-    local ok = true
-    for v = 0, needed - 1 do
-      if bytes[pos + v] ~= v then ok = false; break end
-    end
-    if ok then
-      return 0xC000 + (pos - 1)
-    end
-  end
-  return nil
+local function init_mapper( debug )
+	--need to select bank0 so PRG-ROM A14 is low when writting to lower bank
+	--TODO this needs to be written to rom where value is 0x00 due to bus conflicts
+	--so need to find the bank table first!
+	--this could present an even larger problem with a blank flash chip
+	--would have to get a byte written to 0x00 first before able to change the bank..
+	--becomes catch 22 situation.  Will have to rely on mcu over powering PRG-ROM..
+	--ahh but a way out would be to disable the PRG-ROM with exp0 (/WE) going low
+	--for now the write below seems to be working fine though..
+	dict.nes("NES_CPU_WR", 0x8000, 0x00)
 end
 
--- Build per-value safe write addresses (bus-conflict-safe): choose any byte b where (b & v) == v.
-local function build_bankaddr_lookup(bank_count)
-  local search_base = 0x0C   -- $C000
-  local KB_search   = 16
+--read PRG-ROM flash ID
+local function prgrom_manf_id( debug )
 
-  local buf = ""
-  local function sink(data) buf = buf .. data end
-  dump.dumptocallback(sink, KB_search, search_base, "NESCPU_4KB", false)
+	init_mapper()
 
-  local bytes = { buf:byte(1, #buf) }
-  local addrs = {}
+	if debug then print("reading PRG-ROM manf ID") end
 
-  for v = 0, bank_count - 1 do
-    if v == 0 then
-      addrs[v] = 0xC000  -- any address works for 0
-    else
-      local found
-      for i = 1, #bytes do
-        if BAND(bytes[i], v) == v then
-          found = 0xC000 + i - 1
-          break
-        end
-      end
-      if not found then
-        return nil
-      end
-      addrs[v] = found
-    end
-  end
+	--enter software mode
+	--ROMSEL controls PRG-ROM /OE which needs to be low for flash writes
+	--So unlock commands need to be addressed below $8000
+	--DISCRETE_EXP0_PRGROM_WR doesn't toggle /ROMSEL by definition though, so A15 is unused
+	--	    15 14 13 12
+	-- 0x5 = 0b  0  1  0  1	-> $5555
+	-- 0x2 = 0b  0  0  1  0	-> $2AAA
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x90)
 
-  return addrs
+	--read manf ID
+	local rv = dict.nes("NES_CPU_RD", 0x8000)
+	if debug then print("attempted read PRG-ROM manf ID:", string.format("%X", rv)) end
+
+	--read prod ID
+	rv = dict.nes("NES_CPU_RD", 0x8001)
+	if debug then print("attempted read PRG-ROM prod ID:", string.format("%X", rv)) end
+
+	--exit software
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x8000, 0xF0)
+
 end
 
--- PRG dump for UNROM (mapper 2) - optimized for DuckTales
-local function dump_prgrom(file, prgKB, debug)
-  local KB_per_read = 16
-  local num_reads   = prgKB / KB_per_read
-  local addr_8000   = 0x08   -- $8000
-  local addr_C000   = 0x0C   -- $C000
+--find a viable banktable location
+local function find_banktable( banktable_size )
+	local search_base = 0x0C -- search in $C000-$F000, the fixed bank
+	local KB_search_space = 16
 
-  -- Determine bank select method
-  local bank_count = num_reads - 1
-  if not banktable_base then
-    banktable_base = find_banktable(bank_count)
-    if banktable_base then
-      print(("Found banktable at address $%X"):format(banktable_base))
-    else
-      print("Banktable not found; using per-value lookup")
-      bankaddr_lookup = bankaddr_lookup or build_bankaddr_lookup(bank_count)
-      if not bankaddr_lookup then 
-        print("Warning: couldn't build per-value lookup, using direct writes")
-        -- Fallback: use direct writes to $8000-$FFFF
-        bankaddr_lookup = {}
-        for v = 0, bank_count - 1 do
-          bankaddr_lookup[v] = 0x8000 + v  -- Direct write to switchable area
-        end
-      end
-    end
-  end
+	--get the fixed bank's content
+	local search_data = ""
+	dump.dumptocallback(
+		function (data)
+			search_data = search_data .. data
+		end,
+		KB_search_space, search_base, "NESCPU_4KB", false
+	)
 
-  -- Switchable banks ($8000-$BFFF)
-  for bank = 0, bank_count - 1 do
-    if debug then print("Dumping PRG bank", bank, "of", bank_count - 1) end
-    
-    -- Select bank
-    if banktable_base then
-      dict.nes("NES_CPU_WR", banktable_base + bank, bank)
-    else
-      local sel_addr = bankaddr_lookup[bank]
-      if not sel_addr then 
-        -- Fallback: write bank number to $8000 + bank
-        sel_addr = 0x8000 + bank
-      end
-      dict.nes("NES_CPU_WR", sel_addr, bank)
-    end
-    
-    -- Bank switch completed
-    
-    -- Dump the bank
-    print("File position before bank", bank, ":", file:seek())
-    dump.dumptofile(file, KB_per_read, addr_8000, "NESCPU_4KB", false)
-    print("File position after bank", bank, ":", file:seek())
-    file:flush()  -- Force flush to disk
-  end
+	--construct the byte sequence that we need
+	local searched_sequence = ""
+	while ( searched_sequence:len() < banktable_size ) do
+		searched_sequence = searched_sequence .. string.char(searched_sequence:len())
+	end
 
-  -- Fixed bank ($C000-$FFFF)
-  if debug then print("Dumping PRG fixed bank at $C000") end
-  print("File position before fixed bank:", file:seek())
-  dump.dumptofile(file, KB_per_read, addr_C000, "NESCPU_4KB", false)
-  print("File position after fixed bank:", file:seek())
-  file:flush()  -- Force flush to disk
+	--search for the banktable in the fixed bank
+	position_in_fixed_bank = string.find( search_data, searched_sequence, 1, true )
+	if ( position_in_fixed_bank == nil ) then
+		return nil
+	end
+
+	--compute the cpu offset of this data
+	return 0xC000 + position_in_fixed_bank - 1
 end
 
--- Top-level entry
+--dump the PRG ROM
+local function dump_prgrom( file, rom_size_KB, debug )
+
+	local KB_per_read = 16
+	local num_reads = rom_size_KB / KB_per_read
+	local read_count = 0
+	local addr_base = 0x08	-- $8000
+
+	while ( read_count < num_reads ) do
+
+		if debug then print( "dump PRG part ", read_count, " of ", num_reads) end
+
+		--select desired bank(s) to dump
+		local bank_addr = banktable_base + read_count
+		print("Selecting bank", read_count, "via address $" .. string.format("%X", bank_addr))
+		dict.nes("NES_CPU_WR", bank_addr, read_count)	--16KB @ CPU $8000
+
+		-- Test read to verify bank switching
+		local test_bytes = {}
+		for i = 0, 7 do
+			test_bytes[i+1] = dict.nes("NES_CPU_RD", 0x8000 + i)
+		end
+		print("Bank", read_count, "test read @ $8000:", string.format("%02X %02X %02X %02X %02X %02X %02X %02X", 
+			test_bytes[1], test_bytes[2], test_bytes[3], test_bytes[4], 
+			test_bytes[5], test_bytes[6], test_bytes[7], test_bytes[8]))
+
+		dump.dumptofile( file, KB_per_read, addr_base, "NESCPU_4KB", false )
+
+		read_count = read_count + 1
+	end
+
+end
+
+
+local function wr_prg_flash_byte(addr, value, bank, debug)
+
+	dict.nes("NES_CPU_WR", banktable_base, 0x00)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xA0)
+	dict.nes("NES_CPU_WR", banktable_base+bank, bank)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", addr, value)
+
+	local rv = dict.nes("NES_CPU_RD", addr)
+
+	local i = 0
+
+	while ( rv ~= value ) do
+		rv = dict.nes("NES_CPU_RD", addr)
+		i = i + 1
+	end
+	if debug then print(i, "naks, done writing byte.") end
+
+	--TODO report error if write failed
+	
+end
+
+--base is the actual NES CPU address, not the rom offset (ie $FFF0, not $7FF0)
+local function wr_bank_table(base, entries, numtables)
+
+	local cur_bank 
+
+	--need to have A14 clear when lower bank enabled
+	init_mapper()
+
+	--UxROM can have a single bank table in $C000-FFFF (assuming this is most likely)
+	--or a bank table in all other banks in $8000-BFFF
+	
+	local i = 0
+	while( i < entries) do
+		wr_prg_flash_byte(base+i, i, 0)
+		i = i+1;
+	end
+
+	--[[
+	if( base >= 0xC000 ) then 
+		--only need one bank table in last bank
+		cur_bank = entries - 1  --16 minus 1 is 15 = 0x0F
+	else
+		--need bank table in all banks except last
+		cur_bank = entries - 2  --16 minus 2 is 14 = 0x0E
+	end
+
+
+	while( cur_bank >= 0 ) do
+		--select bank to write to (last bank first)
+		--use the bank table to make the switch
+		dict.nes("NES_CPU_WR", base+cur_bank, cur_bank)
+
+		--write bank table to selected bank
+		local i = 0
+		while( i < entries) do
+			print("write entry", i, "bank:", cur_bank)
+			wr_prg_flash_byte(base+i, i)
+			i = i+1;
+		end
+
+		cur_bank = cur_bank-1
+
+		if( base >= 0xC000 ) then 
+			--only need one bank table in last bank
+			break
+		end
+	end
+	--]]
+
+	--TODO verify the bank table was successfully written before continuing!
+
+end
+
+
+--this is controlled from the host side one bank at a time
+--but requires mapper specific firmware flashing functions
+local function flash_prgrom(file, rom_size_KB, debug)
+
+	init_mapper()
+	
+	--bank table should already be written
+	
+	--test some bytes
+	--wr_prg_flash_byte(0x0000, 0xA5, true)
+	--wr_prg_flash_byte(0xFFFF, 0x5A, true)
+
+	print("\nProgramming PRG-ROM flash")
+
+	local base_addr = 0x8000 --writes occur $8000-9FFF
+	local bank_size = 16*1024 --UNROM 16KByte per PRG bank
+	local buff_size = 1      --number of bytes to write at a time
+	local cur_bank = 0
+	local total_banks = rom_size_KB*1024/bank_size
+
+	local byte_num --byte number gets reset for each bank
+	local byte_str, data, readdata
+
+	--set the bank table address
+	dict.nes("SET_BANK_TABLE", banktable_base) 
+	if debug then print("get banktable:", string.format("%X", dict.nes("GET_BANK_TABLE"))) end
+
+	while cur_bank < total_banks do
+
+		if (cur_bank %4 == 0) then
+			print("writting PRG bank: ", cur_bank, " of ", total_banks-1)
+		end
+
+		--select bank to flash
+		dict.nes("SET_CUR_BANK", cur_bank) 
+		if debug then print("get bank:", dict.nes("GET_CUR_BANK")) end
+
+		--program the entire bank's worth of data
+
+		--[[  This version of the code programs a single byte at a time but doesn't require 
+		--	MMC3 specific functions in the firmware
+		print("This is slow as molasses, but gets the job done")
+		byte_num = 0  --current byte within the bank
+		while byte_num < bank_size do
+
+			--read next byte from the file and convert to binary
+			byte_str = file:read(buff_size)
+			data = string.unpack("B", byte_str, 1)
+
+			--write the data
+			--SLOWEST OPTION: no firmware MMC3 specific functions 100% host flash algo:
+			--wr_prg_flash_byte(base_addr+byte_num, data, cur_bank, false)   --0.7KBps
+			--EASIEST FIRMWARE SPEEDUP: 5x faster, create MMC3 write byte function:
+			--can use same write function as NROM
+			dict.nes("UNROM_PRG_FLASH_WR", base_addr+byte_num, data)  --3.8KBps (5.5x faster than above)
+
+			if (verify) then
+				readdata = dict.nes("NES_CPU_RD", base_addr+byte_num)
+				if readdata ~= data then
+					print("ERROR flashing byte number", byte_num, " in bank",cur_bank, " to flash ", data, readdata)
+				end
+			end
+
+			byte_num = byte_num + 1
+		end
+		--]]
+
+		--Have the device write a banks worth of data
+		--Same as NROM
+		flash.write_file( file, bank_size/1024, mapname, "PRGROM", false )
+
+		cur_bank = cur_bank + 1
+	end
+
+	print("Done Programming PRG-ROM flash")
+
+end
+
+
+
+--Cart should be in reset state upon calling this function 
+--this function processes all user requests for this specific board/mapper
 local function process(process_opts, console_opts)
-  local test       = process_opts["test"]
-  local read       = process_opts["read"]
-  local erase      = process_opts["erase"]
-  local program    = process_opts["program"]
-  local verify     = process_opts["verify"]
-  local dumpfile   = process_opts["dump_filename"]
+	local test = process_opts["test"]
+	local read = process_opts["read"]
+	local erase = process_opts["erase"]
+	local program = process_opts["program"]
+	local verify = process_opts["verify"]
+	local dumpfile = process_opts["dump_filename"]
+	local flashfile = process_opts["flash_filename"]
+	local verifyfile = process_opts["verify_filename"]
+	
+	local rv = nil
+	local file 
+	local prg_size = console_opts["prg_rom_size_kb"]
+	local chr_size = console_opts["chr_rom_size_kb"]
+	local wram_size = console_opts["wram_size_kb"]
 
-  local prg_size   = console_opts["prg_rom_size_kb"] or 0
-  local chr_size   = console_opts["chr_rom_size_kb"] or 0
+--initialize device i/o for NES
+	dict.io("IO_RESET")
+	dict.io("NES_INIT")
 
-  if test then
-    print("UNROM: test mode detected — continuing (no-op) so read can proceed")
-  end
+--test cart by reading manf/prod ID
+	if test then
+		print("Testing ", mapname)
 
-  if (not read) and (not erase) and (not program) and (not verify) then
-    print("UNROM: nothing to do (no read/erase/program/verify flags).")
-    dict.io("IO_RESET")
-    return
-  end
+		nes.detect_mapper_mirroring(true)
+		nes.ppu_ram_sense(0x1000, true)
+		print("EXP0 pull-up test:", dict.io("EXP0_PULLUP_TEST"))	
 
-  if prg_size <= 0 then
-    error("UNROM: prg_rom_size_kb is 0/undefined; pass -x <size in KB> (e.g., -x 128)")
-  end
+		prgrom_manf_id(true)
+	end
 
-  -- Force CHR size to 0 for UNROM (uses CHR-RAM)
-  if chr_size > 0 then
-    print("UNROM: Forcing CHR size to 0 (UNROM uses CHR-RAM)")
-    chr_size = 0
-  end
+--dump the cart to dumpfile
+	if read then
+		print("\nDumping PRG-ROM...")
+		file = assert(io.open(dumpfile, "wb"))
 
-  if read then
-    print("UNROM: Starting PRG-ROM dump...")
-    print("PRG size:", prg_size, "KB")
-    print("CHR size:", chr_size, "KB (CHR-RAM)")
-    
-    local f = assert(io.open(dumpfile, "wb"))
-    create_header(f, prg_size, chr_size)
-    print("Header written, file position:", f:seek())
-    dump_prgrom(f, prg_size, true)  -- Enable debug output
-    print("Final file position before close:", f:seek())
-    assert(f:close())
-    print("DONE dumping PRG-ROM")
-  end
+		--find bank table to avoid bus conflicts
+		if ( banktable_base == nil ) then
+			local KB_per_bank = 16
+			local bank_count = prg_size / KB_per_bank
+			print("Searching for bank table with", bank_count, "entries")
+			banktable_base = find_banktable( bank_count )
+			if ( banktable_base == nil ) then
+				print( "BANKTABLE NOT FOUND - trying fallback addresses" )
+				-- Try some common bank table addresses
+				local fallback_addrs = {0xE473, 0xCC84, 0x8000, 0xC000, 0xFD69}
+				for i, addr in ipairs(fallback_addrs) do
+					print("Trying fallback address $" .. string.format("%X", addr))
+					banktable_base = addr
+					break  -- Use first fallback for now
+				end
+			else
+				print( "found banktable addr = $" .. string.format("%X", banktable_base) )
+			end
+		else
+			print("Using hardcoded banktable addr = $" .. string.format("%X", banktable_base))
+		end
 
-  dict.io("IO_RESET")
+		--create header: pass open & empty file & rom sizes
+		create_header(file, prg_size, chr_size)
+
+		--dump cart into file
+		--dump.dumptofile( file, prg_size, "UxROM", "PRGROM", true )
+		dump_prgrom(file, prg_size, false)
+
+		--close file
+		assert(file:close())
+		print("DONE Dumping PRG-ROM")
+	end
+
+
+--erase the cart
+	if erase then
+
+		print("\nErasing", mapname);
+
+		init_mapper()
+
+		print("erasing PRG-ROM");
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x80)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x10)
+		rv = dict.nes("NES_CPU_RD", 0x8000)
+
+		local i = 0
+
+		--TODO create some function to pass the read value 
+		--that's smart enough to figure out if the board is actually erasing or not
+		while ( rv ~= 0xFF ) do
+			rv = dict.nes("NES_CPU_RD", 0x8000)
+			i = i + 1
+		end
+		print(i, "naks, done erasing prg.");
+
+	end
+
+
+--program flashfile to the cart
+	if program then
+
+		--open file
+		file = assert(io.open(flashfile, "rb"))
+		--determine if auto-doubling, deinterleaving, etc, 
+		--needs done to make board compatible with rom
+
+		--find bank table in the rom
+		--write bank table to all banks of cartridge
+		wr_bank_table(banktable_base, prg_size/16) --16KB per bank gives number of entries
+
+		--flash cart
+		flash_prgrom(file, prg_size, false)
+
+		--close file
+		assert(file:close())
+
+	end
+
+--verify flashfile is on the cart
+	if verify then
+		--for now let's just dump the file and verify manually
+		print("\nPost dumping PRG-ROM")
+
+		file = assert(io.open(verifyfile, "wb"))
+
+		--dump cart into file
+		dump_prgrom(file, prg_size, false)
+
+		--close file
+		assert(file:close())
+
+		print("DONE post dumping PRG-ROM")
+	end
+
+	dict.io("IO_RESET")
 end
 
--- Exports
+
+-- global variables so other modules can use them
+
+
+-- call functions desired to run when script is called/imported
+
+
+-- functions other modules are able to call
 unrom.process = process
+
+-- return the module's table
 return unrom
