@@ -76,11 +76,11 @@
 3. Super Mario Bros. + Duck Hunt *(after making a `MHROM` mapper)*
 4. Mega Man 3 *(after modification to the `MMC3` mapper)*
 5. DuckTales *(after modification to the `UNROM` mapper)*
+6. Dragon Warrior *(after modification to the `MMC1` mapper as well as 3 ISO baths and 2 ultrasonic cleaners, it worked at a certain angle -- I think there is a problem with my cart)*
  
 
 
 Nintendo Entertainment System (Not Working):
 - CPU Crash (green screen).
 - Looking like PRG banks aren't switching correctly or mapper issue.
-    - Dragon Warrior (USA)
     - The Battle of Olympus
