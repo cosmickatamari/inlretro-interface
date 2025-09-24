@@ -3,14 +3,19 @@
 | Name | Mapper | Notes |
 | -- | -- | -- |
 | Abadox: The Deadly Inner War | MMC1 | None |
+| Adventure Island | CNROM | None |
 | Adventure Island II | MMC3 | None |
+| Arkista's Key | CNROM | None |
 | Astyanax | MMC3 | Required original mapper modifications. |
 | Blaster Master | MMC1 | None |
 | Bucky O'Hare | MMC3 | None |
+| Bump 'n' Jump | CNROM | None |
+| CastleQuest | CNROM | None |
 | Castlevania | UNROM | Required original mapper modifications. |
 | Castlevania II: Simon's Quest | MMC1 | None |
 | [Disney's] Chip 'n Dale Rescue Rangers | MMC1 | None |
 | [Disney's] Darkwing Duck | MMC1 | None |
+| Donkey Kong Classics | CNROM | Multicart for `Donkey Kong` and `Donkey Kong Jr.` |
 | Duck Tales | UNROM | Required original mapper modifications. |
 | Felix the Cat | MMC3 | None |
 | Gauntlet II (NES Version) | MMC3 | None |
@@ -20,7 +25,11 @@
 | Mega Man | UNROM | None |
 | Mega Man 3 | MMC3 | Required original mapper modifications |
 | Mega Man 5 | MMC3 | None |
+| Mickey Mousecapade | CNROM | None |
+| Paperboy | CNROM | None |
 | Platoon | MMC1 | None |
+| Rampage | MMC3 | None |
+| Solomon's Key | CNROM | None |
 | Solstice: The Quest for the Staff of Demnos | ANROM (BNROM) | BNROM mapper works for ANROM cartridges. |
 | Super Mario Bros. 2 | MMC3 | None |
 | Super Mario Bros. 3 | MMC3 | Required original mapper modifications. |
