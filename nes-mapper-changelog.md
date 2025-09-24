@@ -44,7 +44,7 @@
 Some code was adopted from this fork of the inlretro project from this LUA - https://gitlab.com/kevinms/INL-retro-progdump/-/blob/d936b8eac92c3206f13301a7df1ac5dd36699938/host/scripts/nes/gxrom.lua
 <br/><br/>
 
-### UNROM:
+### UNROM edit 1 - `DuckTales`
 *Problem* `DuckTales (USA)` dumped; however would not load in Mesen. No data existed when viewing in a Hex Editor past the header row.
 
 *Fix:*
@@ -52,3 +52,22 @@ Some code was adopted from this fork of the inlretro project from this LUA - htt
 2. Uses bitwise logic to find safe write addresses that won't cause bus conflicts.
 3. Has multiple fallback strategies if the primary method fails.
 4. Forces proper UNROM mapper identification in the header
+
+### UNROM edit 2 - `DuckTales` and Castlevania
+*Problem* - During the 2nd round of NES testing, the Ducktales cartridge would not access bank tables correctly (at all) 
+
+*Fix:*
+1. Debugger created which showed `Bank    0       test read @ $8000:      FF FF FF FF FF FF FF FF` for every bank.
+2. Turned out the bank selection was incorrect at `$C000`. Needed to be in the `$8000-$BFFF` range.
+3. Tested on all owned UNROM mapper games (Top Gun, Mega Man, Ducktales, Castlevania).
+
+### MMC3 - Mega Man 3
+*Problem:* As with the others, it didn't seem like the mapper file was reading the banks correctly. It would read and write the header row; however, it wasn't writing the correct data and then after the header row, was nothing but `FF` inside Hex Editors.
+
+*Fix:*
+1. 
+
+### MMC1 edit 3
+*Problem:* It seemed that after each fix for another game was made, it broke a previously fixed mapper issue with another game.
+
+*Fix:*
