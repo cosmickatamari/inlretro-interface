@@ -76,10 +76,8 @@
 | Zelda II: The Adventures of Link | MMC1 | Backs Up | None |
 | Zoda's Revenge: StarTropics II | MM6 (using MMC3) | Backs Up | None |
 
-<br/><br/>
-
-### footnote-boo 
-The Battle of Olympus - Regardless of method tried, the mapper will only read `FF` for all data banks. With the exception of the header, none of the actual data is being written to the ROM file.
+### footnote-boo
+Regardless of method tried, the mapper will only read `FF` for all data banks. With the exception of the header, none of the actual data is being written to the ROM file.
 
 Modifications Attempted:
 - Standard MMC1 initialization (original working approach). 
