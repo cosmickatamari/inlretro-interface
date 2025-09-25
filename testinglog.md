@@ -78,9 +78,8 @@
 
 <br/><br/> 
 > [!IMPORTANT]
-> > I was unable to get the following cartridges to correctly dump their contents.
+> I was unable to get the following cartridges to correctly dump their contents.
 
-<br/><br/> 
 ### Battle of Olympus, The
 Regardless of method tried, the mapper will only read `FF` for all data banks. With the exception of the header, none of the actual data is being written to the ROM file.
 
