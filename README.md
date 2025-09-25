@@ -11,25 +11,16 @@ Written Using:
 
 ---
 
-As of 9/15/2025, Nintendo Entertainment System section is configured and going through testing.
-
-Project Checklist:
-- [x] Nintendo Entertainment System
-75 Completed, 1 Failure as of 9/25/2025 (99% Success)
-
-- [ ] Famicom
-
-- [ ] Super Nintendo Entertainment System
-
-- [ ] Super Famicom
-
-- [ ] Nintendo 64
-
-- [ ] Sega Genesis / Mega Drive
-
-- [ ] Gameboy
-
-- [ ] Gameboy Advance
+| Console | Success | Failure | Success Rate | Last Updated |
+| -- | -- | -- | -- | -- |
+| Nintendo Entertainment System | 75 | 1 | 99% | 9/25/2025 |
+| Famicom | | | | |
+| Super Nintendo Entertainment System | | | | |
+| Super Famicom | | | | |
+| Nintendo 64 | | | | |
+| Sega Genesis / Mega Drive | | | | |
+| Gameboy | | | | |
+| Gameboy Advance | | | | |
 
 ---
 
