@@ -10,7 +10,7 @@
 | Astyanax | MMC3 | None | Required original mapper modifications. |
 | Balloon Fight | NROM | None | None |
 | Battletoads | AOROM (using BNROM) | None | None |
-| ~~Battle of Olympus, The~~ | MMC1 | None | [Unable to dump cartridge.](#footnote-boo) |
+| ~~Battle of Olympus, The~~ | MMC1 | None | [Unable to dump cartridge.](#battle-of-olympus-the) |
 | Blaster Master | MMC1 | None | None |
 | Bubble Bobble | MMC1 | None | None |
 | Bucky O'Hare | MMC3 | None | None |
@@ -76,7 +76,12 @@
 | Zelda II: The Adventures of Link | MMC1 | Backs Up | None |
 | Zoda's Revenge: StarTropics II | MM6 (using MMC3) | Backs Up | None |
 
-### footnote-boo
+<br/><br/> 
+> [!IMPORTANT]
+> > I was unable to get the following cartridges to correctly dump their contents.
+
+<br/><br/> 
+### Battle of Olympus, The
 Regardless of method tried, the mapper will only read `FF` for all data banks. With the exception of the header, none of the actual data is being written to the ROM file.
 
 Modifications Attempted:
