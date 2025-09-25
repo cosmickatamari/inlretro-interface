@@ -14,7 +14,8 @@ Written Using:
 As of 9/15/2025, Nintendo Entertainment System section is configured and going through testing.
 
 Project Checklist:
-- [ ] Nintendo Entertainment System
+- [x] Nintendo Entertainment System
+75 Completed, 1 Failure as of 9/25/2025 (99% Success)
 
 - [ ] Famicom
 
