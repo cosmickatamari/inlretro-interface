@@ -17,17 +17,20 @@
 | [Disney's] Darkwing Duck | MMC1 | None |
 | Donkey Kong Classics | CNROM | Multicart for `Donkey Kong` and `Donkey Kong Jr.` |
 | Duck Tales | UNROM | Required original mapper modifications. |
+| Faxanadu | MMC1 | None |
 | Felix the Cat | MMC3 | None |
 | Gauntlet II (NES Version) | MMC3 | None |
 | Legacy of the Wizard | MMC3 | None |
 | Little Nemo: The Dream Master | MMC3 | None |
 | Marble Madness | ANROM (BNROM) | BNROM mapper works for ANROM cartridges. |
 | Mega Man | UNROM | None |
+| Mega Man 2 | MMC1 | None |
 | Mega Man 3 | MMC3 | Required original mapper modifications |
 | Mega Man 5 | MMC3 | None |
 | Mickey Mousecapade | CNROM | None |
 | Paperboy | CNROM | None |
 | Platoon | MMC1 | None |
+| Rad Racer | MMC1 | None |
 | Rampage | MMC3 | None |
 | Solomon's Key | CNROM | None |
 | Solstice: The Quest for the Staff of Demnos | ANROM (BNROM) | BNROM mapper works for ANROM cartridges. |
