@@ -1,5 +1,5 @@
 ### Commited Changes
-**2025 `(host/inlretro-interface-06d.ps1)`**
+**09/25/2025 `(host/inlretro-interface-06d.ps1)`**
 1. NES Database opens to a search page based on the name of the cartridge that's entered.
 2. Note on ANROM cartridges in the powershell script.
 3. Language cleanup in the powershell script.
