@@ -17,7 +17,8 @@ The files in this repository serve as modified replacements for the original sou
 The objective of this second validation cycle is to confirm stability and ensure that no further adjustments to the mapper logic or related support files are necessary.
 
 <br/>
-
+<p align="center">
+  
 ## Current Progress:
 | Console | Success | Failure | Success Rate | Last Updated |
 | -- | -- | -- | -- | -- |
@@ -30,10 +31,10 @@ The objective of this second validation cycle is to confirm stability and ensure
 | Gameboy | | | | |
 | Gameboy Advance | | | | |
 
-<br/>
+</p><br/>
 
 ## Installation:
-1. From the Releases section, download the `Original Program` package and extract its contents.
+1. From the Releases section, download both packages and extract the contents (extract `INL-retro-progdump-master` then `inlretro-interface-nes` in the same location). When prompted, **overwrite** all existing files.
 2. Connect the INL Retro Dumper to an available USB port. For testing purposes, a USB 2.0 port was intentionally used to reduce transfer speed and aid in stability verification.
 3. Navigate to the `WindowsDriverPackage\` directory and execute `dpinst64.exe` to install the required drivers.
 4. From the Releases section, download the `Current Program` package with the most recent timestamp and extract its contents into the same directory where the `Original Program` was extracted. When prompted, **overwrite** all existing files.
