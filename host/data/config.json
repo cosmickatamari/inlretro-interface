@@ -1,0 +1,9 @@
+{
+    "browserDelayMs": 500,
+    "focusRetryAttempts": 3,
+    "focusRetryDelayMs": 100,
+    "inputIdleTimeoutMs": 3000,
+    "version": "0.06d",
+    "author": "Cosmic Katamari",
+    "twitter": "@cosmickatamari"
+}
