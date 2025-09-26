@@ -165,7 +165,7 @@ function Show-Header {
 	
 	Write-Host "`n Created By:   	$($config.author)"
     Write-Host " Twitter/X:    	$($config.twitter)"
-    Write-Host "`n Last Released: 9/17/2025"
+    Write-Host "`n Last Released: 9/25/2025"
     Write-Host " Version: 	$($config.version)"
     Write-Host "`n-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-"
 	
