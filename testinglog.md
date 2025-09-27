@@ -35,10 +35,13 @@
 | Gauntlet II (NES Version) | MMC3 | None | None |
 | Ice Climber | NROM | None | None |
 | Journey to Silius | MMC1 | None | None |
+| Kid Icarus | MMC1 | None | None |
+| Kung Fu | NROM | None | None |
 | Kirby's Adventure | MMC3 | Backs Up | None |
 | Legacy of the Wizard | MMC3 | None | None |
 | Legend of Zelda, The | MMC1 | Backs Up | None |
 | Little Nemo: The Dream Master | MMC3 | None | None |
+| Life Force | UNROM | None | None |
 | Marble Madness | ANROM (using BNROM) | None | BNROM mapper works for ANROM cartridges. |
 | Mario Bros. | NROM | None | None |
 | Mega Man | UNROM | None | None |
@@ -71,6 +74,7 @@
 | Tiny Toon Adventures | MMC3 | None | None |
 | Top Gun | UNROM | None | None |
 | Ultima Exodus | MMC1 | None | None |
+| Wario's Woods | MMC3 | Backed Up | None |
 | Willow | MMC1 | None | None |
 | Wizards & Warriors | ANROM (using BNROM) | None | BNROM mapper works for ANROM cartridges. |
 | Zelda II: The Adventures of Link | MMC1 | Backs Up | None |
