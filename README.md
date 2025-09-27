@@ -22,7 +22,7 @@ The objective of this second validation cycle is to confirm stability and ensure
 ## Current Progress:
 | Console | Success | Failure | Success Rate | Last Updated |
 | -- | -- | -- | -- | -- |
-| Nintendo Entertainment System | 75 | 1 | 99% | 9/25/2025 |
+| Nintendo Entertainment System | 76 | 1 | 98.70% | 9/26/2025 |
 | Famicom | | | | |
 | Super Nintendo Entertainment System | | | | |
 | Super Famicom | | | | |
