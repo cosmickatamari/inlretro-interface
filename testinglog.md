@@ -112,7 +112,7 @@ Mapper Modifications Attempted:
 - Real NES power-on sequence (mimicking actual NES boot)
 
 ### Mappy-Land (Famicom)
-The `NAMCOT-3415` mapper is not officially documented, nor is `DxROM`, which online sources suggest as its default mapping configuration. A provisional implementation of the mapper has been placed in `hosts/scripts/nes/namcot3415.lua` for further review and refinement. The objective is for another developer to examine the code, interpret its behavior, and potentially achieve functional support. Currently, only one other title, `Family Circuit`, utilizes this mapper.
+The `NAMCOT-3415` mapper is not officially supported in INL-Retro, nor is `DxROM`, which online sources suggest as its default mapping configuration. A provisional implementation of the mapper has been placed in `hosts/scripts/nes/namcot3415.lua` for further review and refinement. Since I'm unable to get it to work, the hope is for another developer to examine the code, interpret its behavior, and potentially achieve functional support. Currently, only one other title, `Family Circuit`, utilizes this mapper.
 
 What was tested:
 - Mappers Tested:
