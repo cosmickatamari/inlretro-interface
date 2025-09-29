@@ -81,11 +81,11 @@
 ### Nintendo Famicom (Family Computer)
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
-|Final Fantasy | MMC1 | Backs Up | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
-|Final Fantasy | MMC1 | Backs Up | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
-|Final Fantasy | MMC3 | Backs Up | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
+| Final Fantasy | MMC1 | Backs Up | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
+| Final Fantasy II | MMC1 | Backs Up | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
+| Final Fantasy III | MMC3 | Backs Up | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
 | ~~Mappy-Land~~ | NAMCOT-3415 | None | [Unable to dump cartridge.](#mappy-land-famicom) |
-| Pooyan | NROM | None | None |
+| Pooyan | NROM-256 | None | Required original mapper NROM modifications. |
 | Son Son | NROM-256 | None | Required original mapper NROM modifications. |
 | Spelunker | NROM-256 | None | Required original mapper NROM modifications. |
 | Terra Cresta | UNROM | None | None |
