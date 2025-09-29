@@ -74,7 +74,7 @@
 ====
 
 ### To Do:
-~~1. Nintendo Famicom Functionality~~
+
 2. SNES Functionality
 3. Nintendo 64 Functionality
 4. Gameboy Functionality
@@ -82,7 +82,6 @@
 6. No-Intro dat comparison, file name clean up
 7. Active counter during session
 8. Stager for updated files in existing installs
-~~9. Change the browser opening for NES database from Edge to the end user's default browser.~~
 10. Log file of command used, time, etc.
 11. Allow another redump of the same cart without reentering information.
 12. RetroRGB links to how to clean cartridges (x/DM Bob for approval).
