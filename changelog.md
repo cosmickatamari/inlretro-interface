@@ -1,22 +1,38 @@
 ### Commited Changes
+**09/28/2025 `(host/inlretro-interface-07.ps1)`**
+1. Fixed several instances in `host/scripts/app/dump.lua` where op_buffer references were not properly namespaced as `dict.op_buffer`, which would otherwise result in runtime errors when accessing buffer operation constants.
+2. Successfully dumped an additional Nintendo Entertainment System cartridge, `Kung Fu`, without requiring mapper modifications.
+3. Updated interface UI and extended supported file handling to enable dumping of `Nintendo Famicom` cartridges.
+4. Modified `host/scripts/nes/nrom.lua` to correctly detect and handle the `NROM-256` mapper, enabling successful dumps of `Son Son` and `Spelunker`.
+5. Began development of a `NAMCOT-3415` mapper, referencing available documentation on `DxROM` and `MMC1` variants. Functionality remains incomplete; see NES Mapper changelog for additional details.
+6. An inital run through of all the Nintendo Famicom Family Computer Games that I own were completed.
+	- Initally five games dumped without issue.
+	- One cartridge uses a mapper not programmed with INL-Retro - `NAMCOT-3415`.
+	- Two worked after existing mapper modifications to the `NROM` mapper was done.
+7. A second run of dumping Nintendo Famicom Carts yielded the following results:
+	- Seven cartridges dumped without issue.
+	- One cartridge continues to be an issue.
+	- One Nintendo Entertainment System cartridge using the NROM mapper was also tested and working (checking on 128 and 256 detection).
+
+<br/><br/>
 **09/25/2025 `(host/inlretro-interface-06d.ps1)`**
 1. NES Database opens to a search page based on the name of the cartridge that's entered.
 2. Note on ANROM cartridges in the powershell script.
 3. Language cleanup in the powershell script.
-4. `hosts/scripts/nes/MMC1.lua` was modified due to `Final Fantasy` not running after being dumped.
-5. `hosts/scripts/nes/cnrom.lua` was modified due to `Adventure Island` showing grabbled text.
+4. `host/scripts/nes/MMC1.lua` was modified due to `Final Fantasy` not running after being dumped.
+5. `host/scripts/nes/cnrom.lua` was modified due to `Adventure Island` showing grabbled text.
 6. ~~NES Database site with inputted Game Title name will appear in Microsoft Edge for faster access.~~
-7. `hosts/scripts/nes/mhrom.lua` is a new mapper which was made for the `Super Mario Bros. & Duck Hunt` multicart.
+7. `host/scripts/nes/mhrom.lua` is a new mapper which was made for the `Super Mario Bros. & Duck Hunt` multicart.
 8. `inlretro2.lua` mapping was modified to point to the new mapper for both MHROM and GxROMs.
 9. Interface UI was also given an update for correct mapping selection.
 10. Interface UI has a festive ASCII art header now!
 11. Interface UI flow and presentation was cleaned up as cart dumping progressed.
 12. Moved referenced assets to external JSON files, allows easier modifications of assets when needed.
-13. `hosts/scripts/nes/MMC3.lua` was modified due to incompatibilities with dumping Mega Man 3 which. Additional changes were needed after `Mega Man 3` was working but `Astyanax` (which previously worked) was no longer functional.
+13. `host/scripts/nes/MMC3.lua` was modified due to incompatibilities with dumping Mega Man 3 which. Additional changes were needed after `Mega Man 3` was working but `Astyanax` (which previously worked) was no longer functional.
 14. NES database site now will open regardless of end user's default browser and will refocus on the UI without error.
-15. `hosts/scripts/nes/unrom.lua` was modified due to `Ducktales` not properly dumping. This fix caused Mega Man 3 and Castlevania not to work. Enabling automatic bank table detection instead of using a hardcoded address fixed the issue for the cartridges. Also tested were `Top Gun` and `Mega Man`.
-16. `notes/scripts/nes/mmc1.lua` was modified due to `Dragon Warrior` not properly dumping. Changing back to simple bank switching seems to have fixed the issue.
-17. An inital run through of all the Nintendo Entertainment Games that I own were completed during the mapper modification phase. Afterwards, another dump of all the cartridges again were performed grouping them by mapper. This resulted in 2 mappers needing to be modified `UNROM` and `MMC1`. The end result being that `75 games were successful` and `1 was never able to be dumped`.
+15. `host/scripts/nes/unrom.lua` was modified due to `Ducktales` not properly dumping. This fix caused Mega Man 3 and Castlevania not to work. Enabling automatic bank table detection instead of using a hardcoded address fixed the issue for the cartridges. Also tested were `Top Gun` and `Mega Man`.
+16. `host/scripts/nes/mmc1.lua` was modified due to `Dragon Warrior` not properly dumping. Changing back to simple bank switching seems to have fixed the issue.
+17. An inital run through of all the Nintendo Entertainment Games that I own were completed during the mapper modification phase. Afterwards, another dump of all the cartridges again were performed grouping them by mapper. This resulted in 2 mappers needing to be modified again `UNROM` and `MMC1`. The end result being that `75 games were successful` and `1 was never able to be dumped`.
 
 <br/><br/>
 **09/15/2025 `(inlretro-interface-05.ps1)`**
@@ -58,6 +74,7 @@
 ====
 
 ### To Do:
+~~1. Nintendo Famicom Functionality~~
 2. SNES Functionality
 3. Nintendo 64 Functionality
 4. Gameboy Functionality
@@ -65,4 +82,7 @@
 6. No-Intro dat comparison, file name clean up
 7. Active counter during session
 8. Stager for updated files in existing installs
-9. Change the browser opening for NES database from Edge to the end user's default browser.
+~~9. Change the browser opening for NES database from Edge to the end user's default browser.~~
+10. Log file of command used, time, etc.
+11. Allow another redump of the same cart without reentering information.
+12. RetroRGB links to how to clean cartridges (x/DM Bob for approval).

@@ -74,6 +74,7 @@ function nes_exec(process_opts, console_opts)
         fme7 = require "scripts.nes.fme7",
         gtrom = require "scripts.nes.gtrom",
         mapper30 = require "scripts.nes.mapper30",
+		namcot3415 = require "scripts.nes.namcot3415",
         mapper30v2 = require "scripts.nes.mapper30v2",
         gxrom = require "scripts.nes.mhrom",
         mmc1 = require "scripts.nes.mmc1",

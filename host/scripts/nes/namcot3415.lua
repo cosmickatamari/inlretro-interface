@@ -14,12 +14,12 @@ local ciccom = require "scripts.app.ciccom"
 local buffers = require "scripts.app.buffers"
 
 -- file constants
-local mapname = "NROM"
+local mapname = "NAMCOT-3415"
 
--- Enhanced detection variables
-local is_nrom256 = false
-local detected_prg_size = 16
-local detected_chr_size = 8
+-- Mappy-Land specific settings (large ROMs for 161KB total)
+local is_nrom256 = true  -- Force NROM-256 for large PRG
+local detected_prg_size = 128  -- Mappy-Land has 128KB PRG ROM
+local detected_chr_size = 32   -- Mappy-Land has 32KB CHR ROM
 
 -- local functions
 
@@ -59,26 +59,14 @@ local function detect_nrom_type()
         end
     end
     
-    -- Check if this might be Son Son (force NROM-256 for problematic cartridges)
-    local prg_test1 = dict.nes("NES_CPU_RD", 0x8000)
-    local prg_test2 = dict.nes("NES_CPU_RD", 0xC000)
-    
-    -- If the first bytes are different, it's likely NROM-256
-    if prg_test1 ~= prg_test2 then
+    if identical then
+        print("Detected NROM-128: Data is mirrored (16KB PRG ROM)")
+        is_nrom256 = false
+        detected_prg_size = 16
+    else
         print("Detected NROM-256: Data is unique (32KB PRG ROM)")
         is_nrom256 = true
         detected_prg_size = 32
-    else
-        -- Check if this might be Son Son (known to need NROM-256)
-        if prg_test1 == 0xF9 or prg_test1 == 0x78 then  -- Common Son Son start bytes
-            print("Detected Son Son - forcing NROM-256 (32KB PRG ROM)")
-            is_nrom256 = true
-            detected_prg_size = 32
-        else
-            print("Detected NROM-128: Data is mirrored (16KB PRG ROM)")
-            is_nrom256 = false
-            detected_prg_size = 16
-        end
     end
     
     -- Test CHR ROM/RAM detection more thoroughly
@@ -113,60 +101,52 @@ local function create_header( file, prgKB, chrKB )
     local actual_prg_kb = detected_prg_size
     local actual_chr_kb = detected_chr_size
     
-    -- Try horizontal mirroring for Son Son (NROM-256 with horizontal scrolling)
+    -- Set mirroring based on NROM type detection
     local mirroring
     if is_nrom256 then
-        mirroring = "HORZ"
-        print("Forcing horizontal mirroring for NROM-256 (Son Son specific)")
+        -- Use vertical mirroring (from assembly code) - this was working
+        mirroring = "VERT"  -- Vertical mirroring (from assembly)
+        print("Using vertical mirroring for NROM-256 (from assembly)")
     else
-        -- Use detected mirroring for NROM-128
+        -- NROM-128 uses detected mirroring
         local detected = nes.detect_mapper_mirroring()
         if detected == "1SCNV" then
             mirroring = "VERT"
-            print("Using detected vertical mirroring for NROM-128")
         else
             mirroring = "HORZ"
-            print("Using detected horizontal mirroring for NROM-128")
         end
+        print("Using detected mirroring for NROM-128: " .. mirroring)
     end
     
     print(string.format("Creating header: PRG=%dKB, CHR=%dKB, Mirroring=%s", actual_prg_kb, actual_chr_kb, mirroring))
     
-    -- Create proper header based on detection
-    print("DEBUG: write_header called with mapper=" .. dict.op_buffer[mapname] .. ", mirroring=" .. mirroring)
-    nes.write_header( file, actual_prg_kb, actual_chr_kb, dict.op_buffer[mapname], mirroring)
+    -- Try mapper 2 (UNROM) - simple mapper
+    print("DEBUG: write_header called with mapper=2 (UNROM), mirroring=" .. mirroring)
+    nes.write_header( file, actual_prg_kb, actual_chr_kb, 2, mirroring)
 end
 
--- Enhanced PRG ROM dump with size detection
+-- Simple PRG ROM dump for 128KB
 local function dump_prgrom( file, rom_size_KB, debug )
     local actual_size_kb = detected_prg_size
-    local KB_per_read = 32
     
-    -- Handle 16KB NROM-128
-    if actual_size_kb < KB_per_read then 
-        KB_per_read = actual_size_kb 
-    end
-
+    print(string.format("Dumping PRG ROM: %dKB using simple approach", actual_size_kb))
+    
+    -- Try simple approach - just read the full 128KB at once
+    local KB_per_read = 32  -- Try larger chunks
     local num_reads = actual_size_kb / KB_per_read
     local read_count = 0
     local addr_base = 0x08    -- $8000
-
-    print(string.format("Dumping PRG ROM: %dKB in %d reads", actual_size_kb, num_reads))
-
+    
     while ( read_count < num_reads ) do
         if debug then 
             print( "dump PRG part ", read_count, " of ", num_reads) 
         end
-
+        
         dump.dumptofile( file, KB_per_read, addr_base, "NESCPU_4KB", false )
-
         read_count = read_count + 1
     end
     
-    -- Skip Reset Vector fix - both Spelunker and Son Son work better without it
-    if false and is_nrom256 then
-        print("Reset Vector fix disabled - using original vectors")
-    end
+    print("Simple PRG ROM dump completed")
 end
 
 -- Enhanced CHR ROM dump with detection
@@ -194,28 +174,22 @@ local function dump_chrrom( file, rom_size_KB, debug )
     if chr_test2 == 0xFF then ff_count = ff_count + 1 end
     if chr_test3 == 0xFF then ff_count = ff_count + 1 end
     
-    -- Use standard CHR ROM reading (was working but with flashing)
+    -- Try standard CHR ROM reading for Mappy-Land
     is_irem_cart = false
-    print("Using standard CHR ROM reading for all cartridges")
+    print("Using standard CHR ROM reading for Mappy-Land")
     
     if is_irem_cart then
-        -- Multiple-pass method with enhanced PPU initialization
+        -- Multiple-pass method for IREM cartridges (Spelunker)
         dict.nes("NES_PPU_WR", 0x2000, 0x00)  -- Reset PPU control
         dict.nes("NES_PPU_WR", 0x2001, 0x00)  -- Reset PPU mask
         
-        -- Additional PPU initialization for problematic cartridges like Son Son
-        dict.nes("NES_PPU_WR", 0x2000, 0x80)  -- Set PPU control with NMI enable
-        dict.nes("NES_PPU_WR", 0x2000, 0x00)  -- Reset again
-        dict.nes("NES_PPU_WR", 0x2001, 0x1E)  -- Set PPU mask with rendering enabled
-        dict.nes("NES_PPU_WR", 0x2001, 0x00)  -- Reset mask
-        
         local chr_data = {}
-        local num_passes = 2
+        local num_passes = 3
         
         for pass = 1, num_passes do
             if debug then print("CHR ROM read pass", pass, "of", num_passes) end
             
-            for i = 0x0000, 0x1FFF, 1 do
+            for i = 0x0000, 0x7FFF, 1 do  -- 32KB = 0x0000-0x7FFF
                 local val = dict.nes("NES_PPU_RD", i)
                 
                 if pass == 1 then
@@ -231,42 +205,39 @@ local function dump_chrrom( file, rom_size_KB, debug )
                     end
                 end
                 
-                if (i % 0x400 == 0) and debug then 
-                    print("CHR ROM pass", pass, "progress:", string.format("%X", i), "of 1FFF")
+                if (i % 0x1000 == 0) and debug then 
+                    print("CHR ROM pass", pass, "progress:", string.format("%X", i), "of 7FFF")
                 end
             end
         end
         
         -- Write the final CHR data
-        for i = 0x0000, 0x1FFF, 1 do
+        for i = 0x0000, 0x7FFF, 1 do  -- 32KB = 0x0000-0x7FFF
             file:write(string.char(chr_data[i]))
         end
         file:flush()
         
         if debug then print("CHR ROM dump completed with multiple passes") end
     else
-        -- Direct byte-by-byte CHR ROM reading with timing delays
-        print("Using direct byte-by-byte CHR ROM reading with delays")
+        -- Try standard CHR ROM reading - this might have been working originally
+        print("Using standard CHR ROM reading for Mappy-Land")
         
-        for i = 0x0000, 0x1FFF, 1 do  -- 8KB = 0x0000-0x1FFF
-            local val = dict.nes("NES_PPU_RD", i)
-            file:write(string.char(val))
-            
-            -- Add small delay every 256 bytes for stability
-            if (i % 0x100 == 0) then
-                -- Small delay to ensure stable reading
-                for delay = 1, 10 do
-                    -- Just a small delay loop
-                end
+        local KB_per_read = 8
+        local num_reads = actual_chr_kb / KB_per_read
+        local read_count = 0
+        local addr_base = 0x00    -- $0000
+        
+        while ( read_count < num_reads ) do
+            if debug then 
+                print( "dump CHR part ", read_count, " of ", num_reads) 
             end
             
-            if (i % 0x400 == 0) and debug then 
-                print("CHR ROM progress:", string.format("%X", i), "of 1FFF")
-            end
+            dump.dumptofile( file, KB_per_read, addr_base, "NESPPU_1KB", false )
+            
+            read_count = read_count + 1
         end
-        file:flush()
         
-        if debug then print("CHR ROM dump completed with direct byte-by-byte reading and delays") end
+        if debug then print("CHR ROM dump completed with standard reading") end
     end
 end
 
@@ -435,15 +406,16 @@ local function process(process_opts, console_opts)
     dict.io("IO_RESET")
     dict.io("NES_INIT")
 
-    -- Detect NROM type first
-    detect_nrom_type()
+    -- Skip NROM type detection - use hardcoded Mappy-Land values
+    print("Using hardcoded Mappy-Land settings: 128KB PRG, 32KB CHR, NROM-256")
+    -- detect_nrom_type()  -- Disabled for Mappy-Land
 
 --test the cart
     if test then
         print("Testing ", mapname, is_nrom256 and " (NROM-256)" or " (NROM-128)")
 
         nes.detect_mapper_mirroring(true)
-        print("EXP0 pull-up test:", dict.io("EXP0_PULLUP_TEST"))    
+        print("EXP0 pull-up test:", dict.io("EXP0_PULLUP_TEST"))
 
         prgrom_manf_id(true)
         chrrom_manf_id(true)

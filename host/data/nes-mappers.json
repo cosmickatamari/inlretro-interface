@@ -17,6 +17,7 @@
     "MMC3",
     "MMC4",
     "MMC5",
+	"NAMCOT3415",
     "NROM",
     "UNROM",
     "UNROM_TSOP"
