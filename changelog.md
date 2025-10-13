@@ -1,10 +1,29 @@
 ### Commited Changes
+**10/12/2025 `(host/inlretro-interface-08c.ps1)`**
+1. Optimized the section for dumping `Nintendo Entertainment System` and `Famicom` system cartridges. Since they both use the same mappers, but will save in seperate folders based on the selected console.
+2. Cleaned up the `Super Nintendo Entertainment System` dumper section to match more of the `Nintendo Entertainment System` section. This section has not been tested yet and will more than likely have additional modifications.
+3. Cleaned up the code for the browser open/refresh whenever opening `NEScartDB`.
+4. Made it easier if someone wants to change the timing for the browser window to open and refresh back to the UI.
+5. Made a change to where only a console folder that doesn't exist is created whenever that console is referenced.
+6. Implemented a (hopefully) graceful exit in the event of a crash (ie. USB device hangs).
+7. Some display optimization and tweaking (mainly formatting).
+8. Removed the need for the supporting file `host/data/config.json`.
+9. Added the option to redump the same cartridge again using the same parameters without needing to reenter the needed cartridge information. File names will be incremental, example:
+	- `Adventure Island.nes`
+	- `Adventure Island-dump1.nes`
+	- `Adventure Island-dump2.nes`
+10. Added an option to exit the script at the end a cartridge dump or at the main menu.
+11. Give the option to quickly access RetroRGB's cartridge cleaning article (https://www.retrorgb.com/cleangames.html) during the redumping period.
+12. Added a session counter to monitor how many cartridge dumps have been performed. Count does not persist.
+
+
+<br/><br/>
 **09/28/2025 `(host/inlretro-interface-07.ps1)`**
-1. Fixed several instances in `host/scripts/app/dump.lua` where op_buffer references were not properly namespaced as `dict.op_buffer`, which would otherwise result in runtime errors when accessing buffer operation constants.
+1. Fixed several instances in `host/scripts/app/dump.lua` where `op_buffer` references were not properly namespaced as `dict.op_buffer`, which would otherwise result in runtime errors when accessing buffer operation constants.
 2. Successfully dumped an additional Nintendo Entertainment System cartridge, `Kung Fu`, without requiring mapper modifications.
 3. Updated interface UI and extended supported file handling to enable dumping of `Nintendo Famicom` cartridges.
 4. Modified `host/scripts/nes/nrom.lua` to correctly detect and handle the `NROM-256` mapper, enabling successful dumps of `Son Son` and `Spelunker`.
-5. Began development of a `NAMCOT-3415` mapper, referencing available documentation on `DxROM` and `MMC1` variants. Functionality remains incomplete; see NES Mapper changelog for additional details.
+5. Began development of a `NAMCOT-3415` mapper, referencing available documentation from `DxROM` and `MMC1` variants. Functionality remains incomplete; see NES Mapper changelog (`changelog-nes-mappers.md`) for additional details.
 6. An inital run through of all the Nintendo Famicom Family Computer Games that I own were completed.
 	- Initally five games dumped without issue.
 	- One cartridge uses a mapper not programmed with INL-Retro - `NAMCOT-3415`.
@@ -12,7 +31,7 @@
 7. A second run of dumping Nintendo Famicom Carts yielded the following results:
 	- Seven cartridges dumped without issue.
 	- One cartridge continues to be an issue.
-	- One Nintendo Entertainment System cartridge using the NROM mapper was also tested and working (checking on 128 and 256 detection).
+	- One Nintendo Entertainment System cartridge using the `NROM` mapper was also tested and working (checking on 128 and 256 detection).
 
 <br/><br/>
 **09/25/2025 `(host/inlretro-interface-06d.ps1)`**
@@ -80,8 +99,4 @@
 4. Gameboy Functionality
 5. Sega Genesis Functionality
 6. No-Intro dat comparison, file name clean up
-7. Active counter during session
-8. Stager for updated files in existing installs
 10. Log file of command used, time, etc.
-11. Allow another redump of the same cart without reentering information.
-12. RetroRGB links to how to clean cartridges (x/DM Bob for approval).

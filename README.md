@@ -1,23 +1,32 @@
 # inlretro-interface
 
-PowerShell interface for the INL-Retro Dumper / Programmer.
-https://www.infiniteneslives.com/inlretro.php
+## INL Retro Dumper Interface 
+### An interactive cartridge dumping tool
+	
+## About:
+Interactive PowerShell interface for dumping retro game cartridges using the INL Retro Dumper hardware. Supports multiple cartridge based systems from the 8 and 16 bit era.
 
+## Links (non affiliated):
+ - Cart dumper purchase link: https://www.infiniteneslives.com/inlretro.php
+ - Original Author's Project: https://gitlab.com/InfiniteNesLives/INL-retro-progdump
+ - 3D printed case purchase link: (need to upload)
+ - 3D printed case can self-printed link: https://www.printables.com/model/2808-inlretro-dumper-programmer-case-v2
+
+<br/><br/>
 Written and tested using:
 
 * Windows 11 24H2
 * PowerShell 7.5.3
 * INL Retro firmware 2.3.x
 
-<br/>
-
+<br/><br/>
 The files in this repository serve as modified replacements for the original sources. These modifications were required to enable proper data extraction from specific cartridges. While I do not possess every commercially released cartridge, a comprehensive list of tested titles is included for reference. Each cartridge undergoes a minimum of two validation passes (provided an initial dump is successful). 
+
 1. The first pass occurs during the initial data write.
 2. The second occurs after all cartridges in my collection for a given platform have been processed.
 The objective of this second validation cycle is to confirm stability and ensure that no further adjustments to the mapper logic or related support files are necessary.
 
-<br/>
-
+<br/><br/>
 ## Current Progress:
 | Console | Success | Failure | Success Rate | Last Updated |
 | -- | -- | -- | -- | -- |
@@ -30,8 +39,7 @@ The objective of this second validation cycle is to confirm stability and ensure
 | Nintendo Gameboy | | | | |
 | Nintendo Gameboy Advance | | | | |
 
-<br/>
-
+<br/><br/>
 ## Installation:
 1. From the Releases section, download the `Original Program` package and extract its contents.
 2. Connect the INL Retro Dumper to an available USB port. For testing purposes, a USB 2.0 port was intentionally used to reduce transfer speed and aid in stability verification.
