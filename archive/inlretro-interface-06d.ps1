@@ -1,6 +1,6 @@
 ﻿# INL Retro Dumper Interface
 # By Cosmic Katamari (@cosmickatamari)
-# Last Updated: 09/17/2025
+# Last Updated: 09/25/2025
 
 # PowerShell 7.x check
 if ($PSVersionTable.PSVersion.Major -lt 7) {
@@ -58,70 +58,73 @@ function Restore-WindowForce {
 }
 # ----------------------------------------------------------------------------
 
-# Minimal helper to open Edge and come back
-function Open-UrlInEdge-AndReturn {
+# Minimal helper to open URL in default browser and return focus
+function Open-UrlInDefaultBrowser-AndReturn {
     param(
         [Parameter(Mandatory)][string]$Url,
-        [int]$DelayMs = 350  # tweak 250–500 if needed for your box
+        [int]$DelayMs = 500
     )
 
     $prevHwnd = Get-CallerHwnd
+    
+    # Store current window state (for potential future use)
+    # $wasMinimized = [Win32FocusForce]::IsIconic($prevHwnd)
 
-    # Quote the URL so spaces/apostrophes don't split into multiple args
-    Start-Process -FilePath "msedge.exe" -ArgumentList @("`"$Url`"")
+    # Open URL in default browser
+    Start-Process $Url
 
-    # Tiny delay so Edge can steal focus, then we take it back
+    # Wait for browser to load and steal focus
     Start-Sleep -Milliseconds $DelayMs
-    Restore-WindowForce -Hwnd $prevHwnd
+    
+    # Force focus back with multiple attempts
+    for ($i = 0; $i -lt 3; $i++) {
+        Restore-WindowForce -Hwnd $prevHwnd
+        Start-Sleep -Milliseconds 100
+    }
 }
 
-# Checking for and creating dumping folder locations.
-$null = New-Item -ItemType Directory -Path ".\ignore" -Force
-$null = New-Item -ItemType Directory -Path ".\games\nes\sram" -Force
-$null = New-Item -ItemType Directory -Path ".\games\snes\sram" -Force
-$null = New-Item -ItemType Directory -Path ".\games\n64\sram" -Force
-$null = New-Item -ItemType Directory -Path ".\games\gameboy\sram" -Force
-$null = New-Item -ItemType Directory -Path ".\games\genesis\sram" -Force
+# Initialize data directory and load external data files
+$dataDir = Join-Path $PSScriptRoot "data"
+$null = New-Item -ItemType Directory -Path $dataDir -Force
 
-$NESmapperMenu = @(
-    'Action53',
-    'Action53_TSOP',
-    'BNROM',
-    'CDREAM',
-    'CNINJA',
-    'CNROM',
-    'DualPort',
-    'EasyNSF',
-    'FME7',
-	'GTROM',
-	'GxROM',
-    'Mapper30',
-    'Mapper30v2',
-    'MMC1',
-	'MMC2',
-    'MMC3',
-    'MMC4',
-    'MMC5',
-    'NROM',
-    'UNROM', 
-	'UNROM_TSOP'
+# Load external data files - required for script operation
+try {
+    $NESmapperMenu = Get-Content (Join-Path $dataDir "nes-mappers.json") -ErrorAction Stop | ConvertFrom-Json
+    $consoleMap = Get-Content (Join-Path $dataDir "consoles.json") -ErrorAction Stop | ConvertFrom-Json
+    $config = Get-Content (Join-Path $dataDir "config.json") -ErrorAction Stop | ConvertFrom-Json
+    Write-Host "Configuration and data files loaded successfully." -ForegroundColor Green
+} catch {
+    Write-Error "Failed to load required data files from $dataDir"
+    Write-Error "Please ensure the following files exist:"
+    Write-Error "  - nes-mappers.json"
+    Write-Error "  - consoles.json" 
+    Write-Error "  - config.json"
+    Write-Error "Error details: $($_.Exception.Message)"
+    exit 1
+}
+
+# Create dumping folder locations efficiently
+$directories = @(
+    ".\ignore",
+    ".\games\nes\sram",
+    ".\games\snes\sram", 
+    ".\games\n64\sram",
+    ".\games\gameboy\sram",
+    ".\games\genesis\sram"
 )
 
-$consoleMap = @{
-	1 = "Nintendo Entertainment System"
-	2 = "Super Nintendo Entertainment System"
-	3 = "Nintendo 64"
-	4 = "Gameboy"
-	5 = "Sega Genesis"
+$directories | ForEach-Object { 
+    $null = New-Item -ItemType Directory -Path $_ -Force 
 }
 
-function Read-Int([string]$prompt){
+function Read-Int([string]$prompt, [int]$minValue = [int]::MinValue, [int]$maxValue = [int]::MaxValue){
     while($true){
         $raw = Read-Host $prompt
-        if([int]::TryParse($raw, [ref]([int]$null))){
-            return [int]$raw
+        $result = 0
+        if([int]::TryParse($raw, [ref]$result) -and $result -ge $minValue -and $result -le $maxValue){
+            return $result
         }
-        Write-Host "Please enter a valid selection." -ForegroundColor Yellow
+        Write-Host "Please enter a valid number between $minValue and $maxValue." -ForegroundColor Yellow
     }
 }
 
@@ -141,7 +144,7 @@ function Read-KB-MultipleOf4([string]$prompt){
     }
 }
 
-function Pause-Continue {
+function Wait-ForUserInput {
     Read-Host
 }
 
@@ -160,10 +163,10 @@ function Show-Header {
 	Write-Host "  || | | | | |_| __/ |  |  _| (_| | (_|  __/"
 	Write-Host " |__||_| |_|\__\___|_|  |_|  \____|\___\___|"
 	
-	Write-Host "`n Created By:   	Cosmic Katamari"
-    Write-Host " Twitter/X:    	@cosmickatamari"
-    Write-Host "`n Last Released: 9/17/2025"
-    Write-Host " Version: 	0.06c"
+	Write-Host "`n Created By:   	$($config.author)"
+    Write-Host " Twitter/X:    	$($config.twitter)"
+    Write-Host "`n Last Released: 9/25/2025"
+    Write-Host " Version: 	$($config.version)"
     Write-Host "`n-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-"
 	
 	$Host.UI.RawUI.ForegroundColor = 'White'
@@ -179,15 +182,8 @@ function Select-Console {
     Write-Host " 5 - Sega Genesis" -ForegroundColor DarkGray
     Write-Host
 	
-    while ($true) {
-        $choice = Read-Int "Selection"
-        if ($consoleMap.ContainsKey($choice)) {
-            return $consoleMap[$choice]
-        }
-        else {
-            Write-Host "Please choose a between 1-5." -ForegroundColor Yellow
-        }
-    }
+    $choice = Read-Int "Selection" -minValue 1 -maxValue 5
+    return $consoleMap.($choice.ToString())
 }
 
 function Get-CartridgeName {
@@ -204,8 +200,8 @@ function Select-Mapper {
 	$encoded = [uri]::EscapeDataString($cartridge)
 	$url     = $baseurl + $encoded + $endurl
 
-    # Open Edge and return focus to the script (not always working)
-	Open-UrlInEdge-AndReturn -Url $url -DelayMs 750
+    # Open default browser and return focus to the script
+	Open-UrlInDefaultBrowser-AndReturn -Url $url -DelayMs 750
 
 	Show-Header
 	Write-Host "`nFor quicker access, the NES database has opened to the search results from the game title." -ForegroundColor Blue
@@ -246,8 +242,21 @@ function Select-Mapper {
     }
 }
 
-function Run-INL {
-    param([string[]]$ArgsArray)
+function Invoke-INLRetro {
+    param(
+        [string[]]$ArgsArray,
+        [string]$CartDest,
+        [string]$SramDest,
+        [string]$HasSRAM
+    )
+
+    $exePath = Join-Path $PSScriptRoot 'inlretro.exe'
+    
+    # Check if executable exists
+    if (-not (Test-Path $exePath)) {
+        Write-Error "inlretro.exe not found at $exePath"
+        return
+    }
 
     $pretty = (
         $ArgsArray | ForEach-Object {
@@ -256,27 +265,34 @@ function Run-INL {
     ) -join ' '
 
     Write-Host "`nProgram and argument call used:" -ForegroundColor Blue
-	Write-Host ".\inlretro.exe $pretty" -ForegroundColor Blue
-	& (Join-Path $PSScriptRoot 'inlretro.exe') @ArgsArray
-	Write-Host
+    Write-Host ".\inlretro.exe $pretty" -ForegroundColor Blue
+    
+    try {
+        & $exePath @ArgsArray
+        $exitCode = $LASTEXITCODE
+    } catch {
+        Write-Error "Failed to execute inlretro.exe: $($_.Exception.Message)"
+        $exitCode = -1
+    }
+    
+    Write-Host
 
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "inlretro.exe exited with code $LASTEXITCODE." -ForegroundColor Red
-		Write-Host "`nThe cartridge could not be dumped." -ForegroundColor Red
-		} else {
-		
-		Write-Host "`nYour cartridge dump is located at $cartdest." -ForegroundColor Green
-		
-		if ($hasSRAM -eq 'y') {
-			Write-Host "Your save data is located at $sramdest." -ForegroundColor Green
-			Write-Host "It will work with EverDrives and Emulators (such as Mesen)." -ForegroundColor Green
-		}
-		
-		Write-Host "`nIt is safe to remove the cartridge." -ForegroundColor Cyan
-		Write-Host "Pressing [ENTER] will restart the application, allowing for the next cartridge to be dumped." -ForegroundColor Cyan
-	}
-	
-	Pause-Continue
+    if ($exitCode -ne 0) {
+        Write-Host "inlretro.exe exited with code $exitCode." -ForegroundColor Red
+        Write-Host "`nThe cartridge could not be dumped." -ForegroundColor Red
+    } else {
+        Write-Host "`nYour cartridge dump is located at $CartDest." -ForegroundColor Green
+        
+        if ($HasSRAM -eq 'y') {
+            Write-Host "Your save data is located at $SramDest." -ForegroundColor Green
+            Write-Host "It will work with EverDrives and Emulators (such as Mesen)." -ForegroundColor Green
+        }
+        
+        Write-Host "`nIt is safe to remove the cartridge." -ForegroundColor Cyan
+        Write-Host "Pressing [ENTER] will restart the application, allowing for the next cartridge to be dumped." -ForegroundColor Cyan
+    }
+    
+    Wait-ForUserInput
 }
 
 # -------------------------------- Main Loop ---------------------------------
@@ -321,26 +337,26 @@ while($true){
 				$argsArray += @('-a', "$sramdest", '-w', '8') 
 				}
 
-			Run-INL $argsArray
+			Invoke-INLRetro -ArgsArray $argsArray -CartDest $cartdest -SramDest $sramdest -HasSRAM $hasSRAM
 			}
 		
         2 {  # SNES
             $dest = ".\games\snes\$cartridge.sfc"
             $sram = ".\games\snes\sram\$cartridge.srm"
-            Run-INL "-s scripts/inlretro2.lua -c SNES -d `"$dest`" -a `"$sram`""
-            Pause-Continue
+            $argsArray = @('-s', 'scripts/inlretro2.lua', '-c', 'SNES', '-d', $dest, '-a', $sram)
+            Invoke-INLRetro -ArgsArray $argsArray -CartDest $dest -SramDest $sram -HasSRAM 'y'
         }
         3 {  # N64 (placeholder)
             Write-Host "Add args as needed." -ForegroundColor Yellow
-            Pause-Continue
+            Wait-ForUserInput
         }
         4 {  # Gameboy / GBA (placeholder)
             Write-Host "Add args as needed." -ForegroundColor Yellow
-            Pause-Continue
+            Wait-ForUserInput
         }
         5 {  # Sega Genesis (placeholder)
             Write-Host "Add args as needed." -ForegroundColor Yellow
-            Pause-Continue
+            Wait-ForUserInput
         }
 	}
 }
