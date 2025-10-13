@@ -13,7 +13,7 @@
 	- `Adventure Island-dump1.nes`
 	- `Adventure Island-dump2.nes`
 10. Added an option to exit the script at the end a cartridge dump or at the main menu.
-11. Give the option to quickly access RetroRGB's cartridge cleaning article (https://www.retrorgb.com/cleangames.html) during the redumping period.
+11. Give the option to quickly access `RetroRGB`'s cartridge cleaning article (https://www.retrorgb.com/cleangames.html) during the redumping period.
 12. Added a session counter to monitor how many cartridge dumps have been performed. Count does not persist.
 
 
