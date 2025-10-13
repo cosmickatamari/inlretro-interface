@@ -1,30 +1,24 @@
 # inlretro-interface
 
-## INL Retro Dumper Interface 
-### An interactive cartridge dumping tool
-	
-## About:
-Interactive PowerShell interface for dumping retro game cartridges using the INL Retro Dumper hardware. Supports multiple cartridge based systems from the 8 and 16 bit era.
-
-## Links (non affiliated):
- - Cart dumper purchase link: https://www.infiniteneslives.com/inlretro.php
- - Original Author's Project: https://gitlab.com/InfiniteNesLives/INL-retro-progdump
- - 3D printed case purchase link: (need to upload)
- - 3D printed case can self-printed link: https://www.printables.com/model/2808-inlretro-dumper-programmer-case-v2
+## Overview:
+This project provides an interactive PowerShell interface for dumping retro game cartridges using the INL Retro Dumper hardware. The hardware supports a wide range of 8-bit and 16-bit cartridge-based systems, and this software aims to make the dumping process straightforward, reliable, and easy to use.
 
 <br/><br/>
-Written and tested using:
+## About the Modifications:
+This project contains modified versions of the original support files used by the INL Retro Dumper software. These changes were necessary to enable accurate data extraction from cartridges that did not function correctly with the stock configuration. All modifications are fully documented and serve as drop-in replacements for the original sources. By extending the original software, this project improves compatibility and reliability for specific cartridges. If you fork or adapt this project for your own development, please give appropriate credit.
 
+Written and tested using:
 * Windows 11 24H2
 * PowerShell 7.5.3
 * INL Retro firmware 2.3.x
 
 <br/><br/>
-The files in this repository serve as modified replacements for the original sources. These modifications were required to enable proper data extraction from specific cartridges. While I do not possess every commercially released cartridge, a comprehensive list of tested titles is included for reference. Each cartridge undergoes a minimum of two validation passes (provided an initial dump is successful). 
+## Cartridge Testing & Validation:
+While not every commercially released cartridge is available for testing, a comprehensive list of verified titles is included for reference. Each tested cartridge undergoes at least two validation passes (assuming the initial dump completes successfully):
+- First Pass: Performed during the initial data write.
+- Second Pass: Conducted after all cartridges in the collection for a given platform have been processed.
 
-1. The first pass occurs during the initial data write.
-2. The second occurs after all cartridges in my collection for a given platform have been processed.
-The objective of this second validation cycle is to confirm stability and ensure that no further adjustments to the mapper logic or related support files are necessary.
+The purpose of this second validation cycle is to verify overall stability and confirm that no further adjustments to mapper logic or support files are required.
 
 <br/><br/>
 ## Current Progress:
@@ -46,3 +40,17 @@ The objective of this second validation cycle is to confirm stability and ensure
 3. Navigate to the `WindowsDriverPackage\` directory and execute `dpinst64.exe` to install the required drivers.
 4. From the Releases section, download the `Current Program` package with the most recent timestamp and extract its contents into the same directory where the `Original Program` was extracted. When prompted, **overwrite** all existing files.
 5. Launch the script `inlretro-interface.ps1` located in the `host\` folder with the most recent date to begin usage.
+
+<br/><br/>
+## Links (non affiliated):
+- Cart dumper purchase link: https://www.infiniteneslives.com/inlretro.php
+- Original Author's Project: https://gitlab.com/InfiniteNesLives/INL-retro-progdump
+- 3D printed case purchase link: (need to upload)
+- 3D printed case can self-printed link: https://www.printables.com/model/2808-inlretro-dumper-programmer-case-v2
+
+<br/><br/>
+## Disclaimer:
+- This project is not affiliated with INL or any commercial entity.
+- The software and modifications are intended solely for personal backup, preservation, and research purposes.
+- Use responsibly and ensure that you own any cartridges you dump; the repository does not provide copyrighted ROMs.
+- **No warranty is provided; use at your own risk.**
