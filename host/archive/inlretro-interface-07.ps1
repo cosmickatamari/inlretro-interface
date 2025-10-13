@@ -1,6 +1,6 @@
 ﻿# INL Retro Dumper Interface
 # By Cosmic Katamari (@cosmickatamari)
-# Last Updated: 09/28/2025
+# Last Updated: 09/17/2025
 
 # PowerShell 7.x check
 if ($PSVersionTable.PSVersion.Major -lt 7) {
