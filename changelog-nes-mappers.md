@@ -1,4 +1,4 @@
-(Last Updated: 09/28/2025)
+(Last Updated: 10/13/2025)
 
 ### CNROM:
 *Issue:* `Adventure Island` (and some other CNROM games) looked scrambled because the dumper was writing bank numbers to the wrong addresses. On CNROM, if the ROM doesn’t contain `FF` at that spot, the number gets corrupted (bus conflict).
@@ -84,10 +84,10 @@ Some code was adopted from this fork of the inlretro project from this LUA - htt
 *Resolution:*
 1. Implemented a debugger, which consistently reported: `Bank    0       test read @ $8000:      FF FF FF FF FF FF FF FF` across all banks.
 2. Identified incorrect bank selection at $C000; corrected to use the $8000–$BFFF address range.
-3. Verified fix against all available UNROM titles in the collection (Top Gun, Mega Man, DuckTales, Castlevania).
+3. Verified fix against all available UNROM titles in the collection (`Top Gun`, `Mega Man`, `DuckTales`, `Castlevania`).
 <br/><br/>
 
-### NROM - Edit 2: `Son Son` and `Spelunker`
+### NROM - Edit 2: `Son Son` and `Spelunker` (Famicom)
 *Issue:* `Son Son` and `Spelunker` cartridges failed to provide valid data past the iNES header, resulting in truncated and incomplete ROM dumps.
 
 *Resolution:*
