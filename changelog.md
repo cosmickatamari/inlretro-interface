@@ -1,5 +1,21 @@
 ### Commited Changes
-**10/12/2025 `(host/inlretro-interface-08c.ps1)`**
+**10/15/2025 `(host/inlretro-interface-08f.ps1)`**
+1. Added logging feature.
+	- Logs are now saved in the `logs` directory with the name `interface-cmds-[datestamp].txt`.
+	- The name of the log file is shown in the program header now but will not generate until a cartridge dump is processed.
+	- The cartridge path, SRAM path, file size, and the command used to generate the file are all logged.
+	- Redumps are also logged.
+2. Lots of code optimization.
+3. Renamed the program header to reflect the Github name.
+	- `INL Retro Dumper Interface` is now shown as `INL Retro Interface`.
+	- Added coloring to the ASCII logo.
+4. The check for PowerShell 7.x now can download and install from within previous versions of PowerShell.
+5. PowerShell window now automatically resizes to the maximum vertical height and moves to the top-left of the active monitor, making all content easier to view at once.
+6. Will begin working on `Super Nintendo Entertainment System` section next.
+	- Outside of the No-Intro comparison, I don't believe any other Quality of Life changes are needed at this time. Always open to suggestions.
+
+<br/><br/>
+**10/12/2025 `(host/archive/inlretro-interface-08c.ps1)`**
 1. Optimized the section for dumping `Nintendo Entertainment System` and `Famicom` system cartridges. Since they both use the same mappers, but will save in seperate folders based on the selected console.
 2. Cleaned up the `Super Nintendo Entertainment System` dumper section to match more of the `Nintendo Entertainment System` section. This section has not been tested yet and will more than likely have additional modifications.
 3. Cleaned up the code for the browser open/refresh whenever opening `NEScartDB`.
@@ -16,9 +32,8 @@
 11. Give the option to quickly access `RetroRGB`'s cartridge cleaning article (https://www.retrorgb.com/cleangames.html) during the redumping period.
 12. Added a session counter to monitor how many cartridge dumps have been performed. Count does not persist.
 
-
 <br/><br/>
-**09/28/2025 `(host/inlretro-interface-07.ps1)`**
+**09/28/2025 `(host/archive/inlretro-interface-07.ps1)`**
 1. Fixed several instances in `host/scripts/app/dump.lua` where `op_buffer` references were not properly namespaced as `dict.op_buffer`, which would otherwise result in runtime errors when accessing buffer operation constants.
 2. Successfully dumped an additional Nintendo Entertainment System cartridge, `Kung Fu`, without requiring mapper modifications.
 3. Updated interface UI and extended supported file handling to enable dumping of `Nintendo Famicom` cartridges.
@@ -34,7 +49,7 @@
 	- One Nintendo Entertainment System cartridge using the `NROM` mapper was also tested and working (checking on 128 and 256 detection).
 
 <br/><br/>
-**09/25/2025 `(host/inlretro-interface-06d.ps1)`**
+**09/25/2025 `(host/archive/inlretro-interface-06d.ps1)`**
 1. NES Database opens to a search page based on the name of the cartridge that's entered.
 2. Note on ANROM cartridges in the powershell script.
 3. Language cleanup in the powershell script.
@@ -54,19 +69,19 @@
 17. An inital run through of all the Nintendo Entertainment Games that I own were completed during the mapper modification phase. Afterwards, another dump of all the cartridges again were performed grouping them by mapper. This resulted in 2 mappers needing to be modified again `UNROM` and `MMC1`. The end result being that `75 games were successful` and `1 was never able to be dumped`.
 
 <br/><br/>
-**09/15/2025 `(inlretro-interface-05.ps1)`**
+**09/15/2025 `(host/archive/inlretro-interface-05.ps1)`**
 1. Script cleanup and optimation around calling the inlretro executable.
 2. Addressed wrong NES Mapper references.
 3. Beginning personal cart dump of NES carts and will correct issues as they might appear.
 4. Script name changed to match repository name.
 
 <br/><br/>
-**09/14/2025 `(archive/INL_Retro_Interface-03.ps1)`**
+**09/14/2025 `(host/archive/INL_Retro_Interface-03.ps1)`**
 1. Script cleanup and optimation around calling the inlretro executable.
 2. Color coding certain items to be easier to view.
 
 <br/><br/>
-**09/13/2025 `(archive/INL_Retro_Interface.ps1)`**
+**09/13/2025 `(host/archive/INL_Retro_Interface.ps1)`**
 1. Command file was converted to a PowerShell script.
 2. Code cleanup and repeated tasks converted to functions.
 3. NES fine tuning and testing has begun.
@@ -81,12 +96,12 @@
 - Project abandoned.
 
 <br/><br/>
-**08/18/2019 `(archive/interface-04.cmd)`** 
+**08/18/2019 `(host/archive/interface-04.cmd)`** 
 1. NES cartridges better.
 2. SNES compatibility began, somewhat worked.
 
 <br/><br/>
-**05/07/2019 `(archive/interface-02.cmd)`**
+**05/07/2019 `(host/archive/interface-02.cmd)`**
 1. Initial release as a command file.
 2. NES script was somewhat working.
 
@@ -99,4 +114,3 @@
 4. Gameboy Functionality
 5. Sega Genesis Functionality
 6. No-Intro dat comparison, file name clean up
-10. Log file of command used, time, etc.
