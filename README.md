@@ -51,7 +51,7 @@ The purpose of this second validation cycle is to verify overall stability and c
 
 <br/><br/>
 ## Disclaimer:
-- This project is not affiliated with INL or any commercial entity.
+- This project is not affiliated with the original author (Infinite NES Lives) or any commercial entity.
 - The software and modifications are intended solely for personal backup, preservation, and research purposes.
 - Use responsibly and ensure that you own any cartridges you dump; the repository does not provide copyrighted ROMs.
 - **No warranty is provided; use at your own risk.**
