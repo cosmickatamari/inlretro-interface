@@ -95,55 +95,53 @@
 ### Super Nintendo Entertainment System (working)
 | Game Name | Mapper Used | Contains Battery | Notes |
 | -- | -- | -- | -- |
-| Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
-| Utopia: The Creation of a Nation | LoROM |  Yes (Backs Up) | None |
-| Super Metroid (Player's Choice Version) | LoROM | Yes (Backs Up) | None | 
-| Breath of Fire | LoROM | Yes (Backs Up) | None |
-| E.V.O. Search for Eden | LoROM | Yes (Backs Up) | None |
-| Super Mario All-Stars + Super Mario World | LoROM | Yes (Backs Up) | None |
+| ActRaiser 2 | HiROM | None | None |
+| Adventures of Yogi Bear | LoROM | None | None |
+| Aero the Acro-Bat | LoROM | None | Modifications to SRAM detection required (previously had false detection). |
 | Aerobiz SuperSonic | LoROM | Yes (Backs Up) | None |
-| Super Mario World 2: Yoshi's Island | LoROM / (Super FX - GSU-2) |  Yes (Backs Up) | Required modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
-| Kirby's Avalanche | LoRom | No | None |
-| The Magical Quest Starring Mickey Mouse | LoROM | No | None |
-| Plok | LoROM | No | Required modifications to the SNES mapper for detection. |
-| Troddlers | LoROM | No | None |
-| Mega Man X | LoROM | No | None |
-| [Disney's] The Jungle Book | LoROM | No | None |
-| Joe and Mac | LoROM | No | None |
-| [Disney's] Goof Troop | LoROM | No | None |
-| Daffy Duck: The Marvin Missions | LoROM | No | None |
-| Jim Power: The Lost Dimension in 3D | LoROM | No | None |
-| Hook | LoROM | No | None |
-| Aero the Acro-Bat | LoROM | No | Modifications to SRAM detection required (previously had false detection). |
-| Jurassic Park | LoROM | No | None |
-| ClayMates | HiRom | No | None |
-| [Disney's] Aladdin | LoROM | No | None |
-| Rocko's Modern Life: Splunky's Dangerous Day | LoROM | No | Modifications to SRAM detection method required. (previously had false detection) |
-| Adventures of Yogi Bear | LoROM | No | None |
-| ActRaiser 2 | HiROM | No | None |
-| Cool Spot | LoROM | No | None |
-| B.O.B. | LoROM | No | None |
-| Bonkers | LoROM | No | None |
-| Gradius III | LoROM | No | None |
-| The Great Circus Mystery Starring Mickey & Minnie | HiROM | No | None |
-| Monopoly | LoROM | No | None |
-| Mickey Mania: The Timeless Adventures of Mickey Mouse | LoROM | No | None |
-| Final Fantasy III | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Donkey Kong Country | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | DSP-1 ROM settings needed to be specified as well as DSP-1 SRAM detection was needed. |
-| Brain Lord | HiROM |  Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| B.O.B. | LoROM | None | None |
+| Bonkers | LoROM | None | None |
+| Brain Lord | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Breath of Fire | LoROM | Yes (Backs Up) | None |
 | Chrono Trigger | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| ClayMates | HiRom | None | None |
+| Cool Spot | LoROM | None | None |
+| Daffy Duck: The Marvin Missions | LoROM | None | None |
+| Donkey Kong Country | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 2: Diddy Kong's Quest | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Illusion of Gaia | HiRom | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| The 7th Saga | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Ultima VI: The False Prophet | HiROM | Yes (Backs Up) | Required modifications to the SNES mapper for detection. HiRom SRAM detection needed tweaking. |
-| Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 3: Dixie Kong's Double Trouble | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Monopoly | LoROM | No | None |
-| Pilotwings | LoROM (DSP-1) | No | None |
-| The Great Circus Mystery Starring Mickey & Minnie | HiROM | No | None |
-| The Pagemaster | LoROM | No | None |
-| Out to Lunch | LoROM | No | None |
+| E.V.O. Search for Eden | LoROM | Yes (Backs Up) | None |
+| Final Fantasy III | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
+| Gradius III | LoROM | None | None |
+| Hook | LoROM | None | None |
+| Illusion of Gaia | HiRom | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Jim Power: The Lost Dimension in 3D | LoROM | None | None |
+| Joe and Mac | LoROM | None | None |
+| Jurassic Park | LoROM | None | None |
+| Kirby's Avalanche | LoRom | None | None |
+| Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Mega Man X | LoROM | None | None |
+| Mickey Mania: The Timeless Adventures of Mickey Mouse | LoROM | None | None |
+| Monopoly | LoROM | None | None |
+| Out to Lunch | LoROM | None | None |
+| Pilotwings | LoROM (DSP-1) | None | None |
+| Plok | LoROM | None | Required modifications to the SNES mapper for detection. |
+| Rocko's Modern Life: Splunky's Dangerous Day | LoROM | None | Modifications to SRAM detection method required. (previously had false detection) |
+| Super Mario All-Stars + Super Mario World | LoROM | Yes (Backs Up) | None |
+| Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | DSP-1 ROM settings needed to be specified as well as DSP-1 SRAM detection was needed. |
+| Super Mario World 2: Yoshi's Island | LoROM / (Super FX - GSU-2) | Yes (Backs Up) | Required modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
+| Super Metroid (Player's Choice Version) | LoROM | Yes (Backs Up) | None |
+| The 7th Saga | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| The Great Circus Mystery Starring Mickey & Minnie | HiROM | None | None |
+| The Magical Quest Starring Mickey Mouse | LoROM | None | None |
+| The Pagemaster | LoROM | None | None |
+| Troddlers | LoROM | None | None |
+| Ultima VI: The False Prophet | HiROM | Yes (Backs Up) | Required modifications to the SNES mapper for detection. HiRom SRAM detection needed tweaking. |
+| Utopia: The Creation of a Nation | LoROM | Yes (Backs Up) | None |
+| [Disney's] Aladdin | LoROM | None | None |
+| [Disney's] Goof Troop | LoROM | None | None |
+| [Disney's] The Jungle Book | LoROM | None | None |
 
 
 <br/><br/> 
