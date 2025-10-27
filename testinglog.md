@@ -99,28 +99,31 @@
 | Adventures of Yogi Bear | LoROM | None | None |
 | Aero the Acro-Bat | LoROM | None | Modifications to SRAM detection required (previously had false detection). |
 | Aerobiz SuperSonic | LoROM | Yes (Backs Up) | None |
+| [Disney's] Aladdin | LoROM | None | None |
 | B.O.B. | LoROM | None | None |
 | Bonkers | LoROM | None | None |
-| Brain Lord | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Brain Lord | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Breath of Fire | LoROM | Yes (Backs Up) | None |
 | Chrono Trigger | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| ClayMates | HiRom | None | None |
+| ClayMates | HiROM | None | None |
 | Cool Spot | LoROM | None | None |
 | Daffy Duck: The Marvin Missions | LoROM | None | None |
 | Donkey Kong Country | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 2: Diddy Kong's Quest | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 3: Dixie Kong's Double Trouble | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | E.V.O. Search for Eden | LoROM | Yes (Backs Up) | None |
-| Final Fantasy III | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Final Fantasy III | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
+| [Disney's] Goof Troop | LoROM | None | None |
 | Gradius III | LoROM | None | None |
 | Hook | LoROM | None | None |
-| Illusion of Gaia | HiRom | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Illusion of Gaia | HiRom | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Jim Power: The Lost Dimension in 3D | LoROM | None | None |
 | Joe and Mac | LoROM | None | None |
+| [Disney's] The Jungle Book | LoROM | None | None |
 | Jurassic Park | LoROM | None | None |
-| Kirby's Avalanche | LoRom | None | None |
-| Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Kirby's Avalanche | LoROM | None | None |
+| Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Mega Man X | LoROM | None | None |
 | Mickey Mania: The Timeless Adventures of Mickey Mouse | LoROM | None | None |
 | Monopoly | LoROM | None | None |
@@ -130,18 +133,15 @@
 | Rocko's Modern Life: Splunky's Dangerous Day | LoROM | None | Modifications to SRAM detection method required. (previously had false detection) |
 | Super Mario All-Stars + Super Mario World | LoROM | Yes (Backs Up) | None |
 | Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | DSP-1 ROM settings needed to be specified as well as DSP-1 SRAM detection was needed. |
-| Super Mario World 2: Yoshi's Island | LoROM / (Super FX - GSU-2) | Yes (Backs Up) | Required modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
+| Super Mario World 2: Yoshi's Island | LoROM (Super FX - GSU-2) | Yes (Backs Up) | Required modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
 | Super Metroid (Player's Choice Version) | LoROM | Yes (Backs Up) | None |
-| The 7th Saga | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| The 7th Saga | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | The Great Circus Mystery Starring Mickey & Minnie | HiROM | None | None |
 | The Magical Quest Starring Mickey Mouse | LoROM | None | None |
 | The Pagemaster | LoROM | None | None |
 | Troddlers | LoROM | None | None |
-| Ultima VI: The False Prophet | HiROM | Yes (Backs Up) | Required modifications to the SNES mapper for detection. HiRom SRAM detection needed tweaking. |
+| Ultima VI: The False Prophet | HiROM | Yes (Backs Up) | Required modifications to the SNES mapper for detection. HiROM SRAM detection needed tweaking. |
 | Utopia: The Creation of a Nation | LoROM | Yes (Backs Up) | None |
-| [Disney's] Aladdin | LoROM | None | None |
-| [Disney's] Goof Troop | LoROM | None | None |
-| [Disney's] The Jungle Book | LoROM | None | None |
 
 
 <br/><br/> 
