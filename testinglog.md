@@ -1,6 +1,6 @@
 ### Nintendo Entertainment System:
 
-| Name | Mapper | Battery | Notes |
+| Game Name | Mapper Used | Contains Battery | Notes |
 | -- | -- | -- | -- |
 | Abadox: The Deadly Inner War | MMC1 | None | None |
 | Adventure Island | CNROM | None | Required original mapper modifications. |
@@ -79,7 +79,7 @@
 
 <br/><br/>
 ### Nintendo Famicom (Family Computer)
-| Name | Mapper | Battery | Notes |
+| Game Name | Mapper Used | Contains Battery | Notes |
 | -- | -- | -- | -- |
 | Final Fantasy | MMC1 | Yes (Backs Up) | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
 | Final Fantasy II | MMC1 | Yes (Backs Up) | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
@@ -93,7 +93,7 @@
 
 <br/><br/>
 ### Super Nintendo Entertainment System (working)
-| Name | Mapper | Battery | Notes |
+| Game Name | Mapper Used | Contains Battery | Notes |
 | -- | -- | -- | -- |
 | Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
 | Utopia: The Creation of a Nation | LoROM |  Yes (Backs Up) | None |
@@ -102,7 +102,7 @@
 | E.V.O. Search for Eden | LoROM | Yes (Backs Up) | None |
 | Super Mario All-Stars + Super Mario World | LoROM | Yes (Backs Up) | None |
 | Aerobiz SuperSonic | LoROM | Yes (Backs Up) | None |
-| Super Mario World 2: Yoshi's Island | LoROM / (Super FX - GSU-2) |  Yes (Backs Up) | Required modifications to the SNES mapper for detection. |
+| Super Mario World 2: Yoshi's Island | LoROM / (Super FX - GSU-2) |  Yes (Backs Up) | Required modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
 | Kirby's Avalanche | LoRom | No | None |
 | The Magical Quest Starring Mickey Mouse | LoROM | No | None |
 | Plok | LoROM | No | Required modifications to the SNES mapper for detection. |
@@ -129,8 +129,8 @@
 | Monopoly | LoROM | No | None |
 | Mickey Mania: The Timeless Adventures of Mickey Mouse | LoROM | No | None |
 | Final Fantasy III | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Donkey Kong Country | HiROM |  Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Super Mario Kart | HiROM (DSP-1) |  Yes (Backs Up) | DSP-1 ROM settings needed to be specified as well as DSP-1 SRAM detection was needed. |
+| Donkey Kong Country | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | DSP-1 ROM settings needed to be specified as well as DSP-1 SRAM detection was needed. |
 | Brain Lord | HiROM |  Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Chrono Trigger | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 2: Diddy Kong's Quest | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
@@ -139,6 +139,11 @@
 | Ultima VI: The False Prophet | HiROM | Yes (Backs Up) | Required modifications to the SNES mapper for detection. HiRom SRAM detection needed tweaking. |
 | Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 3: Dixie Kong's Double Trouble | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Monopoly | LoROM | No | None |
+| Pilotwings | LoROM (DSP-1) | No | None |
+| The Great Circus Mystery Starring Mickey & Minnie | HiROM | No | None |
+| The Pagemaster | LoROM | No | None |
+| Out to Lunch | LoROM | No | None |
 
 
 <br/><br/> 
