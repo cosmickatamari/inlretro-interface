@@ -1,9 +1,9 @@
 ### Commited Changes
 **10/26/2025 `(host/inlretro-interface-10f.ps1)`**
 1. Corrected issues with `v2proto_hirom.lua` where:
-	 - The validation was checking if rom_size and sram_size were "truthy", but 0 is falsy in LUA.
-	 - The cartridge `Plok` returned rom_type: 5, but this wasn't defined in the lookup table. Added [0x05] = "ROM, Save RAM and DSP1 chip" to the hardware_type table.
-	 - The script was using the user-specified mapping (-m hirom) even when it detected a different mapping from the cartridge header.
+	 - The validation was checking if `rom_size` and `sram_size` were "truthy", but 0 is falsy in LUA.
+	 - The cartridge `Plok` returned rom_type: 5, but this wasn't defined in the lookup table. Added `[0x05] = "ROM, Save RAM and DSP1 chip"` to the hardware_type table.
+	 - The script was using the user-specified mapping `(-m hirom)` even when it detected a different mapping from the cartridge header.
 	 - Added error handling for division by zero. The `dump_rom` function could fail if `KB_per_bank` is nil.
 	 - Added error handling for division by zero. The `dump_ram` function could fail if `KB_per_bank` is nil.
 2. Addressed issues within the `v2proto_hirom.lua`, such as:
@@ -11,9 +11,9 @@
 	- There was a reference to `flashfile` that's not defined (originally line 993).
 	- There was a reference to `verifyfile` that's not defined (originally line 1010).
 	- The variables `sram_table` and `exp_ram_table` are used but not declared (originally lines 897-898).
-3. Within the interface file, the parameter `-m` is not passed anymore since the LUA script seems to (at least with my testing base) be able to determine correctly what is a HIROM and LOROM (based on a hardware address check).
-4. Automatic SRAM detection performed to see if the parameter even needs to be used when dumping the cartridge.
-5. Included a function `ConvertTo-SafeFileName` that will check for input of characters invalid in Windows file names. 
+3. Within the interface file, the parameter `-m` is not passed anymore since the LUA script seems to (at least with my testing base) be able to determine correctly what is a `HiROM` and `LoROM` (based on a hardware address check).
+4. Automatic SRAM detection performing well now to see what parameters need to be used when dumping the cartridge and save data.
+5. Created a function `ConvertTo-SafeFileName` that will check for input of characters invalid in Windows file names. 
 	- Converts `< > : " / \ |` to ` - `.
 	- Strips out `? *`.
 6. Error catching now terminates the program with the error message displayed on the screen.
@@ -26,7 +26,7 @@
 12. Added `0x04` to the `sram_size_tbl` so that the SRAM for `Donkey Kong Country` could be correctly dumped.
 13. Made the cartridge detection output more user friendly and understandable to read.
 	- It is also now logged in the appropriate logfile for future reference.
-14. When required data files are missing, the default GitHub page opens to redownload them.
+~~14. When required data files are missing, the default GitHub page opens to redownload them.~~
 15. Cartridge detection uses hardware mappers from `v2proto_hirom.lua` instead of hoping the correct filename is given.
 16. A counter was placed on the detection method screen to indicate if the program is still responsive.
 17. Added additional hardware detection types, allowing for more lenient validation for third-party cartridges.
