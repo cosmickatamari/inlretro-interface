@@ -1,12 +1,3 @@
-### Commited Changes
-**[date] `file`**
-1. Moved the default file size to after header parser correcting the issue of all SNES cartridge dumps being 4mb. This is only needed if the header parsing fails.
-2. Put in logic to where when the SRAM is detected and there are additional possible methods for detecting the SRAM, they are not run.
-3. More display cleanup and easier to read messages.
-4. Took out all the extra title specific checks for games like `Super Mario World 2: Yoshi's Island`, since they can properly be detected now with the default logic for `Super FX` chips.
-
-
-<br/><br/>
 **10/26/2025 `(host/inlretro-interface-10f.ps1)`**
 1. Corrected issues with `v2proto_hirom.lua` where:
 	 - The validation was checking if `rom_size` and `sram_size` were "truthy", but 0 is falsy in LUA.
@@ -34,7 +25,7 @@
 12. Added `0x04` to the `sram_size_tbl` so that the SRAM for `Donkey Kong Country` could be correctly dumped.
 13. Made the cartridge detection output more user friendly and understandable to read.
 	- It is also now logged in the appropriate logfile for future reference.
-~~14. When required data files are missing, the default GitHub page opens to redownload them.~~
+14. ~~When required data files are missing, the default GitHub page opens to redownload them.~~
 15. Cartridge detection uses hardware mappers from `v2proto_hirom.lua` instead of hoping the correct filename is given.
 16. A counter was placed on the detection method screen to indicate if the program is still responsive.
 17. Added additional hardware detection types, allowing for more lenient validation for third-party cartridges.
