@@ -48,7 +48,6 @@ function main ()
 	local erase = require "scripts.app.erase"
 	local flash = require "scripts.app.flash"
 	local swim = require "scripts.app.swim"
-	local jtag = require "scripts.app.jtag"
 	local ciccom = require "scripts.app.ciccom"
 	local fwupdate = require "scripts.app.fwupdate"
 	local files = require "scripts.app.files"
@@ -62,7 +61,7 @@ function main ()
 	
 	--NES mappers
 	--local curcart = require "scripts.nes.nrom"
-	--local curcart = require "scripts.nes.mmc1"
+	local curcart = require "scripts.nes.mmc1"
 	--local curcart = require "scripts.nes.unrom"
 	--local curcart = require "scripts.nes.cnrom"
 	--local curcart = require "scripts.nes.mmc3"
@@ -84,31 +83,29 @@ function main ()
 	--local curcart = require "scripts.snes.v3"
 	--local curcart = require "scripts.snes.lorom_5volt"  --catskull design
 	--local curcart = require "scripts.snes.v2proto"
-	local curcart = require "scripts.snes.v2proto_hirom"  
+	--local curcart = require "scripts.snes.v2proto_hirom"  --becoming the master SNES script...
 	
-	-- MAIN GAMEBOY/GAMEBOY COLOR boards 
-	-- (SUPER MARIO BROS DELUXE WORKS WITH MBCL on kb=8 * 128)
-	-- (POKEMON AND MARIO TENNIS WORKS WITH MBCL on kb=16 * 128)
+	--GAMEBOY boards
 	--local curcart = require "scripts.gb.romonly"
-	--local curcart = require "scripts.gb.mbc1" --WORKING SCRIPT--
+	--local curcart = require "scripts.gb.mbc1"
 	
 	--GBA 
 	--local curcart = require "scripts.gba.basic"
-	
-	--SEGA GENESIS / MASTER SYSTEM 
+
+	--SEGA GENESIS 
 	--local curcart = require "scripts.sega.genesis_v1"
 	
 	--N64 
-	--local curcart = require "scripts.n64.basic"
+	local curcart = require "scripts.n64.basic"
 	
 -- =====================================================
 -- USERS: set cart_console to the  to point to the mapper script you would like to use here.
 -- =====================================================
 	--local cart_console = "NES" 	--includes Famicom
-	local cart_console = "SNES"
+	--local cart_console = "SNES"
 	--local cart_console = "SEGA"
-	--local cart_console = "N64"
-	--local cart_console = "DMG"	--includes Gameboy/Gameboy Color
+	local cart_console = "N64"
+	--local cart_console = "DMG"
 	--local cart_console = "GBA"
 	--local cart_console = "SMS"
 
@@ -124,7 +121,7 @@ function main ()
 		erase = false,
 		program = false,
 		verify = false,
-		dumpram = true,
+		dumpram = false,
 		writeram = false,
 		dump_filename = "ignore/dump.bin",
 		flash_filename = "ignore/flash.bin",
@@ -141,29 +138,12 @@ function main ()
 		prg_rom_size_kb = 256 * 128,	-- Size of NES PRG-ROM in KByte
 		chr_rom_size_kb = 8,			-- Size of NES CHR-ROM in KByte
 		wram_size_kb = 0,				-- Size of NES PRG-RAM/WRAM in KByte
--- =====================================================
--- USERS: Change the Multiplier Below to change the file size of the rom.
--- =====================================================
-	-- GBA/N64/SEGA ROM SPECIFIED -- [Sega 32x carts have not been tested]
-	-- 8 * 128 for GB/GBC ( Used Mainly for most GAMEBOY/GAMEBOY COLOR GAMES )
-	-- 16 * 128 for GB/GBC/SEGA 16 ( For Some GAMEBOY/GAMEBOY COLOR GAMES )
-	-- 64 * 128 for GBA ( Used Mainly) [ Pokemon Roms do not work] (Do not use for N64)
-	-- 128 * 128 fo GBA (Used when basic2 script is active)
-	-- 128 * 128 for N64 (Used promanantly)
-	-- 256 * 128 for GBA ( Used Mainly for GBA Video )
-		
-		--rom_size_kbyte = 8 * 128,		-- Size of ROM in kilobytes, used for GB/GBC consoles.
-		--rom_size_kbyte = 16 * 128, 		-- Size of ROM in kilobytes, used for SEGA 16bit (Genesis/MasterSystem) consoles.		
-		--rom_size_kbyte = 32 * 128,		-- Size of ROM in kilobytes, used for SEGA 16bit consoles.
-		--rom_size_kbyte = 64 * 128,		-- Size of ROM in kilobytes, used for GBA console.
-		--rom_size_kbyte = 128 * 128, 		-- Size of ROM in kilobytes, used for N64 and GBA consoles.
-		--rom_size_kbyte = 256 * 128, 		-- Size of ROM in kilobytes, used for GBA (GBA Video) console.		
+		rom_size_kbyte = 8 * 128, 		-- Size of ROM in kilobytes, used for non-NES consoles.
 		
 		-- If more convienient, specifying size in megabits is also supported.
 		-- rom_size_kbyte = 8, 			-- Size of ROM in megabits, used for non-NES consoles.
 	}
-
-
+	
 	--Firmware update testing
 
 	--active development path (based on makefile in use)

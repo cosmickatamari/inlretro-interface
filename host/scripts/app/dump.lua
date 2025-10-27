@@ -151,7 +151,7 @@ local function dumptofile( file, sizeKB, map, mem, debug )
 		end,
 		sizeKB, map, mem, debug
 	)
-	print("Total bytes written:", bytes_written)
+	-- print("Total bytes written:", bytes_written)  -- Removed for cleaner ROM dump output
 end
 
 
