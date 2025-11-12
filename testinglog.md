@@ -120,7 +120,7 @@
 | Animaniacs | LoROM | None | None |
 | B.O.B. | LoROM | None | None |
 | Bonkers | LoROM | None | None |
-| Brain Lord | HiROM (FastROM 1) | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
+| Brain Lord | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Breath of Fire | LoROM | Yes (Backs Up) | None |
 | Bubsy II | HiROM | None | None |
 | Bubsy In: Claws Encounters of the Furred Kind | LoROM | None | None |
@@ -151,7 +151,7 @@
 | Lemmings | LoROM | None | None |
 | Lemmings 2: The Tribes | LoROM | Yes (Backs Up) | Byte offset for SRAM needed to be prefered at 0x6000. |
 | The Lion King | HiROM | None | Around banks 32 through 48 seemed to be slower than normal. |
-| [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM (FastROM} | None | None |
+| [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM | None | None |
 | Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | The Magical Quest Starring Mickey Mouse | LoROM | None | None |
 | Mega Man X | LoROM | None | None |
@@ -160,7 +160,7 @@
 | Monopoly | LoROM | None | None |
 | Out to Lunch | LoROM | None | None |
 | The Pagemaster | LoROM | None | None |
-| Pilotwings | LoROM DSP1 | None | None |
+| Pilotwings | LoROM (DSP-1) | None | None |
 | [Disney's] Pinocchio | HiROM | None | Detection method changes were required. |
 | Pitfall: The Mayan Adventure | LoROM | None | None |
 | Plok | LoROM | None | Required modifications to the SNES mapper for detection. |
@@ -204,7 +204,7 @@
 | Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0431 |
 | StarFox | LoROM / Super FX (Mario Chip) | None | Black screen, only sound. https://snescentral.com/article.php?id=0636 |
 | Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0059 |
-| Super Mario Kart | HiROM (DSP1) | Yes (Backs Up) | Game will load with SRAM data (occasional graphics issues), after choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
+| Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | Game will load with SRAM data (occasional graphics issues), after choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
 | Super Mario RPG: Legend of the Seven Stars | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0049 |
 | The Legend of Zelda: A Link to the Past | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0164 |
 
