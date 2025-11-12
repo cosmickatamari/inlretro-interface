@@ -945,8 +945,8 @@ function ReDump {
                         $sramSizeKB = [int]$matches[1]
                     }
                     
-                    # Method 3: Check Hardware Type for "Save RAM" indication
-                    $method3Msg = "Method 3: Checking Hardware Type for Save RAM"
+                    # Step 3: Check Hardware Type for "Save RAM" indication
+                    $method3Msg = "Step 3: Checking Hardware Type for Save RAM"
                     Write-Host $method3Msg -ForegroundColor Cyan
                     $detectionMessages += $method3Msg
                     
@@ -973,18 +973,17 @@ function ReDump {
                         $detectionMessages += $noSaveRamMsg
                     }
                     
-                    Write-Host ""  # Add blank line after Method 3
+                    Write-Host ""  # Add blank line after Step 3
                     $detectionMessages += ""  # Add blank line to log as well
                     
-                    # Method 4: Check for Super FX games with SRAM size in Expansion RAM Size field
+                    # Step 4: Check for Super FX games with SRAM size in Expansion RAM Size field
                     # According to SNES documentation: Super FX games store SRAM size in Expansion RAM Size field
                     # BUT: Skip this for Yoshi's Island which has special handling
                     if (-not ($headerOutput -match "Rom Title:\s*YOSHI'S ISLAND")) {
-                        $method4Msg = "Method 4: Checking for SuperFX + Save RAM + SRAM Size None"
-                        Write-Host $method4Msg -ForegroundColor Cyan
-                        $detectionMessages += $method4Msg
-                        
                         if ($headerOutput -match "Hardware Type:.*SuperFX.*Save RAM" -and $headerOutput -match "SRAM Size:\s*None") {
+                            $method4Msg = "Step 4: Checking for SuperFX + Save RAM + SRAM Size None"
+                            Write-Host $method4Msg -ForegroundColor Cyan
+                            $detectionMessages += $method4Msg
                             $foundSuperFxMsg = "Found SuperFX with Save RAM and SRAM Size None."
                             Write-Host $foundSuperFxMsg -ForegroundColor Green
                             $detectionMessages += $foundSuperFxMsg
@@ -1025,7 +1024,7 @@ function ReDump {
                         $detectionMessages += $skipSuperFxMsg
                     }
                     
-                    Write-Host ""  # Add blank line after Method 4
+                    Write-Host ""  # Add blank line after Step 4
                     $detectionMessages += ""  # Add blank line to log as well
                     
                     # Final status output

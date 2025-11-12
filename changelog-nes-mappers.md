@@ -1,5 +1,3 @@
-(Last Updated: 10/13/2025)
-
 ### CNROM:
 *Issue:* `Adventure Island` (and some other CNROM games) looked scrambled because the dumper was writing bank numbers to the wrong addresses. On CNROM, if the ROM doesn’t contain `FF` at that spot, the number gets corrupted (bus conflict).
 
