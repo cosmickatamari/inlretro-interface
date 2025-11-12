@@ -35,7 +35,7 @@ While I do not own or have access to every commercially released cartridge for t
 | -- | -- | -- | -- | -- |
 | Nintendo Entertainment System | 76 | 1 | 98.70% | 9/26/2025 |
 | Nintendo Famicom (Family Computer) | 7 | 1 | 87.50% | 9/29/2025 |
-| Super Nintendo Entertainment System | 86 | 4 | 95.56% | 11/06/2025 |
+| Super Nintendo Entertainment System | 86 | 4 | 95.56% | 11/10/2025 |
 | Super Famicom | 0 | 1 | 0.00% | 11/06/2025 |
 
 
@@ -43,10 +43,10 @@ While I do not own or have access to every commercially released cartridge for t
 ## Game Save Progression:
 | Console | Dump Success | Dump Failure | Dump Success Rate | Last Updated |
 | -- | -- | -- | -- | -- |
-| Nintendo Entertainment System | 9 | 0 | 100% | 11/11/2025 |
-| Nintendo Famicom (Family Computer) | 3 | 0 | 100% | 11/11/2025 |
-| Super Nintendo Entertainment System | 28 | 6 | 82.35% | 11/11/2025 |
-| Super Famicom | 0 | 1 | 0.00% | 11/11/2025 |
+| Nintendo Entertainment System | 9 | 0 | 100% | 9/26/2025 |
+| Nintendo Famicom (Family Computer) | 3 | 0 | 100% | 9/29/2025 |
+| Super Nintendo Entertainment System | 28 | 6 | 82.35% | 11/10/2025 |
+| Super Famicom | 0 | 1 | 0.00% | 11/06/2025 |
 
 
 <br/><br/>
