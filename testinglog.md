@@ -91,9 +91,9 @@
 ### Nintendo Famicom (Family Computer):
 | Game Name | Mapper Used | Contains Battery | Notes |
 | -- | -- | -- | -- |
-| Final Fantasy | MMC1 | Yes (Backs Up) | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
-| Final Fantasy II | MMC1 | Yes (Backs Up) | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
-| Final Fantasy III | MMC3 | Yes (Backs Up) | Cartridge was translated using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
+| Final Fantasy | MMC1 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
+| Final Fantasy II | MMC1 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
+| Final Fantasy III | MMC3 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
 | Pooyan | NROM-256 | None | Required original mapper NROM modifications. |
 | Son Son | NROM-256 | None | Required original mapper NROM modifications. |
 | Spelunker | NROM-256 | None | Required original mapper NROM modifications. |
@@ -131,9 +131,9 @@
 | Donkey Kong Country | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 2: Diddy Kong's Quest | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 3: Dixie Kong's Double Trouble | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Earthbound | HiROM | Yes (Backs Up) | Worked after hard coding (bank=0x30, offset=0x0060, SNESSYS_PAGE). |
+| Earthbound | HiROM | Yes (Backs Up) | Worked after hard coding (`bank=0x30`, `offset=0x0060`, `SNESSYS_PAGE`). |
 | E.V.O. Search for Eden | LoROM | Yes (Backs Up) | None |
-| Equinox | LoROM | Yes (Backs Up) | Potentially, the SRAM Signature will show 00 (first 16 bytes) depending on the amount of data stored. |
+| Equinox | LoROM | Yes (Backs Up) | Potentially, the SRAM Signature will show `00` depending on the amount of data stored. |
 | Final Fantasy III | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
 | [Disney's] Goof Troop | LoROM | None | None |
@@ -149,7 +149,7 @@
 | Kirby's Dream Course | LoROM | Yes (Backs Up) | None |
 | Lagoon | LoROM | Yes (Backs Up) | None |
 | Lemmings | LoROM | None | None |
-| Lemmings 2: The Tribes | LoROM | Yes (Backs Up) | Byte offset for SRAM needed to be prefered at 0x6000. |
+| Lemmings 2: The Tribes | LoROM | Yes (Backs Up) | Byte offset for SRAM needed to be prefered at `0x6000`. |
 | The Lion King | HiROM | None | Around banks 32 through 48 seemed to be slower than normal. |
 | [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM | None | None |
 | Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
@@ -166,28 +166,30 @@
 | Plok | LoROM | None | Required modifications to the SNES mapper for detection. |
 | Populous | LoROM | None | None |
 | Robotrek | HiROM | Yes (Backs Up) | Mapper Mode 0x44 was needed for detection. |
-| Rocko's Modern Life: Splunky's Dangerous Day | LoROM | None | Modifications to SRAM detection method required. (previously had false detection) |
+| Rocko's Modern Life: Splunky's Dangerous Day | LoROM | None | Modifications to SRAM detection method required (previously had false detection). |
 | Secret of Evermore | HiROM | Yes (Backs Up) | The SRAM correctly dumped after Earthbound fix. |
 | Secret of Mana | HiROM | Yes (Backs Up) | Mapper detection needed to be altered for game ROM. The SRAM correctly dumped after Earthbound fix. |
-| SimEarth: The Living Planet | LoROM | Yes (Backs Up) | Needed to expand SRAM banks, TOMCAT signature check. |
+| SimEarth: The Living Planet | LoROM | Yes (Backs Up) | Needed to expand SRAM banks, `TOMCAT` signature check. |
 | Spectre | LoROM | None | None |
 | Street Fighter II | LoROM | None | None |
-| Street Fighter II Turbo | HiROM | None | None |
+| Street Fighter II Turbo: Hyper Fighting | HiROM | None | None |
 | Super Adventure Island | LoROM | None | None |
 | Super Castlevania IV | LoROM | None | None |
 | Super Mario All-Stars + Super Mario World | LoROM | Yes (Backs Up) | None |
 | Super Mario World 2: Yoshi's Island | LoROM Super FX (GSU-2) | Yes (Backs Up) | Required massive modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
 | Super Metroid (Player's Choice Version) | LoROM | Yes (Backs Up) | None |
 | Super Ninja Boy | LoROM | None | None |
+| Super Street Fighter II: The New Challengers | HiROM | None | None |
 | Taz-Mania | LoROM | None | None |
 | Teenage Mutant Ninja Turtles: Turtles in Time | LoROM | None | None |
 | Tetris Attack | LoROM | None | None |
 | Tiny Toon Adventures: Buster Bust Loose! | LoROM | None | None |
-| [Disney's] Toy Story | HiROM | None | Padding check created. |
+| [Disney's] Toy Story | HiROM | None | Game ROM signature padding check created. |
 | Troddlers | LoROM | None | None |
 | UN Squadron | LoROM | None | None |
 | Utopia: The Creation of a Nation | LoROM | Yes (Backs Up) | None |
 | The 7th Saga | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
+| Wanderers From Ys III | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
 | Warlock (Beware the Ultimate Evil of) | LoROM | None | None |
 | Wario's Woods | LoROM | Yes (Backs Up) | SRAM Offset adjust for detection. |
 | Wordtris | LoROM | None | None |
