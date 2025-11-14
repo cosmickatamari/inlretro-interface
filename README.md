@@ -58,7 +58,7 @@ While I do not own or have access to every commercially released cartridge for t
 - Cart dumper purchase link: https://www.infiniteneslives.com/inlretro.php
 - Original Author's Project: https://gitlab.com/InfiniteNesLives/INL-retro-progdump
 - 3D printed case purchase link: ()
-- 3D printed case can self-printed link: https://www.printables.com/model/2808-inlretro-dumper-programmer-case-v2
+- 3D printed case STL (for self-printing) link: https://www.printables.com/model/2808-inlretro-dumper-programmer-case-v2
 - RetroRGB.com :: Cartridge Cleaning Methods: https://www.retrorgb.com/cleangames.html
 <br/><br/>
 
