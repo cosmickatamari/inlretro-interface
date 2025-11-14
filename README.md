@@ -37,7 +37,7 @@ While I do not own or have access to every commercially released cartridge for t
 <br/><br/>
 
 ## Game Save Progression:
-| Console | SRAM Success | SRAM Failure | SRAM Success Rate | Last Updated |
+| Console | Success | Failure | Success Rate | Last Updated |
 | -- | -- | -- | -- | -- |
 | Nintendo Entertainment System | 9 | 0 | 100% | 9/26/2025 |
 | Nintendo Famicom (Family Computer) | 3 | 0 | 100% | 9/29/2025 |
