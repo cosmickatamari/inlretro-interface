@@ -1,7 +1,7 @@
 # SA-1 Cartridge Support Limitations
 SA-1 enhanced Super Nintendo cartridges (such as Kirby Super Star, Super Mario RPG, and others) **cannot currently be detected or dumped** using the INL Retro dumper due to hardware-level CIC (Copy Protection Integrated Circuit) authentication requirements. The SA-1 chip sits between the cartridge connector and ROM chips, blocking all ROM access until it receives proper SNES CIC authentication signals.
-
 <br/><br/>
+
 ## The Core Problem
 The SA-1 chip requires **SNES CIC authentication** to unlock ROM access. This is a **hardware-level limitation** the SA-1 chip physically blocks access to the ROM chips until it receives the correct authentication sequence from a genuine SNES CIC. When attempting to read from SA-1 cartridges without proper CIC authentication:
 
@@ -9,8 +9,8 @@ The SA-1 chip requires **SNES CIC authentication** to unlock ROM access. This is
 - Header detection fails completely
 - No cartridge information can be retrieved
 - ROM dumping is impossible
-
 <br/><br/>
+
 ## Attempts Made to Enable SA-1 Support
 Multiple software-based approaches were attempted to work around the CIC authentication requirement:
 
@@ -23,6 +23,7 @@ Multiple software-based approaches were attempted to work around the CIC authent
   - Attempted multiple toggle sequences (up to 3 attempts per session)
 
 **Result:** Failed - All ROM reads still returned `0xFF`.
+<br/><br/>
 
 #### 2. CLK1 (M2/SYSCLK) Clock Signal Disabling
   - Attempting to disable the system clock signal (CLK1/M2) during initialization, as some sources suggest this can improve unlocking.
@@ -33,7 +34,8 @@ Multiple software-based approaches were attempted to work around the CIC authent
   - Re-enabled clock after each attempt
   - Tested both with and without clock disabled
 
-**Result:** Failed - No improvement in ROM access.<br />
+**Result:** Failed - No improvement in ROM access.
+<br/><br/>
 
 #### 3. Systematic Bank Scanning
   - Testing all possible ROM banks (0x00-0x7F) systematically to find any accessible ROM region.
@@ -45,6 +47,7 @@ Multiple software-based approaches were attempted to work around the CIC authent
   - Performed before and after toggle sequences
 
 **Result:** Failed - All 1,024+ read attempts returned `0xFF`.
+<br/><br/>
 
 #### 4. Progressive Timing Variations
   - Trying different delay timings between reset/play mode toggles.
@@ -56,6 +59,7 @@ Multiple software-based approaches were attempted to work around the CIC authent
   - Multiple stabilization delays (0.05s to 0.1s)
 
 **Result:** Failed - No combination of timings enabled ROM access
+<br/><br/>
 
 #### 5. Multiple Bank and Address Testing
   - Testing ROM accessibility at various banks and addresses immediately after toggle sequences.
@@ -67,15 +71,15 @@ Multiple software-based approaches were attempted to work around the CIC authent
   - Tested after complete toggle sequences
 
 **Result:** Failed - All reads returned `0xFF` regardless of bank or address
-
 <br/><br/>
+
 ## Why These Attempts Failed
 All software-based approaches failed because they cannot address the SNES CIC authentication. The SA-1 chip requires:
   1. **Proper CIC communication protocol** - The INLretro hardware does not appear to have SNES CIC emulation/cloning capability
   2. **Timing-critical authentication sequence** - CIC authentication involves precise timing of clock and data signals
   3. **Hardware-level CIC clone** - Similar to how Retrode required a dedicated CIC clone adapter
-
 <br/><br/>
+
 ## Comparison with Other Hardware:
 **Retrode (AVR-based dumper):**
   - Initially could not dump SA-1 games
@@ -89,7 +93,7 @@ All software-based approaches failed because they cannot address the SNES CIC au
   - Currently lacks SNES CIC emulation/cloning capability
   - Software-only approaches insufficient
   - Would require similar hardware/firmware support for SA-1 games
-
 <br/><br/>
+
 ## Conclusion:
 SA-1 cartridge support requires hardware-level SNES CIC authentication capabilities that the current INLretro hardware does not possess. All software-based workarounds (DX2 trick, clock manipulation, bank scanning, timing variations) failed because they cannot bypass the CIC authentication requirement. Support for SA-1 cartridges would require significant hardware and/or firmware enhancements to the INLretro dumper.
