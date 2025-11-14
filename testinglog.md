@@ -122,6 +122,7 @@
 | Bonkers | LoROM | None | None |
 | Brain Lord | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Breath of Fire | LoROM | Yes (Backs Up) | None |
+| Breath of Fire 2 | HiROM | Yes (Backs Up) | None |
 | Bubsy II | HiROM | None | None |
 | Bubsy In: Claws Encounters of the Furred Kind | LoROM | None | None |
 | Chrono Trigger | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
@@ -154,6 +155,7 @@
 | [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM | None | None |
 | Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | The Magical Quest Starring Mickey Mouse | LoROM | None | None |
+| Maui Mallard in Cold Shadow | LoROM | None | None |
 | Mega Man X | LoROM | None | None |
 | Mickey Mania: The Timeless Adventures of Mickey Mouse | LoROM | None | None |
 | Mickey's Ultimate Challenge | LoROM | None | None |
@@ -204,6 +206,7 @@
 | F-Zero | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0001 |
 | Final Fantasy II (version 1.1) | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0028 |
 | Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0431 |
+| Kirby Super Star | LoROM (SA-1) | Yes (Unknown) | Header Detection isn't working. https://snescentral.com/pcbboards.php?chip=SHVC-1L3B-11 |
 | StarFox | LoROM / Super FX (Mario Chip) | None | Black screen, only sound. https://snescentral.com/article.php?id=0636 |
 | Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0059 |
 | Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | Game will load with SRAM data (occasional graphics issues), after choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
@@ -215,12 +218,8 @@
 ### Super Nintendo Entertainment System (still need to test):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
-| Breath of Fire 2 | Unknown | Yes () | Still in shipping. |
-| Kirby Super Star | Unknown | Yes () | Still in shipping. |
 | Mario Paint | LoROM | Yes () | I need a mouse (think it got lost when I moved). |
-| Maui Mallard in Cold Shadow | Unknown | No | Still in shipping. |
 | Pac-Man 2: The New Adventures | Unknown | Unknown | Still in shipping. |
 | Spanky's Quest | Unknown | Unknown | Still in shipping. |
-| Super Street Fighter II | Uknown | No | Still in shipping. |
 | Ultima: The False Prophet | LoROM | Yes () | Need to replace battery. |
 | Ultima: Ruins of Virtue II | Unknown | Yes () | Still in shipping. |
