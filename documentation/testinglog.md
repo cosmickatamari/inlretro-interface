@@ -161,6 +161,7 @@
 | Mickey's Ultimate Challenge | LoROM | None | None |
 | Monopoly | LoROM | None | None |
 | Out to Lunch | LoROM | None | None |
+| Pac-Man 2: The New Adventures | LoROM | None | None |
 | The Pagemaster | LoROM | None | None |
 | Pilotwings | LoROM (DSP-1) | None | None |
 | [Disney's] Pinocchio | HiROM | None | Detection method changes were required. |
@@ -190,6 +191,7 @@
 | [Disney's] Toy Story | HiROM | None | Game ROM signature padding check created. |
 | Troddlers | LoROM | None | None |
 | UN Squadron | LoROM | None | None |
+| Ultima: Ruins of Virtue II | LoROM | Yes (Backs Up) | None |
 | Utopia: The Creation of a Nation | LoROM | Yes (Backs Up) | None |
 | The 7th Saga | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Wanderers From Ys III | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
@@ -220,7 +222,4 @@
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
 | Mario Paint | LoROM | Yes () | I need a mouse (think it got lost when I moved). |
-| Pac-Man 2: The New Adventures | Unknown | Unknown | Still in shipping. |
-| Spanky's Quest | Unknown | Unknown | Still in shipping. |
 | Ultima: The False Prophet | LoROM | Yes () | Need to replace battery. |
-| Ultima: Ruins of Virtue II | Unknown | Yes () | Still in shipping. |
