@@ -172,6 +172,7 @@
 | Secret of Evermore | HiROM | Yes (Backs Up) | The SRAM correctly dumped after Earthbound fix. |
 | Secret of Mana | HiROM | Yes (Backs Up) | Mapper detection needed to be altered for game ROM. The SRAM correctly dumped after Earthbound fix. |
 | SimEarth: The Living Planet | LoROM | Yes (Backs Up) | Needed to expand SRAM banks, `TOMCAT` signature check. |
+| Spanky's Quest | LoROM | None | None |
 | Spectre | LoROM | None | None |
 | Street Fighter II | LoROM | None | None |
 | Street Fighter II Turbo: Hyper Fighting | HiROM | None | None |
