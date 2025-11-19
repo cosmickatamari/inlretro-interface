@@ -133,7 +133,7 @@
 | Donkey Kong Country 2: Diddy Kong's Quest | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Donkey Kong Country 3: Dixie Kong's Double Trouble | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
 | Earthbound | HiROM | Yes (Backs Up) | Worked after hard coding (`bank=0x30`, `offset=0x0060`, `SNESSYS_PAGE`). |
-| E.V.O. Search for Eden | LoROM | Yes (Backs Up) | None |
+| E.V.O.: Search for Eden | LoROM | Yes (Backs Up) | None |
 | Equinox | LoROM | Yes (Backs Up) | Potentially, the SRAM Signature will show `00` depending on the amount of data stored. |
 | Final Fantasy III | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
