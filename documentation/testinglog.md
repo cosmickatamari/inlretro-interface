@@ -192,6 +192,7 @@
 | Troddlers | LoROM | None | None |
 | UN Squadron | LoROM | None | None |
 | Ultima: Ruins of Virtue II | LoROM | Yes (Backs Up) | None |
+| Ultima VI: The False Prophet | LoROM | Yes (Backs Up) | Works, needed to replace battery. |
 | Utopia: The Creation of a Nation | LoROM | Yes (Backs Up) | None |
 | The 7th Saga | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | Wanderers From Ys III | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
@@ -222,4 +223,8 @@
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
 | Mario Paint | LoROM | Yes () | I need a mouse (think it got lost when I moved). |
-| Ultima: The False Prophet | LoROM | Yes () | Need to replace battery. |
+| Sim Ant | Unknown | Yes () | Still in shipping. |
+| Ka-Blooey | Unknown | No | Still in shipping. |
+| Out of this World | Unknown | No | Still in shipping. |
+| The Lost Vikings | Unknown | No | Still in shipping. |
+| Super Bomberman 2 | Unknown | No | Still in shipping. |
