@@ -101,7 +101,7 @@
 
 
 <br/><br/>
-### Nintendo Famicom (Family Computer) - (Issues):
+### Nintendo Famicom (Family Computer) (Issues):
 | Game Name | Mapper Used | Contains Battery | Notes |
 | -- | -- | -- | -- |
 | Mappy-Land | NAMCOT-3415 | None | Unable to dump cartridge. https://nescartdb.com/profile/view/1790/mappy-land |
@@ -222,9 +222,11 @@
 ### Super Nintendo Entertainment System (still need to test):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
+| Dragon's Lair | Unknown | No | Still in shipping. |
 | Mario Paint | LoROM | Yes () | I need a mouse (think it got lost when I moved). |
 | Sim Ant | Unknown | Yes () | Still in shipping. |
 | Ka-Blooey | Unknown | No | Still in shipping. |
 | Out of this World | Unknown | No | Still in shipping. |
 | The Lost Vikings | Unknown | No | Still in shipping. |
+| Soul Blazer | Unknown | No | Still in shipping. |
 | Super Bomberman 2 | Unknown | No | Still in shipping. |
