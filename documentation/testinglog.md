@@ -114,7 +114,7 @@
 | ActRaiser | LoROM | Yes (Backs Up) | None |
 | ActRaiser 2 | HiROM | None | None |
 | Adventures of Yogi Bear | LoROM | None | None |
-| Aero the Acro-Bat | LoROM | None | Modifications to SRAM detection required (previously had false detection). |
+| Aero the Acro-Bat | LoROM | None | Modifications to SRAM detection required (previously game ROM had incorrect detection). |
 | Aerobiz SuperSonic | LoROM | Yes (Backs Up) | None |
 | [Disney's] Aladdin | LoROM | None | None |
 | Animaniacs | LoROM | None | None |
@@ -153,6 +153,7 @@
 | Lemmings 2: The Tribes | LoROM | Yes (Backs Up) | Byte offset for SRAM needed to be prefered at `0x6000`. |
 | The Lion King | HiROM | None | Around banks 32 through 48 seemed to be slower than normal. |
 | [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM | None | None |
+| The Lost Vikings | LoROM | None | None |
 | Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | The Magical Quest Starring Mickey Mouse | LoROM | None | None |
 | Maui Mallard in Cold Shadow | LoROM | None | None |
@@ -161,6 +162,7 @@
 | Mickey's Ultimate Challenge | LoROM | None | None |
 | Monopoly | LoROM | None | None |
 | Out to Lunch | LoROM | None | None |
+| Out of this World | LoROm | None | None |
 | Pac-Man 2: The New Adventures | LoROM | None | None |
 | The Pagemaster | LoROM | None | None |
 | Pilotwings | LoROM (DSP-1) | None | None |
@@ -172,12 +174,14 @@
 | Rocko's Modern Life: Splunky's Dangerous Day | LoROM | None | Modifications to SRAM detection method required (previously had false detection). |
 | Secret of Evermore | HiROM | Yes (Backs Up) | The SRAM correctly dumped after Earthbound fix. |
 | Secret of Mana | HiROM | Yes (Backs Up) | Mapper detection needed to be altered for game ROM. The SRAM correctly dumped after Earthbound fix. |
+| SimAnt: The Electronic Ant Colony | LoROM | Yes (Backs Up) | None |
 | SimEarth: The Living Planet | LoROM | Yes (Backs Up) | Needed to expand SRAM banks, `TOMCAT` signature check. |
 | Spanky's Quest | LoROM | None | None |
 | Spectre | LoROM | None | None |
 | Street Fighter II | LoROM | None | None |
 | Street Fighter II Turbo: Hyper Fighting | HiROM | None | None |
 | Super Adventure Island | LoROM | None | None |
+| Super Bomberman 2 | HiRom | None | None |
 | Super Castlevania IV | LoROM | None | None |
 | Super Mario All-Stars + Super Mario World | LoROM | Yes (Backs Up) | None |
 | Super Mario World 2: Yoshi's Island | LoROM Super FX (GSU-2) | Yes (Backs Up) | Required massive modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
@@ -211,6 +215,7 @@
 | Final Fantasy II (version 1.1) | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0028 |
 | Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0431 |
 | Kirby Super Star | LoROM (SA-1) | Yes (Unknown) | Header Detection isn't working. https://snescentral.com/pcbboards.php?chip=SHVC-1L3B-11 |
+| Mario Paint | LoROM | Yes (Potential Issues) | I think there's an issue with my cartridge, even after replacing the battery, it has a problem retaining data. https://snescentral.com/article.php?id=0035 |
 | StarFox | LoROM / Super FX (Mario Chip) | None | Black screen, only sound. https://snescentral.com/article.php?id=0636 |
 | Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0059 |
 | Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | Game will load with SRAM data (occasional graphics issues), after choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
@@ -223,10 +228,9 @@
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
 | Dragon's Lair | Unknown | No | Still in shipping. |
-| Mario Paint | LoROM | Yes () | I need a mouse (think it got lost when I moved). |
-| Sim Ant | Unknown | Yes () | Still in shipping. |
+| HyperZone | Unkown | No | Still in shipping. |
 | Ka-Blooey | Unknown | No | Still in shipping. |
-| Out of this World | Unknown | No | Still in shipping. |
-| The Lost Vikings | Unknown | No | Still in shipping. |
+| SimCity | Unkown | Yes () | Still in shipping. |
 | Soul Blazer | Unknown | No | Still in shipping. |
-| Super Bomberman 2 | Unknown | No | Still in shipping. |
+| Space Ace | Unknown | Unknown | Still in shipping. |
+| Super Widget | Unknown | Unknown | Still in shipping. |
