@@ -143,7 +143,7 @@
 | The Great Circus Mystery Starring Mickey & Minnie | HiROM | None | None |
 | Hook | LoROM | None | None |
 | HyperZone | LoROM | No | None |
-| Illusion of Gaia | HiRom | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
+| Illusion of Gaia | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Jim Power: The Lost Dimension in 3D | LoROM | None | None |
 | Joe and Mac | LoROM | None | None |
 | [Disney's] The Jungle Book | LoROM | None | None |
