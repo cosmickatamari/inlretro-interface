@@ -140,6 +140,7 @@
 | Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
 | [Disney's] Goof Troop | LoROM | None | None |
 | Gradius III | LoROM | None | None |
+| The Great Circus Mystery Starring Mickey & Minnie | HiROM | None | None |
 | Hook | LoROM | None | None |
 | HyperZone | LoROM | No | None |
 | Illusion of Gaia | HiRom | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
