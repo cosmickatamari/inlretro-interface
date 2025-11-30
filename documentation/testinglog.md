@@ -42,7 +42,7 @@
 | Legacy of the Wizard | MMC3 | None | None |
 | Legend of Zelda, The | MMC1 | Yes (Backs Up) | None |
 | Little Nemo: The Dream Master | MMC3 | None | None |
-| Marble Madness | ANROM (using BNROM) | None | BNROM mapper works for ANROM cartridges. |
+| Marble Madness | ANROM (using BNROM) | None | `BNROM` mapper works for `ANROM` cartridges. |
 | Mario Bros. | NROM | None | None |
 | Mega Man | UNROM | None | None |
 | Mega Man 2 | MMC1 | None | None |
@@ -62,7 +62,7 @@
 | Snake Rattle n Roll | MMC1 | None | None |
 | Solor Jetman: Hunt for the Golden Warpship | AOROM (using BNROM) | None | None |
 | Solomon's Key | CNROM | None | None |
-| Solstice: The Quest for the Staff of Demnos | ANROM (using BNROM) | None | BNROM mapper works for ANROM cartridges. |
+| Solstice: The Quest for the Staff of Demnos | ANROM (using BNROM) | None | `BNROM` mapper works for `ANROM` cartridges. |
 | StarTropics | MM6 (using MMC3) | Yes (Backs Up) | None |
 | Super Mario Bros. & Duck Hunt | MHROM (using GxROM | None | Mutlticart for `Super Mario Bros.` and `Duck Hunt` |
 | Super Mario Bros. 2 | MMC3 | None | None |
@@ -75,7 +75,7 @@
 | Top Gun | UNROM | None | None |
 | Ultima Exodus | MMC1 | None | None |
 | Willow | MMC1 | None | None |
-| Wizards & Warriors | ANROM (using BNROM) | None | BNROM mapper works for ANROM cartridges. |
+| Wizards & Warriors | ANROM (using BNROM) | None | `BNROM` mapper works for `ANROM` cartridges. |
 | Zelda II: The Adventures of Link | MMC1 | Yes (Backs Up) | None |
 | Zoda's Revenge: StarTropics II | MM6 (using MMC3) | Yes (Backs Up) | None |
 
@@ -94,9 +94,9 @@
 | Final Fantasy | MMC1 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
 | Final Fantasy II | MMC1 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
 | Final Fantasy III | MMC3 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
-| Pooyan | NROM-256 | None | Required original mapper NROM modifications. |
-| Son Son | NROM-256 | None | Required original mapper NROM modifications. |
-| Spelunker | NROM-256 | None | Required original mapper NROM modifications. |
+| Pooyan | NROM-256 | None | Required original mapper `NROM` modifications. |
+| Son Son | NROM-256 | None | Required original mapper `NROM` modifications. |
+| Spelunker | NROM-256 | None | Required original mapper `NROM` modifications. |
 | Terra Cresta | UNROM | None | None |
 
 
@@ -120,31 +120,34 @@
 | Animaniacs | LoROM | None | None |
 | B.O.B. | LoROM | None | None |
 | Bonkers | LoROM | None | None |
-| Brain Lord | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
+| Brain Lord | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Breath of Fire | LoROM | Yes (Backs Up) | None |
 | Breath of Fire 2 | HiROM | Yes (Backs Up) | None |
 | Bubsy II | HiROM | None | None |
 | Bubsy In: Claws Encounters of the Furred Kind | LoROM | None | None |
-| Chrono Trigger | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Chrono Trigger | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | ClayMates | HiROM | None | None |
 | Cool Spot | LoROM | None | None |
 | Daffy Duck: The Marvin Missions | LoROM | None | None |
-| Donkey Kong Country | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Donkey Kong Country 2: Diddy Kong's Quest | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
-| Donkey Kong Country 3: Dixie Kong's Double Trouble | HiROM | Yes (Backs Up) | HiRom SRAM detection needed tweaking. |
+| Donkey Kong Country | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
+| Donkey Kong Country 2: Diddy Kong's Quest | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
+| Donkey Kong Country 3: Dixie Kong's Double Trouble | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
+| Dragon's Lair | LoROM | None | None |
 | Earthbound | HiROM | Yes (Backs Up) | Worked after hard coding (`bank=0x30`, `offset=0x0060`, `SNESSYS_PAGE`). |
 | E.V.O.: Search for Eden | LoROM | Yes (Backs Up) | None |
 | Equinox | LoROM | Yes (Backs Up) | Potentially, the SRAM Signature will show `00` depending on the amount of data stored. |
-| Final Fantasy III | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
+| Final Fantasy III | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
 | [Disney's] Goof Troop | LoROM | None | None |
 | Gradius III | LoROM | None | None |
 | Hook | LoROM | None | None |
-| Illusion of Gaia | HiRom | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
+| HyperZone | LoROM | No | None |
+| Illusion of Gaia | HiRom | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Jim Power: The Lost Dimension in 3D | LoROM | None | None |
 | Joe and Mac | LoROM | None | None |
 | [Disney's] The Jungle Book | LoROM | None | None |
 | Jurassic Park | LoROM | None | None |
+| Ka-Blooey | LoROM | None | None |
 | Killer Instinct | HiROM | None | None |
 | Kirby's Avalanche | LoROM | None | None |
 | Kirby's Dream Course | LoROM | Yes (Backs Up) | None |
@@ -154,7 +157,7 @@
 | The Lion King | HiROM | None | Around banks 32 through 48 seemed to be slower than normal. |
 | [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM | None | None |
 | The Lost Vikings | LoROM | None | None |
-| Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
+| Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | The Magical Quest Starring Mickey Mouse | LoROM | None | None |
 | Maui Mallard in Cold Shadow | LoROM | None | None |
 | Mega Man X | LoROM | None | None |
@@ -162,7 +165,7 @@
 | Mickey's Ultimate Challenge | LoROM | None | None |
 | Monopoly | LoROM | None | None |
 | Out to Lunch | LoROM | None | None |
-| Out of this World | LoROm | None | None |
+| Out of this World | LoROM | None | None |
 | Pac-Man 2: The New Adventures | LoROM | None | None |
 | The Pagemaster | LoROM | None | None |
 | Pilotwings | LoROM (DSP-1) | None | None |
@@ -176,6 +179,7 @@
 | Secret of Mana | HiROM | Yes (Backs Up) | Mapper detection needed to be altered for game ROM. The SRAM correctly dumped after Earthbound fix. |
 | SimAnt: The Electronic Ant Colony | LoROM | Yes (Backs Up) | None |
 | SimEarth: The Living Planet | LoROM | Yes (Backs Up) | Needed to expand SRAM banks, `TOMCAT` signature check. |
+| Space Ace | LoROM | None | None |
 | Spanky's Quest | LoROM | None | None |
 | Spectre | LoROM | None | None |
 | Street Fighter II | LoROM | None | None |
@@ -216,6 +220,7 @@
 | Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0431 |
 | Kirby Super Star | LoROM (SA-1) | Yes (Unknown) | Header Detection isn't working. https://snescentral.com/pcbboards.php?chip=SHVC-1L3B-11 |
 | Mario Paint | LoROM | Yes (Potential Issues) | I think there's an issue with my cartridge, even after replacing the battery, it has a problem retaining data. https://snescentral.com/article.php?id=0035 |
+| SimCity | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/pcbboards.php?chip=SHVC-1A5B-03 |
 | StarFox | LoROM / Super FX (Mario Chip) | None | Black screen, only sound. https://snescentral.com/article.php?id=0636 |
 | Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0059 |
 | Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | Game will load with SRAM data (occasional graphics issues), after choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
@@ -227,10 +232,5 @@
 ### Super Nintendo Entertainment System (still need to test):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
-| Dragon's Lair | Unknown | No | Still in shipping. |
-| HyperZone | Unkown | No | Still in shipping. |
-| Ka-Blooey | Unknown | No | Still in shipping. |
-| SimCity | Unkown | Yes () | Still in shipping. |
 | Soul Blazer | Unknown | No | Still in shipping. |
-| Space Ace | Unknown | Unknown | Still in shipping. |
 | Super Widget | Unknown | Unknown | Still in shipping. |
