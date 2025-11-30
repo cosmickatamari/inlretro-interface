@@ -233,5 +233,6 @@
 ### Super Nintendo Entertainment System (still need to test):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
+| King Arthur and the Knights of Justice | Unknown | Unknown | Still in shipping. |
 | Soul Blazer | Unknown | No | Still in shipping. |
 | Super Widget | Unknown | Unknown | Still in shipping. |
