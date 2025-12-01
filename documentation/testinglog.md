@@ -155,7 +155,7 @@
 | Kirby's Dream Course | LoROM | Yes (Backs Up) | None |
 | Lagoon | LoROM | Yes (Backs Up) | None |
 | Lemmings | LoROM | None | None |
-| Lemmings 2: The Tribes | LoROM | Yes (Backs Up) | Byte offset for SRAM needed to be prefered at `0x6000`. |
+| Lemmings 2: The Tribes | LoROM | Yes (Backs Up) | Byte offset for SRAM needed to be referenced at `0x6000`. |
 | The Lion King | HiROM | None | Around banks 32 through 48 seemed to be slower than normal. |
 | [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM | None | None |
 | The Lost Vikings | LoROM | None | None |
@@ -175,7 +175,7 @@
 | Pitfall: The Mayan Adventure | LoROM | None | None |
 | Plok | LoROM | None | Required modifications to the SNES mapper for detection. |
 | Populous | LoROM | None | None |
-| Robotrek | HiROM | Yes (Backs Up) | Mapper Mode 0x44 was needed for detection. |
+| Robotrek | HiROM | Yes (Backs Up) | Mapper Mode `0x44` was needed for detection. |
 | Rocko's Modern Life: Splunky's Dangerous Day | LoROM | None | Modifications to SRAM detection method required (previously had false detection). |
 | Secret of Evermore | HiROM | Yes (Backs Up) | The SRAM correctly dumped after Earthbound fix. |
 | Secret of Mana | HiROM | Yes (Backs Up) | Mapper detection needed to be altered for game ROM. The SRAM correctly dumped after Earthbound fix. |
@@ -205,7 +205,7 @@
 | Ultima VI: The False Prophet | LoROM | Yes (Backs Up) | Works, needed to replace battery. |
 | Utopia: The Creation of a Nation | LoROM | Yes (Backs Up) | None |
 | Warlock (Beware the Ultimate Evil of) | LoROM | None | None |
-| Wario's Woods | LoROM | Yes (Backs Up) | SRAM Offset adjust for detection. |
+| Wario's Woods | LoROM | Yes (Backs Up) | SRAM offset adjust for detection. |
 | Wordtris | LoROM | None | None |
 | Young Merlin | LoROM | None | None |
 | Ys III: Wanderers From Ys | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
