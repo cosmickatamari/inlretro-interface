@@ -111,6 +111,7 @@
 ### Super Nintendo Entertainment System:
 | Game Name | Mapper Used | Contains Battery | Notes |
 | -- | -- | -- | -- |
+| The 7th Saga | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
 | ActRaiser | LoROM | Yes (Backs Up) | None |
 | ActRaiser 2 | HiROM | None | None |
 | Adventures of Yogi Bear | LoROM | None | None |
@@ -165,8 +166,8 @@
 | Mickey Mania: The Timeless Adventures of Mickey Mouse | LoROM | None | None |
 | Mickey's Ultimate Challenge | LoROM | None | None |
 | Monopoly | LoROM | None | None |
-| Out to Lunch | LoROM | None | None |
 | Out of this World | LoROM | None | None |
+| Out to Lunch | LoROM | None | None |
 | Pac-Man 2: The New Adventures | LoROM | None | None |
 | The Pagemaster | LoROM | None | None |
 | Pilotwings | LoROM (DSP-1) | None | None |
@@ -203,12 +204,11 @@
 | Ultima: Ruins of Virtue II | LoROM | Yes (Backs Up) | None |
 | Ultima VI: The False Prophet | LoROM | Yes (Backs Up) | Works, needed to replace battery. |
 | Utopia: The Creation of a Nation | LoROM | Yes (Backs Up) | None |
-| The 7th Saga | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
-| Wanderers From Ys III | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
 | Warlock (Beware the Ultimate Evil of) | LoROM | None | None |
 | Wario's Woods | LoROM | Yes (Backs Up) | SRAM Offset adjust for detection. |
 | Wordtris | LoROM | None | None |
 | Young Merlin | LoROM | None | None |
+| Ys III: Wanderers From Ys | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
 | Zoop | LoROM | None | None |
 
 
@@ -218,10 +218,10 @@
 | -- | -- | -- | -- |
 | F-Zero | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0001 |
 | Final Fantasy II (version 1.1) | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0028 |
-| Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0431 |
 | Kirby Super Star | LoROM (SA-1) | Yes (Unknown) | Header Detection isn't working. https://snescentral.com/pcbboards.php?chip=SHVC-1L3B-11 |
+| Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0431 |
 | Mario Paint | LoROM | Yes (Potential Issues) | I think there's an issue with my cartridge, even after replacing the battery, it has a problem retaining data. https://snescentral.com/article.php?id=0035 |
-| SimCity | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/pcbboards.php?chip=SHVC-1A5B-03 |
+| Sim City | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Battery had to be replaced, confirmed saves work on console. https://snescentral.com/pcbboards.php?chip=SHVC-1A5B-03 |
 | StarFox | LoROM / Super FX (Mario Chip) | None | Black screen, only sound. https://snescentral.com/article.php?id=0636 |
 | Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. https://snescentral.com/article.php?id=0059 |
 | Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | Game will load with SRAM data (occasional graphics issues), after choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
