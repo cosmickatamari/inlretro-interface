@@ -111,7 +111,7 @@
 ### Super Nintendo Entertainment System:
 | Game Name | Mapper Used | Contains Battery | Notes |
 | -- | -- | -- | -- |
-| The 7th Saga | HiROM | Yes (Backs Up) | HiROM SRAM detection needed tweaking. |
+| The 7th Saga | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | ActRaiser | LoROM | Yes (Backs Up) | None |
 | ActRaiser 2 | HiROM | None | None |
 | Adventures of Yogi Bear | LoROM | None | None |
