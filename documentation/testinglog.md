@@ -194,6 +194,7 @@
 | Super Metroid (Player's Choice Version) | LoROM | Yes (Backs Up) | None |
 | Super Ninja Boy | LoROM | None | None |
 | Super Street Fighter II: The New Challengers | HiROM | None | None |
+| Super Widget | LoROM | None | None |
 | Taz-Mania | LoROM | None | None |
 | Teenage Mutant Ninja Turtles: Turtles in Time | LoROM | None | None |
 | Tetris Attack | LoROM | None | None |
@@ -234,5 +235,4 @@
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
 | King Arthur and the Knights of Justice | Unknown | Unknown | Still in shipping. |
-| Soul Blazer | Unknown | Unknown | Still in shipping. |
-| Super Widget | Unknown | Unknown | Still in shipping. |
+| Soul Blazer | LoROM | Yes () | Still in shipping. |
