@@ -160,6 +160,7 @@
 | [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM | None | None |
 | The Lost Vikings | LoROM | None | None |
 | Lufia & The Fortress of Doom | LoROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
+| Lufia II: Rise of the Sinistrals | LoROM | Yes (Backs Up) | Additional `HiROM` mapper and SRAM detections needed slight tweaking. |
 | The Magical Quest Starring Mickey Mouse | LoROM | None | None |
 | Maui Mallard in Cold Shadow | LoROM | None | None |
 | Mega Man X | LoROM | None | None |
@@ -223,6 +224,7 @@
 | Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0431 |
 | Mario Paint | LoROM | Yes (Potential Issues) | I think there's an issue with my cartridge, even after replacing the battery, it has a problem retaining data. https://snescentral.com/article.php?id=0035 |
 | Sim City | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Battery had to be replaced, confirmed saves work on console. https://snescentral.com/pcbboards.php?chip=SHVC-1A5B-03 |
+| Soul Blazer | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. However, Hex Editor shows character data. https://snescentral.com/article.php?id=0620 |
 | StarFox | LoROM (Super FX - Mario Chip) | None | Black screen, only sound. https://snescentral.com/article.php?id=0636 |
 | Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0059 |
 | Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | Game will load with SRAM data (occasional graphics issues), after choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
@@ -235,4 +237,3 @@
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
 | King Arthur and the Knights of Justice | Unknown | Unknown | Still in shipping. |
-| Soul Blazer | LoROM | Yes () | Still in shipping. |
