@@ -194,6 +194,8 @@
 | Super Mario World 2: Yoshi's Island | LoROM Super FX (GSU-2) | Yes (Backs Up) | Required massive modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
 | Super Metroid (Player's Choice Version) | LoROM | Yes (Backs Up) | None |
 | Super Ninja Boy | LoROM | None | None |
+| Super Play Action Football | LoROM | Yes (Backs Up) | None |
+| Super Scope 6 | LoROM | None | None | 
 | Super Street Fighter II: The New Challengers | HiROM | None | None |
 | Super Widget | LoROM | None | None |
 | Taz-Mania | LoROM | None | None |
@@ -236,4 +238,7 @@
 ### Super Nintendo Entertainment System (still need to test):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
+| Arcana | Unknown | Unknown | Still in shipping. |
+| BreakThru | Unknown | Unknown | Still in shipping. |
 | King Arthur and the Knights of Justice | Unknown | Unknown | Still in shipping. |
+| Spindizzy Worlds | Unknown | Unknown | Still in shipping. |
