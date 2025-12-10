@@ -151,7 +151,7 @@
 | Jurassic Park | LoROM | None | None |
 | Ka-Blooey | LoROM | None | None |
 | Killer Instinct | HiROM | None | None |
-| King Arthur and the Knights of Justice | HiRom | None | None |
+| King Arthur and the Knights of Justice | HiROM | None | None |
 | Kirby's Avalanche | LoROM | None | None |
 | Kirby's Dream Course | LoROM | Yes (Backs Up) | None |
 | Lagoon | LoROM | Yes (Backs Up) | None |
