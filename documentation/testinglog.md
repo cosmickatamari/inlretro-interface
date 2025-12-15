@@ -186,6 +186,7 @@
 | Space Ace | LoROM | None | None |
 | Spanky's Quest | LoROM | None | None |
 | Spectre | LoROM | None | None |
+| Spindizzy Worlds | LoROM | None | None |
 | Street Fighter II | LoROM | None | None |
 | Street Fighter II Turbo: Hyper Fighting | HiROM | None | None |
 | Super Adventure Island | LoROM | None | None |
@@ -221,6 +222,7 @@
 ### Super Nintendo Entertainment System (Issues):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
+| Arcana | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0022 |
 | F-Zero | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0001 |
 | Final Fantasy II (version 1.1) | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0028 |
 | Kirby Super Star | LoROM (SA-1) | Yes (Unknown) | Header Detection isn't working. https://snescentral.com/pcbboards.php?chip=SHVC-1L3B-11 |
@@ -239,6 +241,6 @@
 ### Super Nintendo Entertainment System (still need to test):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
-| Arcana | Unknown | Unknown | Still in shipping. |
 | BreakThru | Unknown | Unknown | Still in shipping. |
-| Spindizzy Worlds | Unknown | Unknown | Still in shipping. |
+| Flashback | Unknown | Unknown | Still in shipping. |
+| Paperboy 2 | Unknown | Unknown | Still in shipping. |
