@@ -139,6 +139,7 @@
 | Equinox | LoROM | Yes (Backs Up) | Potentially, the SRAM Signature will show `00` depending on the amount of data stored. |
 | Final Fantasy III | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
+| Flashback - The Quest for Identity | HiROM | None | Had to fix `Write-FileAnalysisLines` when being called and having an empty array. Also, needed to adjust for `00` padding in game ROM. |
 | [Disney's] Goof Troop | LoROM | None | None |
 | Gradius III | LoROM | None | None |
 | The Great Circus Mystery Starring Mickey & Minnie | HiROM | None | None |
@@ -172,6 +173,7 @@
 | Out to Lunch | LoROM | None | None |
 | Pac-Man 2: The New Adventures | LoROM | None | None |
 | The Pagemaster | LoROM | None | None |
+| Paperboy 2 | LoROM | None | None |
 | Pilotwings | LoROM (DSP-1) | None | None |
 | [Disney's] Pinocchio | HiROM | None | Detection method changes were required. |
 | Pitfall: The Mayan Adventure | LoROM | None | None |
@@ -241,6 +243,5 @@
 ### Super Nintendo Entertainment System (still need to test):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
-| BreakThru | Unknown | Unknown | Still in shipping. |
-| Flashback | Unknown | Unknown | Still in shipping. |
-| Paperboy 2 | Unknown | Unknown | Still in shipping. |
+| BreakThru! | Unknown | Unknown | Still in shipping. |
+| Whizz | Unknown | Unknown | Still in shipping. |
