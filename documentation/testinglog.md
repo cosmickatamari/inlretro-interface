@@ -139,7 +139,7 @@
 | Equinox | LoROM | Yes (Backs Up) | Potentially, the SRAM Signature will show `00` depending on the amount of data stored. |
 | Final Fantasy III | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Final Fantasy: Mystic Quest | LoROM | Yes (Backs Up) | None |
-| Flashback - The Quest for Identity | HiROM | None | Had to fix `Write-FileAnalysisLines` when being called and having an empty array. Also, needed to adjust for `00` padding in game ROM. |
+| Flashback - The Quest for Identity | HiROM | None | Fix for `Write-FileAnalysisLines` when being called and having an empty array. Also, needed to adjust for `00` padding in game ROM. |
 | [Disney's] Goof Troop | LoROM | None | None |
 | Gradius III | LoROM | None | None |
 | The Great Circus Mystery Starring Mickey & Minnie | HiROM | None | None |
