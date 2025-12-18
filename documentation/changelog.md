@@ -10,9 +10,9 @@
 7. Needed to adjust for `00` padding in game ROM.
 8. Spent sometime for **much better code commenting**, in the event someone else wants to modify anything. And for sanity sake!
 9. Modularized the PowerShell script into separate module files. 
-	- Based on functions and consoles but groupped by similar processes. 
-	- They are located in the `.\modules\` folder.
-	- Names start with `INLinterface.`
+	- Based on functions and consoles but grouped by similar processes. 
+	- Located in the `.\modules\` folder.
+	- Names start with `INLinterface.*`
 	- Most modules need to start at the beginning; however, console specific modules are on-demand whenever that console is being used to dump a cartridge.
 	- This will also make adding the remaining consoles easier.
 10. Relative paths are now used instead of full paths in the log files and console output.
