@@ -47,7 +47,7 @@ While I do not own or have access to every commercially released cartridge for t
 ## Installation:
 1. From the Releases section, download the `Original Program` package and extract its contents.
 2. Connect the INL Retro Dumper to an available USB port. For testing purposes, a USB 2.0 port was intentionally used to reduce transfer speed and aid in stability verification.
-3. Navigate to the `.\WindowsDriverPackage\` directory and execute (as administrator) `dpinst64.exe` to install the required drivers.
+3. Navigate to the `.\WindowsDriverPackage` directory and execute (as administrator) `dpinst64.exe` to install the required drivers.
 4. From the Releases section, download the `Current Program` package with the most recent timestamp and extract its contents into the same directory where the `Original Program` was extracted. When prompted, **overwrite** all existing files.
 5. Launch the script `inlretro-interface[xx].ps1` located in the `.\host` folder with the most recent date to begin usage.
 
