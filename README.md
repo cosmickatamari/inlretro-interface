@@ -6,10 +6,10 @@ The hardware supports a wide range of cartridge-based systems, this software aim
 
 <br/><br/>
 ## About Modifications:
-This project contains modified versions of the original support files used by the INL Retro Dumper software. These changes were necessary to enable accurate data extraction from cartridges that did not function correctly with the stock configuration and/or mappers. This project aims to improve compatibility and reliability for cartridges.
+This project contains both modified versions of the original support files as well as new files created during developement. These changes were necessary to enable more accurate data extraction from cartridges that did not function correctly with the stock configuration and/or mappers. This project aims to improve compatibility and reliability for cartridges.
+If you have an existing installation of the original software, I would recommend applying this project to a copy of that installation.
 If you fork or adapt this project for your own development, please give appropriate credit. 
 
-<br/><br/>
 Written and tested using:
 * Windows 11 25H2
 * PowerShell 7.5.3
