@@ -1,19 +1,16 @@
 -- Enhanced NROM script with NROM-256 detection
 -- Based on the original nrom.lua but with automatic detection and proper handling
 
--- create the module's table
-local nrom = {}
-
--- import required modules
 local dict = require "scripts.app.dict"
 local nes = require "scripts.app.nes"
 local dump = require "scripts.app.dump"
 local flash = require "scripts.app.flash"
 local swim = require "scripts.app.swim"
 local ciccom = require "scripts.app.ciccom"
-local buffers = require "scripts.app.buffers"
 
--- file constants
+local nrom = {}
+
+-- File constants
 local mapname = "NROM"
 
 -- Enhanced detection variables
@@ -21,564 +18,458 @@ local is_nrom256 = false
 local detected_prg_size = 16
 local detected_chr_size = 8
 
--- local functions
-
 -- Detect if this is NROM-256 or NROM-128
 local function detect_nrom_type()
-    print("Detecting NROM type...")
-    
-    -- Try to read from different memory locations to detect size
-    local test_addresses = {
-        {0x8000, "First 16KB"},
-        {0xC000, "Last 16KB"}
-    }
-    
-    local first_16k_data = {}
-    local last_16k_data = {}
-    
-    -- Read first 16KB
-    for i = 0, 255 do
-        local addr = 0x8000 + i
-        local val = dict.nes("NES_CPU_RD", addr)
-        first_16k_data[i] = val
-    end
-    
-    -- Read last 16KB
-    for i = 0, 255 do
-        local addr = 0xC000 + i
-        local val = dict.nes("NES_CPU_RD", addr)
-        last_16k_data[i] = val
-    end
-    
-    -- Compare the data to detect mirroring vs unique data
-    local identical = true
-    for i = 0, 255 do
-        if first_16k_data[i] ~= last_16k_data[i] then
-            identical = false
-            break
-        end
-    end
-    
-    -- Check if this might be Son Son (force NROM-256 for problematic cartridges)
-    local prg_test1 = dict.nes("NES_CPU_RD", 0x8000)
-    local prg_test2 = dict.nes("NES_CPU_RD", 0xC000)
-    
-    -- If the first bytes are different, it's likely NROM-256
-    if prg_test1 ~= prg_test2 then
-        print("Detected NROM-256: Data is unique (32KB PRG ROM)")
-        is_nrom256 = true
-        detected_prg_size = 32
-    else
-        -- Check if this might be Son Son (known to need NROM-256)
-        if prg_test1 == 0xF9 or prg_test1 == 0x78 then  -- Common Son Son start bytes
-            print("Detected Son Son - forcing NROM-256 (32KB PRG ROM)")
-            is_nrom256 = true
-            detected_prg_size = 32
-        else
-            print("Detected NROM-128: Data is mirrored (16KB PRG ROM)")
-            is_nrom256 = false
-            detected_prg_size = 16
-        end
-    end
-    
-    -- Test CHR ROM/RAM detection more thoroughly
-    local chr_test_addresses = {0x0000, 0x1000, 0x1FFF}
-    local chr_data = {}
-    local chr_ff_count = 0
-    local chr_zero_count = 0
-    
-    for _, addr in ipairs(chr_test_addresses) do
-        local val = dict.nes("NES_PPU_RD", addr)
-        chr_data[addr] = val
-        if val == 0xFF then
-            chr_ff_count = chr_ff_count + 1
-        elseif val == 0x00 then
-            chr_zero_count = chr_zero_count + 1
-        end
-    end
-    
-    -- Force CHR ROM detection for now (ignore corruption)
-    print("Detected CHR ROM: 8KB accessible (forced)")
-    detected_chr_size = 8
-    
-    print(string.format("Final detection: PRG=%dKB, CHR=%dKB, Type=%s", 
-                       detected_prg_size, detected_chr_size, 
-                       is_nrom256 and "NROM-256" or "NROM-128"))
-    
-    return is_nrom256, detected_prg_size, detected_chr_size
+	print("Detecting NROM type...")
+
+	local first_16k_data = {}
+	local last_16k_data = {}
+
+	-- Read first 16KB
+	for i = 0, 255 do
+		local addr = 0x8000 + i
+		local val = dict.nes("NES_CPU_RD", addr)
+		first_16k_data[i] = val
+	end
+
+	-- Read last 16KB
+	for i = 0, 255 do
+		local addr = 0xC000 + i
+		local val = dict.nes("NES_CPU_RD", addr)
+		last_16k_data[i] = val
+	end
+
+	-- Compare the data to detect mirroring vs unique data
+	local identical = true
+	for i = 0, 255 do
+		if first_16k_data[i] ~= last_16k_data[i] then
+			identical = false
+			break
+		end
+	end
+
+	-- Check if this might be Son Son (force NROM-256 for problematic cartridges)
+	local prg_test1 = dict.nes("NES_CPU_RD", 0x8000)
+	local prg_test2 = dict.nes("NES_CPU_RD", 0xC000)
+
+	-- If the first bytes are different, it's likely NROM-256
+	if prg_test1 ~= prg_test2 then
+		print("Detected NROM-256: Data is unique (32KB PRG ROM)")
+		is_nrom256 = true
+		detected_prg_size = 32
+	else
+		-- Check if this might be Son Son (known to need NROM-256)
+		if prg_test1 == 0xF9 or prg_test1 == 0x78 then  -- Common Son Son start bytes
+			print("Detected Son Son - forcing NROM-256 (32KB PRG ROM)")
+			is_nrom256 = true
+			detected_prg_size = 32
+		else
+			print("Detected NROM-128: Data is mirrored (16KB PRG ROM)")
+			is_nrom256 = false
+			detected_prg_size = 16
+		end
+	end
+
+	-- Force CHR ROM detection for now (ignore corruption)
+	print("Detected CHR ROM: 8KB accessible (forced)")
+	detected_chr_size = 8
+
+	print(string.format("Final detection: PRG=%dKB, CHR=%dKB, Type=%s",
+		detected_prg_size, detected_chr_size,
+		is_nrom256 and "NROM-256" or "NROM-128"))
+
+	return is_nrom256, detected_prg_size, detected_chr_size
 end
 
-local function create_header( file, prgKB, chrKB )
-    -- Use detected sizes instead of parameters
-    local actual_prg_kb = detected_prg_size
-    local actual_chr_kb = detected_chr_size
-    
-    -- Try horizontal mirroring for Son Son (NROM-256 with horizontal scrolling)
-    local mirroring
-    if is_nrom256 then
-        mirroring = "HORZ"
-        print("Forcing horizontal mirroring for NROM-256 (Son Son specific)")
-    else
-        -- Use detected mirroring for NROM-128
-        local detected = nes.detect_mapper_mirroring()
-        if detected == "1SCNV" then
-            mirroring = "VERT"
-            print("Using detected vertical mirroring for NROM-128")
-        else
-            mirroring = "HORZ"
-            print("Using detected horizontal mirroring for NROM-128")
-        end
-    end
-    
-    print(string.format("Creating header: PRG=%dKB, CHR=%dKB, Mirroring=%s", actual_prg_kb, actual_chr_kb, mirroring))
-    
-    -- Create proper header based on detection
-    print("DEBUG: write_header called with mapper=" .. dict.op_buffer[mapname] .. ", mirroring=" .. mirroring)
-    nes.write_header( file, actual_prg_kb, actual_chr_kb, dict.op_buffer[mapname], mirroring)
+local function create_header(file, prgKB, chrKB)
+	-- Use detected sizes instead of parameters
+	local actual_prg_kb = detected_prg_size
+	local actual_chr_kb = detected_chr_size
+
+	-- Try horizontal mirroring for Son Son (NROM-256 with horizontal scrolling)
+	local mirroring
+	if is_nrom256 then
+		mirroring = "HORZ"
+		print("Forcing horizontal mirroring for NROM-256 (Son Son specific)")
+	else
+		-- Use detected mirroring for NROM-128
+		local detected = nes.detect_mapper_mirroring()
+		if detected == "1SCNV" then
+			mirroring = "VERT"
+			print("Using detected vertical mirroring for NROM-128")
+		else
+			mirroring = "HORZ"
+			print("Using detected horizontal mirroring for NROM-128")
+		end
+	end
+
+	print(string.format("Creating header: PRG=%dKB, CHR=%dKB, Mirroring=%s", actual_prg_kb, actual_chr_kb, mirroring))
+
+	-- Create proper header based on detection
+	nes.write_header(file, actual_prg_kb, actual_chr_kb, dict.op_buffer[mapname], mirroring)
 end
 
 -- Enhanced PRG ROM dump with size detection
-local function dump_prgrom( file, rom_size_KB, debug )
-    local actual_size_kb = detected_prg_size
-    local KB_per_read = 32
-    
-    -- Handle 16KB NROM-128
-    if actual_size_kb < KB_per_read then 
-        KB_per_read = actual_size_kb 
-    end
+local function dump_prgrom(file, rom_size_KB, debug)
+	local actual_size_kb = detected_prg_size
+	local KB_per_read = 32
+	
+	-- Handle 16KB NROM-128
+	if actual_size_kb < KB_per_read then
+		KB_per_read = actual_size_kb
+	end
 
-    local num_reads = actual_size_kb / KB_per_read
-    local read_count = 0
-    local addr_base = 0x08    -- $8000
+	local num_reads = actual_size_kb / KB_per_read
+	local read_count = 0
+	local addr_base = 0x08  -- $8000
 
-    print(string.format("Dumping PRG ROM: %dKB in %d reads", actual_size_kb, num_reads))
+	print(string.format("Dumping PRG ROM: %dKB in %d reads", actual_size_kb, num_reads))
 
-    while ( read_count < num_reads ) do
-        if debug then 
-            print( "dump PRG part ", read_count, " of ", num_reads) 
-        end
+	while (read_count < num_reads) do
+		if debug then
+			print("dump PRG part", read_count, "of", num_reads)
+		end
 
-        dump.dumptofile( file, KB_per_read, addr_base, "NESCPU_4KB", false )
+		dump.dumptofile(file, KB_per_read, addr_base, "NESCPU_4KB", false)
 
-        read_count = read_count + 1
-    end
-    
-    -- Skip Reset Vector fix - both Spelunker and Son Son work better without it
-    if false and is_nrom256 then
-        print("Reset Vector fix disabled - using original vectors")
-    end
+		read_count = read_count + 1
+	end
 end
 
 -- Enhanced CHR ROM dump with detection
-local function dump_chrrom( file, rom_size_KB, debug )
-    local actual_chr_kb = detected_chr_size
-    
-    if actual_chr_kb == 0 then
-        print("Skipping CHR ROM dump - CHR RAM detected")
-        return
-    end
-    
-    print(string.format("Dumping CHR ROM: %dKB", actual_chr_kb))
-    
-    -- Detect if this might be Spelunker (IREM cartridges need special handling)
-    local is_irem_cart = false
-    
-    -- Check for IREM cartridge characteristics (Spelunker uses Toshiba CHR ROM)
-    local chr_test1 = dict.nes("NES_PPU_RD", 0x0000)
-    local chr_test2 = dict.nes("NES_PPU_RD", 0x1000)
-    local chr_test3 = dict.nes("NES_PPU_RD", 0x1FFF)
-    
-    -- IREM carts often have more 0xFF bytes due to Toshiba chip timing issues
-    local ff_count = 0
-    if chr_test1 == 0xFF then ff_count = ff_count + 1 end
-    if chr_test2 == 0xFF then ff_count = ff_count + 1 end
-    if chr_test3 == 0xFF then ff_count = ff_count + 1 end
-    
-    -- Use standard CHR ROM reading (was working but with flashing)
-    is_irem_cart = false
-    print("Using standard CHR ROM reading for all cartridges")
-    
-    if is_irem_cart then
-        -- Multiple-pass method with enhanced PPU initialization
-        dict.nes("NES_PPU_WR", 0x2000, 0x00)  -- Reset PPU control
-        dict.nes("NES_PPU_WR", 0x2001, 0x00)  -- Reset PPU mask
-        
-        -- Additional PPU initialization for problematic cartridges like Son Son
-        dict.nes("NES_PPU_WR", 0x2000, 0x80)  -- Set PPU control with NMI enable
-        dict.nes("NES_PPU_WR", 0x2000, 0x00)  -- Reset again
-        dict.nes("NES_PPU_WR", 0x2001, 0x1E)  -- Set PPU mask with rendering enabled
-        dict.nes("NES_PPU_WR", 0x2001, 0x00)  -- Reset mask
-        
-        local chr_data = {}
-        local num_passes = 2
-        
-        for pass = 1, num_passes do
-            if debug then print("CHR ROM read pass", pass, "of", num_passes) end
-            
-            for i = 0x0000, 0x1FFF, 1 do
-                local val = dict.nes("NES_PPU_RD", i)
-                
-                if pass == 1 then
-                    chr_data[i] = val
-                else
-                    -- Use majority voting for corrupted bytes
-                    if chr_data[i] ~= val then
-                        if val ~= 0xFF and val ~= 0x00 then
-                            chr_data[i] = val
-                        elseif chr_data[i] == 0xFF or chr_data[i] == 0x00 then
-                            chr_data[i] = val
-                        end
-                    end
-                end
-                
-                if (i % 0x400 == 0) and debug then 
-                    print("CHR ROM pass", pass, "progress:", string.format("%X", i), "of 1FFF")
-                end
-            end
-        end
-        
-        -- Write the final CHR data
-        for i = 0x0000, 0x1FFF, 1 do
-            file:write(string.char(chr_data[i]))
-        end
-        file:flush()
-        
-        if debug then print("CHR ROM dump completed with multiple passes") end
-    else
-        -- Direct byte-by-byte CHR ROM reading with timing delays
-        print("Using direct byte-by-byte CHR ROM reading with delays")
-        
-        for i = 0x0000, 0x1FFF, 1 do  -- 8KB = 0x0000-0x1FFF
-            local val = dict.nes("NES_PPU_RD", i)
-            file:write(string.char(val))
-            
-            -- Add small delay every 256 bytes for stability
-            if (i % 0x100 == 0) then
-                -- Small delay to ensure stable reading
-                for delay = 1, 10 do
-                    -- Just a small delay loop
-                end
-            end
-            
-            if (i % 0x400 == 0) and debug then 
-                print("CHR ROM progress:", string.format("%X", i), "of 1FFF")
-            end
-        end
-        file:flush()
-        
-        if debug then print("CHR ROM dump completed with direct byte-by-byte reading and delays") end
-    end
+local function dump_chrrom(file, rom_size_KB, debug)
+	local actual_chr_kb = detected_chr_size
+
+	if actual_chr_kb == 0 then
+		print("Skipping CHR ROM dump - CHR RAM detected")
+		return
+	end
+
+	print(string.format("Dumping CHR ROM: %dKB", actual_chr_kb))
+
+	-- Use standard CHR ROM reading for all cartridges
+	print("Using standard CHR ROM reading")
+
+	-- Direct byte-by-byte CHR ROM reading
+	for i = 0x0000, 0x1FFF, 1 do  -- 8KB = 0x0000-0x1FFF
+		local val = dict.nes("NES_PPU_RD", i)
+		file:write(string.char(val))
+
+		-- Add small delay every 256 bytes for stability
+		if (i % 0x100 == 0) then
+			-- Small delay to ensure stable reading
+			for delay = 1, 10 do
+				-- Just a small delay loop
+			end
+		end
+
+		if (i % 0x400 == 0) and debug then
+			print("CHR ROM progress:", string.format("%X", i), "of 1FFF")
+		end
+	end
+	file:flush()
+
+	if debug then print("CHR ROM dump completed") end
 end
 
---read PRG-ROM flash ID
-local function prgrom_manf_id( debug )
-    if debug then print("reading PRG-ROM manf ID") end
+-- Read PRG-ROM flash ID
+local function prgrom_manf_id(debug)
+	if debug then print("reading PRG-ROM manf ID") end
 
-    --enter software mode
-    dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
-    dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
-    dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x90)
+	-- Enter software ID mode
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x90)
 
-    --read manf ID
-    local rv = dict.nes("NES_CPU_RD", 0x8000)
-    if debug then print("attempted read PRG-ROM manf ID:", string.format("%X", rv)) end
+	-- Read manufacturer ID
+	local rv = dict.nes("NES_CPU_RD", 0x8000)
+	if debug then print("attempted read PRG-ROM manf ID:", string.format("%X", rv)) end
 
-    --read prod ID
-    rv = dict.nes("NES_CPU_RD", 0x8001)
-    if debug then print("attempted read PRG-ROM prod ID:", string.format("%X", rv)) end
+	-- Read product ID
+	rv = dict.nes("NES_CPU_RD", 0x8001)
+	if debug then print("attempted read PRG-ROM prod ID:", string.format("%X", rv)) end
 
-    --exit software
-    dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x8000, 0xF0)
+	-- Exit software ID mode
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x8000, 0xF0)
 end
 
---read CHR-ROM flash ID
-local function chrrom_manf_id( debug )
-    if debug then print("reading CHR-ROM manf ID") end
+-- Read CHR-ROM flash ID
+local function chrrom_manf_id(debug)
+	if debug then print("reading CHR-ROM manf ID") end
 
-    --enter software mode
-    dict.nes("NES_PPU_WR", 0x1555, 0xAA)
-    dict.nes("NES_PPU_WR", 0x0AAA, 0x55)
-    dict.nes("NES_PPU_WR", 0x1555, 0x90)
-    
-    --read manf ID
-    local rv = dict.nes("NES_PPU_RD", 0x0000)
-    if debug then print("attempted read CHR-ROM manf ID:", string.format("%X", rv)) end
+	-- Enter software ID mode
+	dict.nes("NES_PPU_WR", 0x1555, 0xAA)
+	dict.nes("NES_PPU_WR", 0x0AAA, 0x55)
+	dict.nes("NES_PPU_WR", 0x1555, 0x90)
+	
+	-- Read manufacturer ID
+	local rv = dict.nes("NES_PPU_RD", 0x0000)
+	if debug then print("attempted read CHR-ROM manf ID:", string.format("%X", rv)) end
 
-    --read prod ID
-    rv = dict.nes("NES_PPU_RD", 0x0001)
-    if debug then print("attempted read CHR-ROM prod ID:", string.format("%X", rv)) end
+	-- Read product ID
+	rv = dict.nes("NES_PPU_RD", 0x0001)
+	if debug then print("attempted read CHR-ROM prod ID:", string.format("%X", rv)) end
 
-    --exit software
-    dict.nes("NES_PPU_WR", 0x0000, 0xF0)
+	-- Exit software ID mode
+	dict.nes("NES_PPU_WR", 0x0000, 0xF0)
 end
 
---write a single byte to PRG-ROM flash
+-- Write a single byte to PRG-ROM flash
 local function wr_prg_flash_byte(addr, value, debug)
-    if (addr < 0x8000 or addr > 0xFFFF) then
-        print("\n  ERROR! flash write to PRG-ROM", string.format("$%X", addr), "must be $8000-FFFF \n\n")
-        return
-    end
+	if (addr < 0x8000 or addr > 0xFFFF) then
+		print("\n  ERROR! flash write to PRG-ROM", string.format("$%X", addr), "must be $8000-FFFF \n\n")
+		return
+	end
 
-    --send unlock command and write byte
-    dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
-    dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
-    dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xA0)
-    dict.nes("DISCRETE_EXP0_PRGROM_WR", addr, value)
+	-- Send unlock command and write byte
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xA0)
+	dict.nes("DISCRETE_EXP0_PRGROM_WR", addr, value)
 
-    local rv = dict.nes("NES_CPU_RD", addr)
-    local i = 0
+	local rv = dict.nes("NES_CPU_RD", addr)
+	local i = 0
 
-    while ( rv ~= value ) do
-        rv = dict.nes("NES_CPU_RD", addr)
-        i = i + 1
-    end
-    if debug then print(i, "naks, done writing byte.") end
+	while (rv ~= value) do
+		rv = dict.nes("NES_CPU_RD", addr)
+		i = i + 1
+	end
+	if debug then print(i, "naks, done writing byte.") end
 end
 
---write a single byte to CHR-ROM flash
+-- Write a single byte to CHR-ROM flash
 local function wr_chr_flash_byte(addr, value, debug)
-    if (addr < 0x0000 or addr > 0x1FFF) then
-        print("\n  ERROR! flash write to CHR-ROM", string.format("$%X", addr), "must be $0000-1FFF \n\n")
-        return
-    end
+	if (addr < 0x0000 or addr > 0x1FFF) then
+		print("\n  ERROR! flash write to CHR-ROM", string.format("$%X", addr), "must be $0000-1FFF \n\n")
+		return
+	end
 
-    --send unlock command and write byte
-    dict.nes("NES_PPU_WR", 0x1555, 0xAA)
-    dict.nes("NES_PPU_WR", 0x0AAA, 0x55)
-    dict.nes("NES_PPU_WR", 0x1555, 0xA0)
-    dict.nes("NES_PPU_WR", addr, value)
+	-- Send unlock command and write byte
+	dict.nes("NES_PPU_WR", 0x1555, 0xAA)
+	dict.nes("NES_PPU_WR", 0x0AAA, 0x55)
+	dict.nes("NES_PPU_WR", 0x1555, 0xA0)
+	dict.nes("NES_PPU_WR", addr, value)
 
-    local rv = dict.nes("NES_PPU_RD", addr)
-    local i = 0
+	local rv = dict.nes("NES_PPU_RD", addr)
+	local i = 0
 
-    while ( rv ~= value ) do
-        rv = dict.nes("NES_PPU_RD", addr)
-        i = i + 1
-    end
-    if debug then print(i, "naks, done writing byte.") end
+	while (rv ~= value) do
+		rv = dict.nes("NES_PPU_RD", addr)
+		i = i + 1
+	end
+	if debug then print(i, "naks, done writing byte.") end
 end
 
---fast host flash one bank at a time...
+-- Fast host flash one bank at a time
 local function flash_prgrom(file, rom_size_KB, debug)
-    local actual_size_kb = detected_prg_size
-    print("\nProgramming PRG-ROM flash")
+	local actual_size_kb = detected_prg_size
+	print("\nProgramming PRG-ROM flash")
 
-    local base_addr = 0x8000
-    local bank_size = 32*1024
-    local buff_size = 1
-    local cur_bank = 0
-    local total_banks = actual_size_kb*1024/bank_size
+	local bank_size = 32 * 1024
+	local cur_bank = 0
+	local total_banks = actual_size_kb * 1024 / bank_size
 
-    while cur_bank < total_banks do
-        if (cur_bank %8 == 0) then
-            print("writting PRG bank: ", cur_bank, " of ", total_banks-1)
-        end
+	while cur_bank < total_banks do
+		if (cur_bank % 8 == 0) then
+			print("writing PRG bank:", cur_bank, "of", total_banks - 1)
+		end
 
-        flash.write_file( file, 32, mapname, "PRGROM", false )
-        cur_bank = cur_bank + 1
-    end
+		flash.write_file(file, 32, mapname, "PRGROM", false)
+		cur_bank = cur_bank + 1
+	end
 
-    print("Done Programming PRG-ROM flash")
+	print("Done Programming PRG-ROM flash")
 end
 
---slow host flash one byte at a time...
+-- Slow host flash one byte at a time
 local function flash_chrrom(file, rom_size_KB, debug)
-    local actual_chr_kb = detected_chr_size
-    
-    if actual_chr_kb == 0 then
-        print("Skipping CHR ROM flash - CHR RAM detected")
-        return
-    end
-    
-    print("\nProgramming CHR-ROM flash")
+	local actual_chr_kb = detected_chr_size
 
-    local base_addr = 0x0000
-    local bank_size = 8*1024
-    local buff_size = 1
-    local cur_bank = 0
-    local total_banks = actual_chr_kb*1024/bank_size
+	if actual_chr_kb == 0 then
+		print("Skipping CHR ROM flash - CHR RAM detected")
+		return
+	end
 
-    while cur_bank < total_banks do
-        if (cur_bank %8 == 0) then
-            print("writting CHR bank: ", cur_bank, " of ", total_banks-1)
-        end
+	print("\nProgramming CHR-ROM flash")
 
-        flash.write_file( file, 8, mapname, "CHRROM", false )
-        cur_bank = cur_bank + 1
-    end
+	local bank_size = 8 * 1024
+	local cur_bank = 0
+	local total_banks = actual_chr_kb * 1024 / bank_size
 
-    print("Done Programming CHR-ROM flash")
+	while cur_bank < total_banks do
+		if (cur_bank % 8 == 0) then
+			print("writing CHR bank:", cur_bank, "of", total_banks - 1)
+		end
+
+		flash.write_file(file, 8, mapname, "CHRROM", false)
+		cur_bank = cur_bank + 1
+	end
+
+	print("Done Programming CHR-ROM flash")
 end
 
---Cart should be in reset state upon calling this function 
---this function processes all user requests for this specific board/mapper
+-- Cart should be in reset state upon calling this function
+-- This function processes all user requests for this specific board/mapper
 local function process(process_opts, console_opts)
-    local test = process_opts["test"]
-    local read = process_opts["read"]
-    local erase = process_opts["erase"]
-    local program = process_opts["program"]
-    local verify = process_opts["verify"]
-    local dumpfile = process_opts["dump_filename"]
-    local flashfile = process_opts["flash_filename"]
-    local verifyfile = process_opts["verify_filename"]
+	local test = process_opts["test"]
+	local read = process_opts["read"]
+	local erase = process_opts["erase"]
+	local program = process_opts["program"]
+	local verify = process_opts["verify"]
+	local dumpfile = process_opts["dump_filename"]
+	local flashfile = process_opts["flash_filename"]
+	local verifyfile = process_opts["verify_filename"]
 
-    local rv = nil
-    local file 
-    local prg_size = console_opts["prg_rom_size_kb"]
-    local chr_size = console_opts["chr_rom_size_kb"]
-    local wram_size = console_opts["wram_size_kb"]
-    local mirror = console_opts["mirror"]
+	local rv = nil
+	local file
+	local prg_size = console_opts["prg_rom_size_kb"]
+	local chr_size = console_opts["chr_rom_size_kb"]
+	local mirror = console_opts["mirror"]
 
-    local filetype = "nes"
+	local filetype = "nes"
 
-    --initialize device i/o for NES
-    dict.io("IO_RESET")
-    dict.io("NES_INIT")
+	-- Initialize device I/O for NES
+	dict.io("IO_RESET")
+	dict.io("NES_INIT")
 
-    -- Detect NROM type first
-    detect_nrom_type()
+	-- Detect NROM type first
+	detect_nrom_type()
 
---test the cart
-    if test then
-        print("Testing ", mapname, is_nrom256 and " (NROM-256)" or " (NROM-128)")
+	-- Test the cart
+	if test then
+		print("Testing", mapname, is_nrom256 and " (NROM-256)" or " (NROM-128)")
+		nes.detect_mapper_mirroring(true)
+		print("EXP0 pull-up test:", dict.io("EXP0_PULLUP_TEST"))
+		prgrom_manf_id(true)
+		chrrom_manf_id(true)
+	end
 
-        nes.detect_mapper_mirroring(true)
-        print("EXP0 pull-up test:", dict.io("EXP0_PULLUP_TEST"))    
+	-- Change mirroring
+	if mirror then
+		print("Setting", mirror, "mirroring via CIC software mirror control")
+		nes.detect_mapper_mirroring(true)
 
-        prgrom_manf_id(true)
-        chrrom_manf_id(true)
-    end
+		ciccom.start()
+		ciccom.set_opcode("M")
+		ciccom.write(mirror)
 
---change mirroring
-    if mirror then
-        print("Setting", mirror, "mirroring via CIC software mirror control")
-        nes.detect_mapper_mirroring(true)
+		dict.io("IO_RESET")
+		ciccom.sleep(0.01)
 
-        ciccom.start()
-        ciccom.set_opcode("M")
-        ciccom.write(mirror)
+		dict.io("SWIM_INIT", "SWIM_ON_A0")
+		if swim.start(true) then
+			swim.read_stack()
+		else
+			print("ERROR trying to read back CIC signature stack data")
+		end
+		swim.stop_and_reset()
 
-        dict.io("IO_RESET")    
-        ciccom.sleep(0.01)
+		print("done reading STM8 stack on A0\n")
 
-        dict.io("SWIM_INIT", "SWIM_ON_A0")    
-        if swim.start(true) then
-            swim.read_stack()
-        else
-            print("ERROR trying to read back CIC signature stack data")
-        end
-        swim.stop_and_reset()
+		dict.io("IO_RESET")
+		dict.io("NES_INIT")
+		nes.detect_mapper_mirroring(true)
+	end
 
-        print("done reading STM8 stack on A0\n")
+	-- Dump the cart to dumpfile
+	if read then
+		print("\nDumping PRG & CHR ROMs...")
 
-        dict.io("IO_RESET")    
-        dict.io("NES_INIT")
-        nes.detect_mapper_mirroring(true)
-    end
+		file = assert(io.open(dumpfile, "wb"))
 
---dump the cart to dumpfile
-    if read then
-        print("\nDumping PRG & CHR ROMs...")
-        
-        file = assert(io.open(dumpfile, "wb"))
+		-- Create header: pass open & empty file & ROM sizes
+		create_header(file, prg_size, chr_size)
 
-        --create header: pass open & empty file & rom sizes
-        create_header(file, prg_size, chr_size)
+		-- Dump cart into file
+		dump_prgrom(file, prg_size, false)
+		dump_chrrom(file, chr_size, true)  -- Enable debug for CHR ROM
 
-        --dump cart into file
-        dump_prgrom(file, prg_size, false)
-        dump_chrrom(file, chr_size, true)  -- Enable debug for CHR ROM
+		-- Close file
+		assert(file:close())
+		print("DONE Dumping PRG & CHR ROMs")
+	end
 
-        --close file
-        assert(file:close())
-        print("DONE Dumping PRG & CHR ROMs")
-    end
+	-- Erase the cart
+	if erase then
+		print("\nErasing", mapname)
 
---erase the cart
-    if erase then
-        print("\nErasing ", mapname);
+		print("erasing PRG-ROM")
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x80)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
+		dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x10)
+		rv = dict.nes("NES_CPU_RD", 0x8000)
 
-        print("erasing PRG-ROM");
-        dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
-        dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
-        dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x80)
-        dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0xAA)
-        dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x2AAA, 0x55)
-        dict.nes("DISCRETE_EXP0_PRGROM_WR", 0x5555, 0x10)
-        rv = dict.nes("NES_CPU_RD", 0x8000)
+		local i = 0
+		while (rv ~= 0xFF) do
+			rv = dict.nes("NES_CPU_RD", 0x8000)
+			i = i + 1
+		end
+		print(i, "naks, done erasing prg.")
 
-        local i = 0
-        while ( rv ~= 0xFF ) do
-            rv = dict.nes("NES_CPU_RD", 0x8000)
-            i = i + 1
-        end
-        print(i, "naks, done erasing prg.");
+		if detected_chr_size > 0 then
+			print("erasing CHR-ROM")
+			dict.nes("NES_PPU_WR", 0x1555, 0xAA)
+			dict.nes("NES_PPU_WR", 0x0AAA, 0x55)
+			dict.nes("NES_PPU_WR", 0x1555, 0x80)
+			dict.nes("NES_PPU_WR", 0x1555, 0xAA)
+			dict.nes("NES_PPU_WR", 0x0AAA, 0x55)
+			dict.nes("NES_PPU_WR", 0x1555, 0x10)
+			rv = dict.nes("NES_PPU_RD", 0x0000)
 
-        if detected_chr_size > 0 then
-            print("erasing CHR-ROM");
-            dict.nes("NES_PPU_WR", 0x1555, 0xAA)
-            dict.nes("NES_PPU_WR", 0x0AAA, 0x55)
-            dict.nes("NES_PPU_WR", 0x1555, 0x80)
-            dict.nes("NES_PPU_WR", 0x1555, 0xAA)
-            dict.nes("NES_PPU_WR", 0x0AAA, 0x55)
-            dict.nes("NES_PPU_WR", 0x1555, 0x10)
-            rv = dict.nes("NES_PPU_RD", 0x0000)
+			i = 0
+			while (rv ~= 0xFF) do
+				rv = dict.nes("NES_PPU_RD", 0x0000)
+				i = i + 1
+			end
+			print(i, "naks, done erasing chr.\n")
+		else
+			print("Skipping CHR ROM erase - CHR RAM detected")
+		end
+	end
 
-            i = 0
-            while ( rv ~= 0xFF ) do
-                rv = dict.nes("NES_PPU_RD", 0x0000)
-                i = i + 1
-            end
-            print(i, "naks, done erasing chr.\n");
-        else
-            print("Skipping CHR ROM erase - CHR RAM detected")
-        end
-    end
+	-- Program flashfile to the cart
+	if program then
+		file = assert(io.open(flashfile, "rb"))
 
---program flashfile to the cart
-    if program then
-        file = assert(io.open(flashfile, "rb"))
+		if filetype == "nes" then
+			local buffsize = 1
+			local byte
+			local count = 1
 
-        if filetype == "nes" then
-            local buffsize = 1
-            local byte
-            local count = 1
+			for byte in file:lines(buffsize) do
+				local data = string.unpack("B", byte, 1)
+				count = count + 1
+				if count == 17 then break end
+			end
+		end
 
-            for byte in file:lines(buffsize) do
-                local data = string.unpack("B", byte, 1)
-                count = count + 1
-                if count == 17 then break end
-            end
-        end
+		flash_prgrom(file, prg_size, true)
+		flash_chrrom(file, chr_size, true)
+		assert(file:close())
+	end
 
-        flash_prgrom(file, prg_size, true)
-        flash_chrrom(file, chr_size, true)
-        assert(file:close())
-    end
+	-- Verify flashfile is on the cart
+	if verify then
+		print("\nPost dumping PRG & CHR ROMs...")
 
---verify flashfile is on the cart
-    if verify then
-        print("\nPost dumping PRG & CHR ROMs...")
+		file = assert(io.open(verifyfile, "wb"))
 
-        file = assert(io.open(verifyfile, "wb"))
+		dump_prgrom(file, prg_size, false)
+		dump_chrrom(file, chr_size, false)
 
-        dump_prgrom(file, prg_size, false)
-        dump_chrrom(file, chr_size, false)
+		assert(file:close())
 
-        assert(file:close())
+		print("DONE post dumping PRG & CHR ROMs")
+	end
 
-        print("DONE post dumping PRG & CHR ROMs")
-    end
-
-    dict.io("IO_RESET")
+	dict.io("IO_RESET")
 end
 
--- global variables so other modules can use them
-
--- call functions desired to run when script is called/imported
-
--- functions other modules are able to call
+-- Functions other modules are able to call
 nrom.process = process
 
--- return the module's table
+-- Return the module's table
 return nrom
