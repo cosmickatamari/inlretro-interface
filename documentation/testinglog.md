@@ -122,6 +122,7 @@
 | B.O.B. | LoROM | None | None |
 | Bonkers | LoROM | None | None |
 | Brain Lord | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
+| BreakThru! | LoROM | None | None |
 | Breath of Fire | LoROM | Yes (Backs Up) | None |
 | Breath of Fire 2 | HiROM | Yes (Backs Up) | None |
 | Bubsy II | HiROM | None | None |
@@ -243,5 +244,4 @@
 ### Super Nintendo Entertainment System (still need to test):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
-| BreakThru! | Unknown | Unknown | Still in shipping. |
 | Whizz | Unknown | Unknown | Still in shipping. |
