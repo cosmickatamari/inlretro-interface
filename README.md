@@ -12,7 +12,7 @@ This project contains both modified versions of the original support files as we
 - If you have an existing installation of the original software, I would recommend applying this project to a copy of that installation.
 - If you fork or adapt this project for your own development, please give appropriate credit. 
 
-<br/>
+<br/><br/>
 Written and tested using:
 * Windows 11 25H2
 * PowerShell 7.5.3
