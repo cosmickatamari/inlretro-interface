@@ -63,8 +63,8 @@ While I do not own or have access to every commercially released cartridge for t
 ## Donations:
 I went back and forth on this but decided to make a voluntary donation page with [Buy Me A Coffee](https://buymeacoffee.com/cosmickatamari) for these reasons:
 - Small donations add up and make it easier to keep projects maintained. 
-- It’s a simple way for people who find the project useful to say “thanks.”
-- It encourages more experiments, side projects, and feature ideas.
+- It’s a simple way for people who find the project useful to say “thank you."
+- It encourages more experiments, side projects, and feature ideas. Also for other projects.
 - But remember, it's totally optional ... the code is still there whether anyone donates or not.
 
 <br/><br/>
