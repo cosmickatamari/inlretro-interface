@@ -1,15 +1,16 @@
 # inlretro-interface
 
 ## Overview:
-This project provides an interactive PowerShell interface for dumping retro game cartridges using the INL Retro Dumper hardware. This software is meant as a drop in for the existing project, originally created by InfiniteNesLives and will require overlapping files from this project ontop of his. All files are provided in the releases section. All modifications are fully documented.
-&nbsp;  &nbsp;  
-The hardware supports a wide range of cartridge-based systems, this software aims to make the dumping process straightforward, reliable, and easy to use.
+This project provides an interactive PowerShell interface for dumping retro game cartridges using the INL Retro Dumper hardware. This software is meant as a drop in for the existing project, originally created by InfiniteNesLives and will require overwriting files from this project ontop of his. All files are provided in the releases section. All modifications are fully documented.
+
+<br/>
+The hardware supports a wide range of cartridge-based systems, this software aims to make the dumping process more straightforward, reliable, and easy to use.
 
 <br/><br/>
 ## About Modifications:
-This project contains both modified versions of the original support files as well as new files created during developement. These changes were necessary to enable more accurate data extraction from cartridges that did not function correctly with the stock configuration and/or mappers. This project aims to improve compatibility and reliability for cartridges.
-If you have an existing installation of the original software, I would recommend applying this project to a copy of that installation.
-If you fork or adapt this project for your own development, please give appropriate credit. 
+This project contains both modified versions of the original support files as well as new files created during developement. These changes were necessary to enable more accurate data extraction from cartridges that did not function correctly with the stock configuration and/or mappers.
+- If you have an existing installation of the original software, I would recommend applying this project to a copy of that installation.
+- If you fork or adapt this project for your own development, please give appropriate credit. 
 
 <br/>
 Written and tested using:
