@@ -34,7 +34,7 @@ While I do not own or have access to every commercially released cartridge for t
 | -- | -- | -- | -- | -- |
 | Nintendo Entertainment System | 76 | 1 | 98.70% | 9/26/2025 |
 | Nintendo Famicom (Family Computer) | 7 | 1 | 87.50% | 9/29/2025 |
-| Super Nintendo Entertainment System | 107 | 5 | 95.54% | 12/17/2025 |
+| Super Nintendo Entertainment System | 108 | 5 | 95.58% | 12/17/2025 |
 | Super Famicom | 0 | 1 | 0.00% | 11/06/2025 |
 
 <br/><br/>
@@ -76,5 +76,3 @@ I went back and forth on this but decided to make a voluntary donation page with
 - The software and modifications are intended solely for personal backup, preservation, and research purposes.
 - Use responsibly and ensure that you own any cartridges you dump; the repository does not provide copyrighted ROMs.
 - **No warranty is provided; use at your own risk.**
-
-</pre>
