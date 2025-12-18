@@ -1,7 +1,9 @@
+<pre>
 # inlretro-interface
 
 ## Overview:
-This project provides an interactive PowerShell interface for dumping retro game cartridges using the INL Retro Dumper hardware. This software is meant as a drop in for the existing project, originally created by InfiniteNesLives and will require overlapping files from this project ontop of his. All files are provided in the releases section. All modifications are fully documented.  The hardware supports a wide range of cartridge-based systems, this software aims to make the dumping process straightforward, reliable, and easy to use.
+This project provides an interactive PowerShell interface for dumping retro game cartridges using the INL Retro Dumper hardware. This software is meant as a drop in for the existing project, originally created by InfiniteNesLives and will require overlapping files from this project ontop of his. All files are provided in the releases section. All modifications are fully documented.  
+The hardware supports a wide range of cartridge-based systems, this software aims to make the dumping process straightforward, reliable, and easy to use.
 
 <br/><br/>
 ## About Modifications:
@@ -73,3 +75,5 @@ I went back and forth on this but decided to make a voluntary donation page with
 - The software and modifications are intended solely for personal backup, preservation, and research purposes.
 - Use responsibly and ensure that you own any cartridges you dump; the repository does not provide copyrighted ROMs.
 - **No warranty is provided; use at your own risk.**
+
+</pre>
