@@ -119,6 +119,7 @@
 | Aerobiz SuperSonic | LoROM | Yes (Backs Up) | None |
 | [Disney's] Aladdin | LoROM | None | None |
 | Animaniacs | LoROM | None | None |
+| Arcana | LoROM | Yes (Backups Up) | SRAM dump worked after framework cleanup and file modularization. |
 | B.O.B. | LoROM | None | None |
 | Bonkers | LoROM | None | None |
 | Brain Lord | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
@@ -227,7 +228,6 @@
 ### Super Nintendo Entertainment System (Issues):
 | Name | Mapper | Battery | Notes |
 | -- | -- | -- | -- |
-| Arcana | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0022 |
 | F-Zero | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0001 |
 | Final Fantasy II (version 1.1) | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0028 |
 | Kirby Super Star | LoROM (SA-1) | Yes (Unknown) | Header Detection isn't working. https://snescentral.com/pcbboards.php?chip=SHVC-1L3B-11 |
