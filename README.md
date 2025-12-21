@@ -43,7 +43,7 @@ While I do not own or have access to every commercially released cartridge for t
 | -- | -- | -- | -- | -- |
 | Nintendo Entertainment System | 9 | 0 | 100% | 9/26/2025 |
 | Nintendo Famicom (Family Computer) | 3 | 0 | 100% | 9/29/2025 |
-| Super Nintendo Entertainment System | 36 | 8 | 81.82% | 12/17/2025 |
+| Super Nintendo Entertainment System | 37 | 7 | 84.09% | 12/20/2025 |
 | Super Famicom | 0 | 1 | 0.00% | 11/06/2025 |
 
 <br/><br/>
