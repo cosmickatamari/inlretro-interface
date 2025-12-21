@@ -144,6 +144,7 @@
 | [Disney's] Goof Troop | LoROM | None | None |
 | Gradius III | LoROM | None | None |
 | The Great Circus Mystery Starring Mickey & Minnie | HiROM | None | None |
+| Home Alone | LoROM | None | None |
 | Hook | LoROM | None | None |
 | HyperZone | LoROM | No | None |
 | Illusion of Gaia | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
@@ -215,6 +216,7 @@
 | Utopia: The Creation of a Nation | LoROM | Yes (Backs Up) | None |
 | Warlock (Beware the Ultimate Evil of) | LoROM | None | None |
 | Wario's Woods | LoROM | Yes (Backs Up) | SRAM offset adjust for detection. |
+| Whizz | LoROM | None | None |
 | Wordtris | LoROM | None | None |
 | Young Merlin | LoROM | None | None |
 | Ys III: Wanderers From Ys | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
@@ -238,10 +240,3 @@
 | Super Mario Kart | HiROM (DSP-1) | Yes (Backs Up) | Game ROM dumps, will load with SRAM data (occasional graphics issues). After choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
 | Super Mario RPG: Legend of the Seven Stars | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0049 |
 | The Legend of Zelda: A Link to the Past | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0164 |
-
-
-<br/><br/> 
-### Super Nintendo Entertainment System (still need to test):
-| Name | Mapper | Battery | Notes |
-| -- | -- | -- | -- |
-| Whizz | Unknown | Unknown | Still in shipping. |
