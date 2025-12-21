@@ -119,7 +119,7 @@
 | Aerobiz SuperSonic | LoROM | Yes (Backs Up) | None |
 | [Disney's] Aladdin | LoROM | None | None |
 | Animaniacs | LoROM | None | None |
-| Arcana | LoROM | Yes (Backups Up) | SRAM dump worked after framework cleanup and file modularization. |
+| Arcana | LoROM | Yes (Backs Up) | SRAM dump worked after framework cleanup and file modularization. |
 | B.O.B. | LoROM | None | None |
 | Bonkers | LoROM | None | None |
 | Brain Lord | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
