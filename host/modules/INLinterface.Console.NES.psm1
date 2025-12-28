@@ -41,6 +41,11 @@ function Invoke-NESDump {
 		[ref]$SessionStartTime
 	)
 	
+	# Initialize SessionStartTime if it hasn't been set yet (for timing calculations)
+	if ($null -eq $SessionStartTime.Value) {
+		$SessionStartTime.Value = Get-Date
+	}
+	
 	$dumpSuccess = Invoke-NESBasedCartridgeDump -ConsoleFolderName 'nes' -CartridgeName $CartridgeName -PSScriptRoot $PSScriptRoot -LogDir $LogDir -NESmapperMenu $NESmapperMenu -BrowserNesDelayMs 750 -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest $LastCartDest -LastSramDest $LastSramDest -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime.Value
 	
 	if ($dumpSuccess) {

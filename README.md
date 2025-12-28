@@ -25,16 +25,16 @@ While I do not own or have access to every commercially released cartridge for t
 	- If the first pass fails, troubleshooting is performed to see what required changes are needed.
 - Second Pass: Conducted after all cartridges in the collection for a given platform have been processed.
 	- This is considered an additional release candidate phase where I would feel comfortable with releasing to the public for testing.
-- Third Pass: This is required should there be additional issues during the second pass or new issues from previously working cartridges are now present from resolving issues with other cartridges from the same console.
+- Additional Passes: This is required should there be additional issues during the second pass or new issues from previously working cartridges are now present from resolving issues with other cartridges from the same console.
 	- This process will continue until either all known cartridges for a console work in one session or if there are known issues for a cartridge preventing it from being correctly dumped. 
 
 <br/><br/>
 ## Game ROM Progression:
 | Console | Success | Failure | Success Rate | Last Updated |
 | -- | -- | -- | -- | -- |
-| Nintendo Entertainment System | 76 | 1 | 98.70% | 9/26/2025 |
+| Nintendo Entertainment System | 87 | 1 | 98.86% | 12/27/2025 |
 | Nintendo Famicom (Family Computer) | 7 | 1 | 87.50% | 9/29/2025 |
-| Super Nintendo Entertainment System | 119 | 4 | 96.75% | 12/20/2025 |
+| Super Nintendo Entertainment System | 123 | 4 | 96.85% | 12/27/2025 |
 | Super Famicom | 0 | 1 | 0.00% | 11/06/2025 |
 
 <br/><br/>
@@ -43,7 +43,7 @@ While I do not own or have access to every commercially released cartridge for t
 | -- | -- | -- | -- | -- |
 | Nintendo Entertainment System | 9 | 0 | 100% | 9/26/2025 |
 | Nintendo Famicom (Family Computer) | 3 | 0 | 100% | 9/29/2025 |
-| Super Nintendo Entertainment System | 37 | 7 | 84.09% | 12/20/2025 |
+| Super Nintendo Entertainment System | 38 | 7 | 84.44% | 12/27/2025 |
 | Super Famicom | 0 | 1 | 0.00% | 11/06/2025 |
 
 <br/><br/>

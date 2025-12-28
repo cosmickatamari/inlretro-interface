@@ -3,16 +3,17 @@
 
 
 <br/><br/>
-### Nintendo Entertainment System:
-| Game Name | Mapper Used | Contains Battery | Notes |
+### Nintendo Entertainment System
+| Game Name | Mapper Used | Contains Battery | Additional Notes |
 | -- | -- | -- | -- |
 | Abadox: The Deadly Inner War | MMC1 | None | None |
 | Adventure Island | CNROM | None | Required original mapper modifications. |
 | Adventure Island II | MMC3 | None | None |
 | Adventures of Lolo | MMC1 | None | None |
-| Arkista's Key | CNROM | None | None |
+| Arkista's Ring | CNROM | None | None |
 | Astyanax | MMC3 | None | Required original mapper modifications. |
 | Balloon Fight | NROM | None | None |
+| Baseball | NROM | None | None |
 | Battletoads | AOROM (using BNROM) | None | None |
 | Battle of Olympus, The | MMC1 | None | Unable to dump cartridge. https://nescartdb.com/profile/view/760/the-battle-of-olympus |
 | Blaster Master | MMC1 | None | None |
@@ -26,11 +27,13 @@
 | [Disney's] Chip 'n Dale Rescue Rangers | MMC1 | None | None |
 | Crystalis | MMC3 | Yes (Backs Up) | None |
 | [Disney's] Darkwing Duck | MMC1 | None | None |
+| Defender II | NROM | None | None |
 | Dig Dug II: Trouble in Paradise | NROM | None | None |
 | Digger T. Rock: The Legend of the Lost City | AOROM (using BNROM) | None | None |
 | Donkey Kong Classics | CNROM | None | Multicart for `Donkey Kong` and `Donkey Kong Jr.` |
 | Dr. Mario | MMC1 | None | None |
 | Dragon Warrior | MMC1 |  Yes (Backs Up) | Required original mapper modifications. |
+| Duck Hunt | NROM | None | None |
 | [Disney's] DuckTales | UNROM | None | Required original mapper modifications. |
 | Excitebike | NROM | None | None |
 | Faxanadu | MMC1 | None | None |
@@ -38,29 +41,36 @@
 | Final Fantasy | MMC1 |  Yes (Backs Up) | Required original mapper modifications. |
 | Gauntlet II (NES Version) | MMC3 | None | None |
 | Ice Climber | NROM | None | None |
+| Jeopardy! 25th Anniversary Edition | AOROM (using BNROM) | None | None |
+| Jeopardy! | AOROM (using BNROM) | None | None |
 | Journey to Silius | MMC1 | None | None |
+| Kid Icarus | MMC1 | None | None |
 | Kirby's Adventure | MMC3 | Yes (Backs Up) | None |
+| Kung Fu | NROM | None | None |
 | Legacy of the Wizard | MMC3 | None | None |
 | Legend of Zelda, The | MMC1 | Yes (Backs Up) | None |
+| Life Force | UNROM | None | None |
 | Little Nemo: The Dream Master | MMC3 | None | None |
 | Marble Madness | ANROM (using BNROM) | None | `BNROM` mapper works for `ANROM` cartridges. |
 | Mario Bros. | NROM | None | None |
 | Mega Man | UNROM | None | None |
 | Mega Man 2 | MMC1 | None | None |
-| Mega Man 3 | MMC3 | None | Required original mapper modifications |
+| Mega Man 3 | MMC3 | None | Required original mapper modifications. |
 | Mega Man 4 | MMC3 | None | None |
 | Mega Man 5 | MMC3 | None | None |
 | Mega Man 6 | MMC3 | None | None |
 | Metroid | MMC1 | None | None |
 | Mickey Mousecapade | CNROM | None | None |
 | NES Open Tournament Golf | MMC1 | Yes (Backs Up) | None |
+| Ninja Gaiden | SLROM | None | None |
 | Paperboy | CNROM | None | None |
+| Pinball | NROM | None | None |
 | Platoon | MMC1 | None | None |
 | R.C. Pro-AM | MMC1 | None | None |
 | Rad Racer | MMC1 | None | None |
 | Rad Racer II | MMC3 | None | None |
 | Rampage | MMC3 | None | None |
-| Snake Rattle n Roll | MMC1 | None | None |
+| Snake Rattle 'n Roll | MMC1 | None | None |
 | Solor Jetman: Hunt for the Golden Warpship | AOROM (using BNROM) | None | None |
 | Solomon's Key | CNROM | None | None |
 | Solstice: The Quest for the Staff of Demnos | ANROM (using BNROM) | None | `BNROM` mapper works for `ANROM` cartridges. |
@@ -72,18 +82,23 @@
 | Teenage Mutant Ninja Turtles | MMC1 | None | None |
 | Tetris | MMC1 | None | None |
 | Tetris 2 | MMC3 | None | None |
+| Simpsons, The: Bart Vs. The World | MMC3 | None | None |
 | Tiny Toon Adventures | MMC3 | None | None |
+| Tiny Toon Adventures 2: Trouble in Wackyland | MMC3 | None | None |
 | Top Gun | UNROM | None | None |
 | Ultima Exodus | MMC1 | None | None |
+| Wario's Woods | MMC3 | Yes (Backups Up) | None |
+| Wheel of Fortune | AOROM | None | None |
 | Willow | MMC1 | None | None |
 | Wizards & Warriors | ANROM (using BNROM) | None | `BNROM` mapper works for `ANROM` cartridges. |
+| Yoshi | MMC1 | None | None |
 | Zelda II: The Adventures of Link | MMC1 | Yes (Backs Up) | None |
 | Zoda's Revenge: StarTropics II | MM6 (using MMC3) | Yes (Backs Up) | None |
 
 
 <br/><br/>
-### Nintendo Famicom (Family Computer):
-| Game Name | Mapper Used | Contains Battery | Notes |
+### Nintendo Famicom (Family Computer)
+| Game Name | Mapper Used | Contains Battery | Additional Notes |
 | -- | -- | -- | -- |
 | Final Fantasy | MMC1 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
 | Final Fantasy II | MMC1 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
@@ -96,9 +111,9 @@
 
 
 <br/><br/>
-### Super Nintendo Entertainment System:
-| Game Name | Mapper Used | Contains Battery | Notes |
-| --- | --- | --- | --- |
+### Super Nintendo Entertainment System
+| Game Name | Mapper Used | Contains Battery | Additional Notes |
+| -- | -- | -- | -- |
 | 7th Saga, The | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | ActRaiser | LoROM | Yes (Backs Up) | None |
 | ActRaiser 2 | HiROM | None | For game ROM, `00` byte padding is a possibility. |
@@ -107,7 +122,8 @@
 | Aerobiz: SuperSonic | LoROM | Yes (Backs Up) | None |
 | [Disney's] Aladdin | LoROM | None | None |
 | Animaniacs | LoROM | None | None |
-| Arcana | LoROM | Yes (Might Work) | SRAM dump worked after framework cleanup and file modularization but no longer working, at least with my copy every 128 bytes seems to be different from the working dump. |
+| Arcana | LoROM | Yes (Might Work) | SRAM dump worked after framework cleanup and file modularization but no longer working. At least with my copy, every 128 bytes seems to be different from the working dump. |
+| Battletoads in Battlemaniacs | LoROM | None | None |
 | B.O.B. | LoROM | None | None |
 | [Disney's] Bonkers | LoROM | None | None |
 | Brain Lord | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
@@ -125,6 +141,7 @@
 | Donkey Kong Country 3: Dixie Kong's Double Trouble | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Dragon's Lair | LoROM | None | None |
 | Earthbound | HiROM | Yes (Backs Up) | Worked after hard coding (`bank=0x30`, `offset=0x0060`, `SNESSYS_PAGE`) for mapper detection. |
+| Earthworm Jim | HiROM | None | None |
 | Eek! The Cat | LoROM | None | None |
 | Equinox | LoROM | Yes (Backs Up) | Potentially, the SRAM and game rom signature will show `00` padding, depending on the amount of data stored. |
 | E.V.O.: The Search for Eden | LoROM | Yes (Backs Up) | None |
@@ -144,6 +161,7 @@
 | Joe and Mac | LoROM | None | None |
 | [Disney's] Jungle Book, The | LoROM | None | None |
 | Jurassic Park | LoROM | None | None |
+| Jurassic Park II: The Chaos Continues | LoROM | None | None |
 | Ka-Blooey | LoROM | None | None |
 | Killer Instinct | HiROM | None | For game ROM, `00` byte padding is a possibility. |
 | King Arthur & the Knights of Justice | HiROM | None | None |
@@ -189,7 +207,7 @@
 | Spanky's Quest | LoROM | None | None |
 | Spectre | LoROM | None | For game ROM, `00` byte padding is a possibility. |
 | Spindizzy Worlds | LoROM | None | None |
-| Star Fox | LoROM (Super FX - Mario Chip 1) | None | Black screen, and no sound. Signature: `00 00 00 00 00 00 C2 30 A9 FF 7F 8D F4 1F A2 AA` https://snescentral.com/article.php?id=0636 |
+| Star Fox | LoROM (Super FX - Mario Chip 1) | None | Doesn't correct dump - black screen, and no sound. Signature: `00 00 00 00 00 00 C2 30 A9 FF 7F 8D F4 1F A2 AA` https://snescentral.com/article.php?id=0636 |
 | Street Fighter II: The World Warrior | LoROM | None | None |
 | Street Fighter II Turbo - Hyper Fighting | HiROM | None | None |
 | Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Gamr ROM will have `00` padding. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0059 |

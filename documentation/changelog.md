@@ -1,6 +1,6 @@
 ### Commited Changes
 
-**12/17/2025 `(inlretro-interface-10p.ps1)`**
+**12/27/2025 `(inlretro-interface-0.10q.ps1)`**
 1. Moved detection temp files from `.\host` to `.\ignore`.
 2. Folder check for `ignore` when detection method begins, the folder is also deleted when the program is gracefully exited.
 3. The session time and amount stats were added during the redump phase, just as the first run.
@@ -16,6 +16,7 @@
 	- Most modules need to start at the beginning; however, console specific modules are on-demand whenever that console is being used to dump a cartridge.
 	- This will also make adding the remaining consoles easier.
 10. Relative paths are now used instead of full paths in the log files and console output.
+11. Various bug fixes relating to the modularization of the application discovered during SNES cartridge dumping.
 
 
 <br/><br/>

@@ -17,7 +17,6 @@ local dict = require "scripts.app.dict"
 local dump = require "scripts.app.dump"
 local flash = require "scripts.app.flash"
 local snes = require "scripts.app.snes"
-local apperase = require "scripts.app.erase"
 
 -- Constants
 local HIROM_NAME = 'HiROM'
@@ -304,6 +303,13 @@ local developer_code = {
 	Utility Functions
 ]]
 
+--- Wait for specified delay duration
+-- @param delay_seconds Delay duration in seconds
+local function wait_delay(delay_seconds)
+	local t0 = os.clock()
+	while os.clock() - t0 < delay_seconds do end
+end
+
 --- Format a value as a hexadecimal string
 -- @param val The value to format
 -- @return Formatted hex string (e.g., "0x1234")
@@ -336,7 +342,8 @@ end
 -- @return Extracted string (trimmed)
 function string_from_bytes(base_addr, length)
 	local byte_table = seq_read(base_addr, length)
-	local s = ""
+	local char_table = {}
+	local char_count = 0
 	
 	for count = 1, length do
 		local byte_val = byte_table[count]
@@ -348,14 +355,16 @@ function string_from_bytes(base_addr, length)
 		
 		-- Filter printable characters (0x20-0xFF)
 		-- Replace control characters with space
+		char_count = char_count + 1
 		if byte_val >= 0x20 and byte_val <= 0xFF then
-			s = s .. string.char(byte_val)
+			char_table[char_count] = string.char(byte_val)
 		elseif byte_val < 0x20 then
-			s = s .. " "
+			char_table[char_count] = " "
 		end
 	end
 	
-	-- Trim trailing spaces
+	-- Join characters and trim trailing spaces
+	local s = table.concat(char_table)
 	return s:match("^%s*(.-)%s*$") or s
 end
 
@@ -421,6 +430,9 @@ function print_header(internal_header)
 		developer_code_str = developer_code[internal_header["developer_code"]]
 	end
 
+	-- Cache version value to avoid duplicate calculation
+	local version = internal_header["version"] or 0
+
 	-- Print header information
 	print("Rom Title:\t\t" .. internal_header["rom_name"])
 	print("Map Mode:\t\t" .. map_mode_str)
@@ -430,7 +442,7 @@ function print_header(internal_header)
 	print("Expansion RAM Size:\t" .. exp_size_str)
 	print("Destination Code:\t" .. destination_code_str)
 	print("Developer:\t\t" .. developer_code_str)
-	print("Version:\t\t" .. string.format("%d.%.1d", (internal_header["version"] or 0) >> 4, (internal_header["version"] or 0) & 0x0F))
+	print("Version:\t\t" .. string.format("%d.%.1d", version >> 4, version & 0x0F))
 	print("Checksum:\t\t" .. hexfmt(internal_header["checksum"]))
 end
 
@@ -438,8 +450,6 @@ end
 -- @param map_adjust Address adjustment for mapping mode (0x0000 for HiROM, 0x8000 for LoROM)
 -- @return Table containing parsed header fields
 function get_header(map_adjust)
-	local mapping = "unknown"
-	
 	-- ROM Registration Addresses (15 bytes)
 	local addr_maker_code = 0xFFB0 - map_adjust             -- 2 bytes
 	local addr_game_code = 0xFFB2 - map_adjust              -- 4 bytes
@@ -460,7 +470,6 @@ function get_header(map_adjust)
 	local addr_checksum = 0xFFDD - map_adjust           -- 2 bytes
 
 	local internal_header = {
-		mapping = mapping,
 		rom_name = string_from_bytes(addr_rom_name, 21),
 		map_mode = dict.snes("SNES_ROM_RD", addr_map_mode),
 		rom_type = dict.snes("SNES_ROM_RD", addr_rom_type),
@@ -498,77 +507,66 @@ end
 
 --- Validate ROM header by checking essential fields
 -- @param internal_header Header table to validate
--- @param debug Enable debug output
 -- @return true if header appears valid
-function isvalidheader(internal_header, debug)
-	-- Check if header is nil or empty
-	if not internal_header then
-		if debug then
-			print("Header is nil")
-		end
-		return false
-	end
-	
-	-- Check for all 0xFF values (unmapped/invalid memory)
-	-- This indicates we're reading from the wrong bank or cartridge isn't responding
-	-- Also check checksum and complement check - if both are 0xFFFF, likely invalid
-	if (internal_header["rom_type"] == 0xFF and 
-	    internal_header["rom_size"] == 0xFF and 
-	    internal_header["map_mode"] == 0xFF) or
-	   (internal_header["checksum"] == 0xFFFF and 
-	    internal_header["compliment_check"] == 0xFFFF) then
-		if debug then
-			print("Rejecting header - all values are 0xFF or checksum/complement are 0xFFFF (unmapped memory)")
-		end
-		return false
-	end
-	
+function isvalidheader(internal_header)
 	-- Relaxed validation - only check essential fields
 	-- Many proto/odd carts omit or corrupt optional fields like checksum
+	
+	-- Special case: Map mode 0x44 (Robotrek, Brain Lord) - be very lenient
+	-- These games use SHVC-2J3M-11 PCB and may have unusual rom_type/rom_size values
+	-- Robotrek in particular may have invalid rom_size/rom_type values
+	-- If map_mode is 0x44, accept the header (map_mode is the key identifier)
+	if internal_header["map_mode"] == 0x44 then
+		return true
+	end
+	
 	local valid_rom_type = hardware_type[internal_header["rom_type"]] ~= nil
 	local valid_rom_size = (internal_header["rom_size"] ~= nil) and
 	                      (rom_size_kb_tbl[internal_header["rom_size"]] ~= nil)
 	
-	if debug then
-		print("ROM type = 0x" .. string.format("%02X", internal_header["rom_type"] or 0xFF) .. 
-		      " (valid: " .. tostring(valid_rom_type) .. ")")
-		print("ROM size = 0x" .. string.format("%02X", internal_header["rom_size"] or 0xFF) .. 
-		      " (valid: " .. tostring(valid_rom_size) .. ")")
-		print("ROM name = '" .. (internal_header["rom_name"] or "") .. "'")
-		print("Map mode = 0x" .. string.format("%02X", internal_header["map_mode"] or 0xFF))
+	return valid_rom_type and valid_rom_size
+end
+
+-- Test configurations to try when reading ROM header
+-- Ordered by likelihood of success (most common first)
+local TEST_CONFIGS = {
+	{bank = 0x00, map_adjust = 0x8000, name = "LoROM detection (bank 0x00)"},
+	{bank = 0x00, map_adjust = 0x0000, name = "HiROM detection (bank 0x00)"},
+	{bank = 0x80, map_adjust = 0x8000, name = "LoROM FastROM detection (bank 0x80)"},
+	{bank = 0x80, map_adjust = 0x0000, name = "HiROM FastROM detection (bank 0x80)"},
+	{bank = 0xC0, map_adjust = 0x8000, name = "LoROM SlowROM detection (bank 0xC0)"},  -- Needed for Robotrek/Brain Lord (map mode 0x44)
+	{bank = 0xC0, map_adjust = 0x0000, name = "HiROM SlowROM detection (bank 0xC0)"},
+	{bank = 0x40, map_adjust = 0x8000, name = "LoROM detection (bank 0x40)"},  -- Additional bank for edge cases like Robotrek
+	{bank = 0x40, map_adjust = 0x0000, name = "HiROM detection (bank 0x40)"},  -- Additional bank for edge cases like Robotrek
+}
+
+--- Try reading header at a specific bank/mapping configuration
+-- @param config Table with bank, map_adjust, and name fields
+-- @param is_retry Whether this is a retry attempt
+-- @return Header table if valid, nil otherwise
+local function try_read_header_at_config(config, is_retry)
+	dict.snes("SNES_SET_BANK", config.bank)
+	local prefix = is_retry and "Retry: " or "Attempting "
+	print(prefix .. config.name .. "...")
+	local header = get_header(config.map_adjust)
+	
+	-- Debug: Show what we read for troubleshooting (especially for Robotrek)
+	if header and header["map_mode"] then
+		local map_mode_val = header["map_mode"]
+		if map_mode_val == 0x44 then
+			-- Found map mode 0x44 - this is Robotrek/Brain Lord
+			print("  DEBUG: Found map_mode 0x44 at " .. config.name)
+		end
 	end
 	
-	-- Check if ROM name has actual printable characters (not just spaces or control chars)
-	local rom_name = internal_header["rom_name"] or ""
-	local has_readable_name = false
-	if rom_name ~= "" then
-		-- Check if name contains at least 3 printable ASCII characters (0x20-0x7E)
-		local printable_count = 0
-		for i = 1, math.min(21, string.len(rom_name)) do
-			local byte = string.byte(rom_name, i)
-			if byte and byte >= 0x20 and byte <= 0x7E then
-				printable_count = printable_count + 1
-			end
-		end
-		has_readable_name = printable_count >= 3
+	if isvalidheader(header) then
+		local suffix = is_retry and " (retry)" or ""
+		print("Valid header found at " .. config.name:match("^([^(]+)") .. " address" .. suffix .. ".")
+		print("")
+		return header
 	end
 	
-	-- If ROM type or size is invalid, but we have a readable ROM name, accept it anyway
-	-- This helps with carts that have non-standard header values but are otherwise valid
-	if not valid_rom_type or not valid_rom_size then
-		if has_readable_name then
-			if debug then
-				print("Accepting header with readable ROM name despite invalid type/size")
-			end
-			return true
-		end
-		if debug then
-			print("Rejecting header - invalid type/size and no readable ROM name")
-		end
-		return false
-	end
-	
-	return true
+	return nil
 end
 
 --- Test cartridge and read header information
@@ -578,46 +576,16 @@ function test()
 	snes.play_mode()
 	
 	-- Small delay to ensure cartridge is ready
-	local t0 = os.clock()
-	while os.clock() - t0 < DELAY_REGISTER_SETUP do end
+	wait_delay(DELAY_REGISTER_SETUP)
 	
 	-- Try reading headers with multiple bank configurations
-	-- Try HiROM banks first since many games use HiROM
-	local hirom_header = nil
-	local lorom_header = nil
 	local internal_header = nil
 	
-	-- First attempt: Try HiROM banks (most common for larger games)
-	-- Try HiROM at bank 0x80 (FastROM) first - most common for commercial games
-	print("Attempting HiROM FastROM detection (bank 0x80)...")
-	dict.snes("SNES_SET_BANK", 0x80)
-	hirom_header = get_header(0x0000)
-	
-	if isvalidheader(hirom_header, true) then
-		print("Valid header found at HiROM FastROM address.")
-		print("")
-		internal_header = hirom_header
-	else
-		-- Try HiROM header at bank 0xC0 (SlowROM)
-		print("Attempting HiROM SlowROM detection (bank 0xC0)...")
-		dict.snes("SNES_SET_BANK", 0xC0)
-		hirom_header = get_header(0x0000)
-		
-		if isvalidheader(hirom_header, true) then
-			print("Valid header found at HiROM SlowROM address.")
-			print("")
-			internal_header = hirom_header
-		else
-			-- Try LoROM header read
-			print("Attempting LoROM detection (bank 0x00)...")
-			dict.snes("SNES_SET_BANK", 0x00)
-			lorom_header = get_header(0x8000)
-			
-			if isvalidheader(lorom_header, true) then
-				print("Valid header found at LoROM address.")
-				print("")
-				internal_header = lorom_header
-			end
+	-- First attempt: Try all configurations
+	for _, config in ipairs(TEST_CONFIGS) do
+		internal_header = try_read_header_at_config(config, false)
+		if internal_header then
+			break
 		end
 	end
 	
@@ -626,39 +594,13 @@ function test()
 		print("Retrying with longer delays...")
 		-- Reset and try again with longer delays
 		snes.play_mode()
-		t0 = os.clock()
-		while os.clock() - t0 < DELAY_REGISTER_SETUP * 2 do end
+		wait_delay(DELAY_REGISTER_SETUP * 2)
 		
-		-- Retry HiROM FastROM
-		print("Retry: HiROM FastROM detection (bank 0x80)...")
-		dict.snes("SNES_SET_BANK", 0x80)
-		hirom_header = get_header(0x0000)
-		
-		if isvalidheader(hirom_header, true) then
-			print("Valid header found at HiROM FastROM address (retry).")
-			print("")
-			internal_header = hirom_header
-		else
-			-- Retry HiROM SlowROM
-			print("Retry: HiROM SlowROM detection (bank 0xC0)...")
-			dict.snes("SNES_SET_BANK", 0xC0)
-			hirom_header = get_header(0x0000)
-			
-			if isvalidheader(hirom_header, true) then
-				print("Valid header found at HiROM SlowROM address (retry).")
-				print("")
-				internal_header = hirom_header
-			else
-				-- Retry LoROM
-				print("Retry: LoROM detection (bank 0x00)...")
-				dict.snes("SNES_SET_BANK", 0x00)
-				lorom_header = get_header(0x8000)
-				
-				if isvalidheader(lorom_header, true) then
-					print("Valid header found at LoROM address (retry).")
-					print("")
-					internal_header = lorom_header
-				end
+		-- Retry all configurations
+		for _, config in ipairs(TEST_CONFIGS) do
+			internal_header = try_read_header_at_config(config, true)
+			if internal_header then
+				break
 			end
 		end
 	end
@@ -676,10 +618,6 @@ function test()
 	
 	return internal_header
 end
-
---[[
-	Flash ROM Functions
-]]
 
 --[[
 	Flash ROM Functions
@@ -735,8 +673,7 @@ local function rom_manf_id(debug)
 end
 
 --- Erase flash ROM chip
--- @param debug Enable debug output
-local function erase_flash(debug)
+local function erase_flash()
 	print("\nErasing TSSOP flash takes about 30sec...")
 	
 	dict.snes("SNES_SET_BANK", 0x00)
@@ -752,13 +689,18 @@ local function erase_flash(debug)
 	-- Wait for erase to complete (check for 0xFF)
 	local rv = dict.snes("SNES_ROM_RD", 0x8000)
 	local i = 0
+	local max_iterations = 1000000  -- Prevent infinite loop
 	
-	while (rv ~= 0xFF) do
+	while (rv ~= 0xFF) and (i < max_iterations) do
 		rv = dict.snes("SNES_ROM_RD", 0x8000)
 		i = i + 1
 	end
 	
-	print(i, "naks, done erasing Super Nintendo.")
+	if i >= max_iterations then
+		print("WARNING: Flash erase timeout - operation may not have completed")
+	end
+	
+	print(i, "nacks, done erasing Super Nintendo.")
 	
 	-- Reset flash
 	dict.snes("SNES_ROM_WR", 0x8000, 0xF0)
@@ -793,8 +735,7 @@ local function stop_gsu_chip(debug, mapping)
 	dict.snes("SNES_ROM_WR", 0x3030, control_reg & 0x7F)  -- Clear bit 7 (GO)
 	
 	-- Wait for processor to stop
-	local t0 = os.clock()
-	while os.clock() - t0 < DELAY_CHIP_STOP do end
+	wait_delay(DELAY_CHIP_STOP)
 	
 	-- Set SCMR (Screen Mode Control Register) for ROM access
 	dict.snes("SNES_ROM_WR", 0x3033, 0x00)
@@ -804,8 +745,7 @@ local function stop_gsu_chip(debug, mapping)
 	dict.snes("SNES_ROM_WR", 0x3030, (control_reg | 0x40) & 0xEF)  -- Set bit 6 (RON), clear bit 4 (RAN)
 	
 	-- Wait for writes to complete
-	t0 = os.clock()
-	while os.clock() - t0 < DELAY_CHIP_STOP do end
+	wait_delay(DELAY_CHIP_STOP)
 	
 	if debug then
 		print("GSU chip stopped and ROM access enabled")
@@ -890,7 +830,7 @@ local function dump_rom(file, start_bank, rom_size_KB, mapping, debug, internal_
 		return
 	end
 	
-	local num_reads = rom_size_KB / KB_per_bank
+	local num_reads = math.ceil(rom_size_KB / KB_per_bank)
 	local read_count = 0
 	
 	-- Dump each bank
@@ -936,11 +876,9 @@ local function dump_earthbound_sram(file, start_bank)
 	print("Earthbound detected - using special SRAM dump (bank 0x30, offset 0x0060, SNESSYS_PAGE, 8KB)")
 	
 	dict.snes("SNES_SET_BANK", 0x30)
+	wait_delay(DELAY_CHIP_STOP)
 	
-	local t0 = os.clock()
-	while os.clock() - t0 < DELAY_CHIP_STOP do end
-	
-		dump.dumptofile(file, 8, 0x0060, "SNESSYS_PAGE", false)
+	dump.dumptofile(file, 8, 0x0060, "SNESSYS_PAGE", false)
 	file:flush()
 end
 
@@ -956,193 +894,13 @@ local function is_simearth_game(rom_title)
 	return string.find(rom_title_upper, "SIM") and string.find(rom_title_upper, "EARTH")
 end
 
---- Check if game is Soul Blazer
--- @param rom_title ROM title string
--- @return true if Soul Blazer detected
-local function is_soulblazer_game(rom_title)
-	if not rom_title or rom_title == "" then
-		return false
-	end
-	
-	local rom_title_upper = string.upper(rom_title)
-	return string.find(rom_title_upper, "SOUL") and string.find(rom_title_upper, "BLAZER")
-end
-
---- Post-process Soul Blazer SRAM dump to extract active save slot
--- Hardware dump format differs from emulator format
--- Search for the save slot signature pattern and extract it
--- @param ram_filename Path to the SRAM dump file
-local function postprocess_soulblazer_sram(ram_filename)
-	local file = io.open(ram_filename, "rb")
-	if not file then
-		print("Soul Blazer: Could not reopen SRAM file for post-processing")
-		return
-	end
-	
-	local raw_data = file:read("*all")
-	file:close()
-	
-	local file_size = #raw_data
-	if file_size < 512 then
-		print("Soul Blazer: SRAM file too small for post-processing")
-		return
-	end
-	
-	-- Emulator format starts with: 04 06 06 04 08 03...
-	-- Hardware dump typically has FF at position 1, then 04 at position 2
-	-- Simple check: if byte 1 is FF and byte 2 is 04, extract from byte 2
-	local found_offset = nil
-	
-	if file_size >= 2 and string.byte(raw_data, 1) == 0xFF and string.byte(raw_data, 2) == 0x04 then
-		found_offset = 2
-		print("Soul Blazer: Detected FF prefix, extracting from offset 0x01")
-	else
-		-- Search for the pattern as fallback
-		local pattern_start = {0x04, 0x06, 0x06, 0x04, 0x08, 0x03}
-		for i = 1, file_size - #pattern_start do
-			local match = true
-			for j = 1, #pattern_start do
-				if string.byte(raw_data, i + j - 1) ~= pattern_start[j] then
-					match = false
-					break
-				end
-			end
-			if match then
-				found_offset = i
-				print("Soul Blazer: Found save slot pattern at offset 0x" .. string.format("%X", found_offset - 1))
-				break
-			end
-		end
-	end
-	
-	if found_offset then
-		print("Soul Blazer: Found save slot pattern at offset 0x" .. string.format("%X", found_offset - 1))
-		-- Verify first byte is 0x04
-		local first_byte = string.byte(raw_data, found_offset)
-		if first_byte ~= 0x04 then
-			print("Soul Blazer: WARNING - Pattern match but first byte is 0x" .. string.format("%02X", first_byte) .. " (expected 0x04)")
-		end
-		
-		-- Extract from found offset to end - this is the save slot data
-		local save_slot_data = string.sub(raw_data, found_offset)
-		
-		-- Verify extracted data starts with 0x04
-		local extracted_first = string.byte(save_slot_data, 1)
-		print("Soul Blazer: Extracted data starts with 0x" .. string.format("%02X", extracted_first))
-		
-		-- Write the corrected format: save slot at start, pad rest with zeros
-		file = io.open(ram_filename, "wb")
-		if not file then
-			print("Soul Blazer: Could not rewrite SRAM file")
-			return
-		end
-		
-		file:write(save_slot_data)
-		
-		-- Pad to original file size if needed
-		if #save_slot_data < file_size then
-			local padding = string.rep("\x00", file_size - #save_slot_data)
-			file:write(padding)
-		end
-		
-		file:close()
-		
-		-- Verify the written file
-		file = io.open(ram_filename, "rb")
-		if file then
-			local verify_data = file:read(1)
-			file:close()
-			if verify_data then
-				local verify_byte = string.byte(verify_data, 1)
-				print("Soul Blazer: Written file starts with 0x" .. string.format("%02X", verify_byte))
-			end
-		end
-		
-		print("Soul Blazer: Post-processed SRAM dump (extracted save slot from offset 0x" .. string.format("%X", found_offset - 1) .. ", wrote " .. #save_slot_data .. " bytes)")
-		
-		-- Also check for save data signature "PG" (50 47) which should appear later in the file
-		local pg_pattern = {0x50, 0x47}
-		local pg_offset = nil
-		for i = 1, file_size - 1 do
-			if string.byte(raw_data, i) == pg_pattern[1] and string.byte(raw_data, i + 1) == pg_pattern[2] then
-				pg_offset = i
-				print("Soul Blazer: Found save data signature 'PG' at offset 0x" .. string.format("%X", pg_offset - 1))
-				break
-			end
-		end
-	else
-		print("Soul Blazer: Could not find save slot signature pattern in SRAM dump")
-		-- Fallback: if dump starts with FF 06, prepend 04 to match emulator format
-		if file_size >= 2 and string.byte(raw_data, 1) == 0xFF and string.byte(raw_data, 2) == 0x06 then
-			local corrected_data = string.char(0x04) .. string.sub(raw_data, 2)
-			-- Ensure file is exactly 8192 bytes (8KB) - truncate if longer, pad if shorter
-			local target_size = 8192
-			if #corrected_data > target_size then
-				corrected_data = string.sub(corrected_data, 1, target_size)
-			elseif #corrected_data < target_size then
-				corrected_data = corrected_data .. string.rep("\x00", target_size - #corrected_data)
-			end
-			file = io.open(ram_filename, "wb")
-			if file then
-				file:write(corrected_data)
-				file:close()
-				print("Soul Blazer: Fallback - prepended 0x04 byte, file size: " .. #corrected_data .. " bytes")
-				
-				-- Check where save data appears in corrected file
-				local pg_pattern = {0x50, 0x47}
-				for i = 1, #corrected_data - 1 do
-					if string.byte(corrected_data, i) == pg_pattern[1] and string.byte(corrected_data, i + 1) == pg_pattern[2] then
-						print("Soul Blazer: Save data 'PG' signature found at offset 0x" .. string.format("%X", i - 1) .. " in corrected file")
-						break
-					end
-				end
-			end
-		elseif string.byte(raw_data, 1) == 0xFF then
-			-- Just remove FF if second byte isn't 06
-			local corrected_data = string.sub(raw_data, 2)
-			file = io.open(ram_filename, "wb")
-			if file then
-				file:write(corrected_data)
-				if #corrected_data < file_size then
-					file:write(string.rep("\x00", file_size - #corrected_data))
-				end
-				file:close()
-				print("Soul Blazer: Fallback - removed leading FF byte")
-			end
-		end
-	end
-end
-
---- Enable LoROM SRAM banks by programming the MAD-1 register
--- Some SHVC-1A5B-0x boards keep SRAM disabled until bits are set at $A13000/$A13001
--- @param ram_size_KB Total SRAM size requested
-local function enable_lorom_sram(ram_size_KB)
-	local effective_size = ram_size_KB or 0
-	if effective_size <= 0 then
-		effective_size = 8 -- default to a single 8KB window so we at least get one bank
-	end
-
-	-- Each bit represents an 8KB window across banks $70-$7F (SNES dev manual, MAD-1)
-	local total_windows = math.max(1, math.ceil(effective_size / 8))
-	if total_windows > 16 then
-		total_windows = 16 -- hardware only exposes banks $70-$7F
-	end
-
-	local lower_mask = 0
-	local upper_mask = 0
-
-	for window = 0, total_windows - 1 do
-		if window < 8 then
-			lower_mask = lower_mask | (1 << window)
-		else
-			upper_mask = upper_mask | (1 << (window - 8))
-		end
-	end
-
-	-- $A13000 controls banks $70-$77, $A13001 controls $78-$7F
-	dict.snes("SNES_SET_BANK", 0xA1)
-	dict.snes("SNES_SYS_WR", 0x3000, lower_mask)
-	dict.snes("SNES_SYS_WR", 0x3001, upper_mask)
+--- SimEarth fallback SRAM dump (used when TOMCAT search fails or file operations fail)
+-- @param file File handle to write to
+local function dump_simearth_fallback(file)
+	print("Dumping SRAM bank 0 of 0 (bank 0x70, offset 0x6000, 8KB, LoROM)")
+	dict.snes("SNES_SET_BANK", 0x70)
+	wait_delay(DELAY_BANK_SWITCH)
+	dump.dumptofile(file, 8, 0x6000, "SNESROM_PAGE", false)
 end
 
 --- Dump SimEarth SRAM (requires TOMCAT signature search)
@@ -1150,24 +908,15 @@ end
 -- @param debug Enable debug output
 local function dump_simearth_sram(file, debug)
 	print("Dumping SRAM bank 0 of 0 (bank 0x70, offset 0x0000, 8KB, LoROM)")
-
-	-- Make sure MAD-1 exposes SRAM before we try to scan for TOMCAT
-	enable_lorom_sram(8)
 	
 	dict.snes("SNES_SET_BANK", 0x70)
-	
-	local t0 = os.clock()
-	while os.clock() - t0 < DELAY_BANK_SWITCH do end
+	wait_delay(DELAY_BANK_SWITCH)
 	
 	-- Read full 32KB window to search for TOMCAT signature
 	local search_file = io.open("simearth_search.bin", "wb")
 	if not search_file then
 		-- Fallback if file creation fails
-		print("Dumping SRAM bank 0 of 0 (bank 0x70, offset 0x6000, 8KB, LoROM)")
-		dict.snes("SNES_SET_BANK", 0x70)
-		t0 = os.clock()
-		while os.clock() - t0 < DELAY_BANK_SWITCH do end
-		dump.dumptofile(file, 8, 0x6000, "SNESROM_PAGE", false)
+		dump_simearth_fallback(file)
 		return
 	end
 	
@@ -1178,11 +927,7 @@ local function dump_simearth_sram(file, debug)
 	if not read_search then
 		-- Fallback if file read fails
 		os.remove("simearth_search.bin")
-		print("Dumping SRAM bank 0 of 0 (bank 0x70, offset 0x6000, 8KB, LoROM)")
-		dict.snes("SNES_SET_BANK", 0x70)
-		t0 = os.clock()
-		while os.clock() - t0 < DELAY_BANK_SWITCH do end
-		dump.dumptofile(file, 8, 0x6000, "SNESROM_PAGE", false)
+		dump_simearth_fallback(file)
 		return
 	end
 	
@@ -1190,22 +935,29 @@ local function dump_simearth_sram(file, debug)
 	read_search:close()
 	os.remove("simearth_search.bin")
 	
-	-- Search for TOMCAT signature: 54 4F 4D 43 41 54
-	local tomcat_pattern = {0x54, 0x4F, 0x4D, 0x43, 0x41, 0x54}
-	local tomcat_pos = nil
+	-- Validate search data was read successfully
+	if not search_data or #search_data == 0 then
+		if debug then
+			print("SimEarth: WARNING - Failed to read search data, using fallback")
+		end
+		dump_simearth_fallback(file)
+		return
+	end
 	
-	for i = 1, math.min(32768 - 6, #search_data - 5) do
-		local match = true
-		for j = 1, 6 do
-			if string.byte(search_data, i + j - 1) ~= tomcat_pattern[j] then
-				match = false
-				break
-			end
+	if #search_data < 8192 then
+		if debug then
+			print("SimEarth: WARNING - Search data too small (" .. #search_data .. " bytes), using fallback")
 		end
-		if match then
-			tomcat_pos = i - 1  -- 0-indexed position
-			break
-		end
+		dump_simearth_fallback(file)
+		return
+	end
+	
+	-- Search for TOMCAT signature: 54 4F 4D 43 41 54
+	-- Use string.find() for more efficient pattern matching
+	local tomcat_pattern = "\x54\x4F\x4D\x43\x41\x54"
+	local tomcat_pos = search_data:find(tomcat_pattern, 1, true)
+	if tomcat_pos then
+		tomcat_pos = tomcat_pos - 1  -- Convert to 0-indexed position
 	end
 	
 	if tomcat_pos then
@@ -1216,17 +968,16 @@ local function dump_simearth_sram(file, debug)
 			file:write(sram_data)
 		else
 			if debug then
-				print("SimEarth: WARNING - Expected 8192 bytes but got " .. #sram_data)
+				print("SimEarth: WARNING - Expected 8192 bytes but got " .. #sram_data .. ", using fallback")
 			end
-			file:write(sram_data)
+			dump_simearth_fallback(file)
 		end
 	else
 		-- Fallback to offset 0x6000 if TOMCAT not found
-		print("Dumping SRAM bank 0 of 0 (bank 0x70, offset 0x6000, 8KB, LoROM)")
-		dict.snes("SNES_SET_BANK", 0x70)
-		t0 = os.clock()
-		while os.clock() - t0 < DELAY_BANK_SWITCH do end
-		dump.dumptofile(file, 8, 0x6000, "SNESROM_PAGE", false)
+		if debug then
+			print("SimEarth: TOMCAT signature not found, using fallback")
+		end
+		dump_simearth_fallback(file)
 	end
 end
 
@@ -1239,7 +990,7 @@ end
 -- @param debug Enable debug output
 -- @param rom_title ROM title for special game detection
 -- @param internal_header Header table for special game detection
-local function dump_ram(file, start_bank, ram_size_KB, mapping, debug, rom_title, internal_header, ram_filename)
+local function dump_ram(file, start_bank, ram_size_KB, mapping, debug, rom_title, internal_header)
 	-- Early exit if no RAM to dump
 	if ram_size_KB == nil or ram_size_KB == 0 then
 		if debug then
@@ -1261,14 +1012,12 @@ local function dump_ram(file, start_bank, ram_size_KB, mapping, debug, rom_title
 	end
 	
 	-- Standard SRAM dump
-	local is_soulblazer = is_soulblazer_game(rom_title)
 	local KB_per_bank
 	local addr_base
 	
 	-- Determine bank size and base address based on mapping
 	if mapping == LOROM_NAME then
-		enable_lorom_sram(ram_size_KB)
-		KB_per_bank = 8   -- LoROM SRAM uses 8KB per bank window
+		KB_per_bank = 32  -- LoROM has 32KB per bank
 		addr_base = 0x00  -- $0000 LoROM RAM start address
 	elseif mapping == HIROM_NAME then
 		KB_per_bank = 8   -- HiROM has 8KB per bank
@@ -1287,11 +1036,6 @@ local function dump_ram(file, start_bank, ram_size_KB, mapping, debug, rom_title
 		num_banks = math.ceil(ram_size_KB / KB_per_bank)
 	end
 	
-	-- Ensure num_banks is valid
-	if not num_banks or num_banks < 1 then
-		num_banks = 1
-	end
-	
 	-- Dump each bank
 	local read_count = 0
 	while read_count < num_banks do
@@ -1307,8 +1051,7 @@ local function dump_ram(file, start_bank, ram_size_KB, mapping, debug, rom_title
 		dict.snes("SNES_SET_BANK", current_bank)
 		
 		-- Small delay to ensure bank switch completes
-		local t0 = os.clock()
-		while os.clock() - t0 < DELAY_BANK_SWITCH do end
+		wait_delay(DELAY_BANK_SWITCH)
 
 		-- Dump based on mapping
 		if mapping == LOROM_NAME then
@@ -1321,17 +1064,15 @@ local function dump_ram(file, start_bank, ram_size_KB, mapping, debug, rom_title
 
 		read_count = read_count + 1
 	end
-	
-	-- Post-process Soul Blazer SRAM if needed
-	if is_soulblazer and ram_filename then
-		file:flush()
-		postprocess_soulblazer_sram(ram_filename)
-	end
 end
 
 --[[
 	Flash Programming Functions
 ]]
+
+-- NOTE: wr_flash_byte() function exists but is currently unused
+-- It may be needed for future flash programming features
+-- Kept for potential future use
 
 --- Program flash ROM from file
 -- TODO: Need to specify first bank, just like dumping!
@@ -1357,12 +1098,12 @@ local function flash_rom(file, rom_size_KB, mapping, debug)
 		return
 	end
 
-	local total_banks = rom_size_KB * 1024 / bank_size
+	local total_banks = math.ceil(rom_size_KB * 1024 / bank_size)
 	local cur_bank = 0
 
 	while cur_bank < total_banks do
 		if cur_bank % 4 == 0 then
-			print("writting ROM bank: ", cur_bank, " of ", total_banks - 1)
+			print("writing ROM bank: ", cur_bank, " of ", total_banks - 1)
 		end
 
 		-- Select the current bank (cannot exceed 0xFF)
@@ -1406,7 +1147,7 @@ local function wr_ram(file, first_bank, ram_size_KB, mapping, debug)
 		bank_size = 8 * 1024   -- HiROM has 8KB per bank
 		base_addr = 0x6000     -- $6000 HiROM RAM start address
 	else
-		print("ERROR! mapping:", mapping, "not supported by dump_ram")
+		print("ERROR! mapping:", mapping, "not supported by wr_ram")
 		return
 	end
 
@@ -1416,15 +1157,16 @@ local function wr_ram(file, first_bank, ram_size_KB, mapping, debug)
 		total_banks = 1
 		bank_size = ram_size_KB * 1024
 	else
-		total_banks = ram_size_KB * 1024 / bank_size
+		total_banks = math.ceil(ram_size_KB * 1024 / bank_size)
 	end
 
 	local cur_bank = 0
 	local byte_num
 	local byte_str, data
 
+	print("This is slow as molasses, but gets the job done")
 	while cur_bank < total_banks do
-		print("writting RAM bank: ", cur_bank, " of ", total_banks - 1)
+		print("writing RAM bank: ", cur_bank, " of ", total_banks - 1)
 
 		-- Select the current bank (cannot exceed 0xFF)
 		if cur_bank <= 0xFF then
@@ -1435,11 +1177,14 @@ local function wr_ram(file, first_bank, ram_size_KB, mapping, debug)
 		end
 
 		-- Write each byte in the bank
-		print("This is slow as molasses, but gets the job done")
 		byte_num = 0
 		while byte_num < bank_size do
 			-- Read next byte from file
 			byte_str = file:read(1)
+			if not byte_str then
+				print("\nERROR: Unexpected end of file at byte " .. byte_num .. " in bank " .. cur_bank)
+				return
+			end
 			data = string.unpack("B", byte_str, 1)
 
 			-- Write the data
@@ -1456,41 +1201,6 @@ local function wr_ram(file, first_bank, ram_size_KB, mapping, debug)
 	end
 
 	print("Done Programming RAM")
-end
-
---[[
-	Flash Programming Functions
-]]
-
---- Write a single byte to SNES ROM flash
--- @param addr Address within current bank (0x0000-0xFFFF)
--- @param value Byte value to write
--- @param debug Enable debug output
-local function wr_flash_byte(addr, value, debug)
-	if addr < 0x0000 or addr > 0xFFFF then
-		print("\n  ERROR! flash write to Super Nintendo", string.format("$%X", addr), "must be $0000-FFFF \n\n")
-		return
-	end
-
-	-- Send unlock command sequence and write byte
-	dict.snes("SNES_ROM_WR", 0x8AAA, 0xAA)
-	dict.snes("SNES_ROM_WR", 0x8555, 0x55)
-	dict.snes("SNES_ROM_WR", 0x8AAA, 0xA0)
-	dict.snes("SNES_ROM_WR", addr, value)
-
-	-- Verify write completed
-	local rv = dict.snes("SNES_ROM_RD", addr)
-	local i = 0
-
-	while rv ~= value do
-		rv = dict.snes("SNES_ROM_RD", addr)
-		i = i + 1
-	end
-	
-	if debug then
-		print(i, "naks, done writing byte.")
-		print("written value:", string.format("%X", value), "verified value:", string.format("%X", rv))
-	end
 end
 
 --[[
@@ -1519,20 +1229,6 @@ local function process(process_opts, console_opts)
 		end
 	end
 	
-	-- Initialize bank variables to defaults (LoROM)
-	local rombank = 0x00
-	local rambank = 0x70
-	
-	if snes_mapping == LOROM_NAME then
-		-- LoROM typically sees the upper half (A15=1) of the first address 0b0000:1000_0000
-		rombank = 0x00
-		rambank = 0x70  -- LoROM maps from 0x70 to 0x7D
-	elseif snes_mapping == HIROM_NAME then
-		-- HiROM bank selection: default to 0x80 (fast ROM, first 4MB)
-		rombank = 0x80  -- Fast ROM, first 4MB (correct for most HiROM games <= 4MB)
-		rambank = 0x30
-	end
-
 	local dumpram = process_opts["dumpram"]
 	local ramdumpfile = process_opts["dumpram_filename"]
 
@@ -1540,32 +1236,49 @@ local function process(process_opts, console_opts)
 	local ram_size = console_opts["wram_size_kb"]
 	local rom_size = console_opts["rom_size_kbyte"]
 
-	-- Test cartridge and read header
-	if process_opts["test"] then
-		print("")
-		print("Testing Super Nintendo game cartridge.")
-		internal_header = test()
-		if internal_header then
-			print_header(internal_header)
-		end
+	-- Initialize bank variables to defaults (LoROM)
+	local rombank = 0x00
+	local rambank = 0x70
 
-		-- Autodetect missing parameters from header
-		if isempty(snes_mapping) and internal_header then
-			snes_mapping = internal_header["mapping"]
-			if snes_mapping == LOROM_NAME then
-				rombank = 0x00
-				rambank = 0x70  -- LoROM maps from 0x70 to 0x7D
-			elseif snes_mapping == HIROM_NAME then
-				-- HiROM bank selection depends on ROM size
-				local rom_size_kb = rom_size or (internal_header and rom_size_kb_tbl[internal_header["rom_size"]] or 0)
-				if rom_size_kb and rom_size_kb <= 4096 then
-					rombank = 0x80  -- First 4MB (fast ROM)
-				else
-					rombank = 0xC0  -- Second 4MB (fast ROM)
-				end
-				rambank = 0x30
+	-- Helper function to setup banks based on mapping and ROM size
+	local function setup_banks(mapping, rom_size_kb)
+		if mapping == LOROM_NAME then
+			rombank = 0x00
+			rambank = 0x70  -- LoROM maps from 0x70 to 0x7D
+		elseif mapping == HIROM_NAME then
+			-- HiROM bank selection depends on ROM size
+			if rom_size_kb and rom_size_kb <= 4096 then
+				rombank = 0x80  -- First 4MB (fast ROM)
+			else
+				rombank = 0xC0  -- Second 4MB (fast ROM)
 			end
+			rambank = 0x30
 		end
+	end
+
+	-- Test cartridge and read header
+	print("")
+	print("Testing Super Nintendo game cartridge")
+	internal_header = test()
+	
+	-- Cache ROM title once for use throughout function
+	local rom_title = ""
+	if internal_header then
+		print_header(internal_header)
+		rom_title = internal_header["rom_name"] or ""
+	end
+
+	-- Use setup_banks for initial bank configuration if mapping is provided
+	if snes_mapping then
+		local rom_size_kb = rom_size or (internal_header and rom_size_kb_tbl[internal_header["rom_size"]] or 0)
+		setup_banks(snes_mapping, rom_size_kb)
+	end
+
+	-- Autodetect missing parameters from header
+	if isempty(snes_mapping) and internal_header then
+		snes_mapping = internal_header["mapping"]
+		local rom_size_kb = rom_size or rom_size_kb_tbl[internal_header["rom_size"]] or 0
+		setup_banks(snes_mapping, rom_size_kb)
 	end
 
 	-- Autodetect RAM size
@@ -1574,28 +1287,9 @@ local function process(process_opts, console_opts)
 		local sram_table = ram_size_kb_tbl[internal_header["sram_size"]]
 		local exp_ram_table = ram_size_kb_tbl[internal_header["exp_ram_size"]] or 0
 		
-		if (sram_table == 0) or (sram_table == nil) then
-			if exp_ram_table > 0 then
-				ram_size = exp_ram_table
-				print("Save RAM Size not provided, " .. ram_size .. " kilobytes detected.")
-			else
-				ram_size = sram_table
-			end
-		else
-			ram_size = sram_table
-		end
-		
-		-- Special handling for SHVC-1A3B-13 PCB: header may report 8KB but actual SRAM is 64KB
-		-- Check if this looks like SHVC-1A3B-13 (LoROM with SRAM, common games like Zelda, etc.)
-		if snes_mapping == LOROM_NAME and ram_size == 8 and internal_header["rom_type"] then
-			local hw_type = hardware_type[internal_header["rom_type"]] or ""
-			if string.find(hw_type, "Save RAM") or string.find(hw_type, "RAM") then
-				-- Many SHVC-1A3B-13 games report 8KB in header but have 64KB SRAM
-				-- Try 64KB if header says 8KB and it's a LoROM game with SRAM
-				print("Warning: Header reports 8KB SRAM, but SHVC-1A3B-13 PCB typically has 64KB.")
-				print("Attempting to dump 64KB SRAM (will verify during dump)...")
-				ram_size = 64
-			end
+		ram_size = sram_table or exp_ram_table or 0
+		if ram_size > 0 and (sram_table == 0 or sram_table == nil) then
+			print("Save RAM Size not provided, " .. ram_size .. " kilobytes detected.")
 		end
 	end
 
@@ -1608,14 +1302,23 @@ local function process(process_opts, console_opts)
 			print("ROM size in header is invalid/unknown - defaulting to 1024KB")
 		end
 	end
+	
+	-- Handle cases where header parsing failed
+	if not internal_header then
+		if (ram_size == 0 or ram_size == nil) and dumpram then
+			print("Header parsing failed - please specify RAM size manually")
+		end
+		if (rom_size == 0 or rom_size == nil) and process_opts["read"] then
+			print("Header parsing failed - please specify ROM size manually")
+		end
+	end
 
 	-- Dump SRAM to file
 	if dumpram then
 		print("\nDumping SAVE RAM...")
 		
 		local file = assert(io.open(ramdumpfile, "wb"))
-		local rom_title = internal_header and internal_header["rom_name"] or ""
-		dump_ram(file, rambank, ram_size, snes_mapping, true, rom_title, internal_header, ramdumpfile)
+		dump_ram(file, rambank, ram_size, snes_mapping, true, rom_title, internal_header)
 		assert(file:close())
 		
 		print("Finished dumping Super Nintendo battery save data (SRAM).")
@@ -1625,8 +1328,7 @@ local function process(process_opts, console_opts)
 	if process_opts["read"] then
 		print("\nDumping Super Nintendo game ROM...")
 		
-		-- Initialize special chips if needed
-		local rom_title = internal_header and internal_header["rom_name"] or ""
+		-- Initialize SuperFX chip if needed
 		if is_superfx_game(internal_header, rom_title) then
 			stop_gsu_chip(true, snes_mapping)
 		end
@@ -1671,8 +1373,7 @@ local function process(process_opts, console_opts)
 	if process_opts["verify"] then
 		print("\nPost dumping Super Nintendo ROM...")
 		
-		-- Initialize special chips if needed
-		local rom_title = internal_header and internal_header["rom_name"] or ""
+		-- Initialize SuperFX chip if needed
 		if is_superfx_game(internal_header, rom_title) then
 			stop_gsu_chip(true, snes_mapping)
 		end
