@@ -13,8 +13,8 @@
 | Arkista's Key | CNROM | None | None |
 | Astyanax | MMC3 | None | Required original mapper modifications. |
 | Balloon Fight | NROM | None | None |
-| Battle of Olympus, The | MMC1 | None | Unable to dump cartridge. https://nescartdb.com/profile/view/760/the-battle-of-olympus |
 | Battletoads | AOROM (using BNROM) | None | None |
+| Battle of Olympus, The | MMC1 | None | Unable to dump cartridge. https://nescartdb.com/profile/view/760/the-battle-of-olympus |
 | Blaster Master | MMC1 | None | None |
 | Bubble Bobble | MMC1 | None | None |
 | Bucky O'Hare | MMC3 | None | None |
@@ -98,7 +98,7 @@
 <br/><br/>
 ### Super Nintendo Entertainment System:
 | Game Name | Mapper Used | Contains Battery | Notes |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | 7th Saga, The | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | ActRaiser | LoROM | Yes (Backs Up) | None |
 | ActRaiser 2 | HiROM | None | For game ROM, `00` byte padding is a possibility. |
