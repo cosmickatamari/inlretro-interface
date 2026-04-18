@@ -86,6 +86,7 @@
 | Tiny Toon Adventures | MMC3 | None | None |
 | Tiny Toon Adventures 2: Trouble in Wackyland | MMC3 | None | None |
 | Top Gun | UNROM | None | None |
+| Top Gun: The Second Mission | MMC3 | None | None |
 | Ultima Exodus | MMC1 | None | None |
 | Wario's Woods | MMC3 | Yes (Backups Up) | None |
 | Wheel of Fortune | AOROM | None | None |
