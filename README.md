@@ -32,10 +32,10 @@ While I do not own or have access to every commercially released cartridge for t
 ## Game ROM Progression:
 | Console | Success | Failure | Success Rate | Last Updated |
 | -- | -- | -- | -- | -- |
-| Nintendo Entertainment System | 87 | 1 | 98.86% | 12/27/2025 |
+| Nintendo Entertainment System | 88 | 1 | 98.88% | 4/18/2026 |
 | Nintendo Famicom (Family Computer) | 7 | 1 | 87.50% | 9/29/2025 |
 | Super Nintendo Entertainment System | 123 | 4 | 96.85% | 12/27/2025 |
-| Super Famicom | 0 | 1 | 0.00% | 11/06/2025 |
+| Super Famicom | 0 | 1 | 0.00% | 11/6/2025 |
 
 <br/><br/>
 ## Game Save Progression:
@@ -44,7 +44,7 @@ While I do not own or have access to every commercially released cartridge for t
 | Nintendo Entertainment System | 9 | 0 | 100% | 9/26/2025 |
 | Nintendo Famicom (Family Computer) | 3 | 0 | 100% | 9/29/2025 |
 | Super Nintendo Entertainment System | 38 | 7 | 84.44% | 12/27/2025 |
-| Super Famicom | 0 | 1 | 0.00% | 11/06/2025 |
+| Super Famicom | 0 | 1 | 0.00% | 11/6/2025 |
 
 <br/><br/>
 ## Installation:
