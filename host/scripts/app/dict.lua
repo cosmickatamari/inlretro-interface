@@ -1,6 +1,13 @@
 -- dictionary module
 -- creates tables with dictionary entries from shared\shared_dict*.h files
 -- performs usb transfer when making dictionary call and returns device data
+--
+-- Host/firmware contract: dict.lua must parse the same shared_dict*.h opcodes and dictionary
+-- indices as the firmware image on the device (see shared/shared_dictionaries.h). The device
+-- bakes dictionary numbers and opcodes at compile time; if the host headers or this parser
+-- drift from what was flashed, USB control transfers fail in hard-to-debug ways. Update
+-- shared headers, dict.lua, and firmware together as one unit—there is no separate runtime
+-- version handshake for the dictionary tables.
 
 -- create the module's table
 local dict = {}

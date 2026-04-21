@@ -12,7 +12,8 @@ function Invoke-FamicomDump {
 		[Parameter(Mandatory)]
 		[string]$CartridgeName,
 		
-		[string]$PSScriptRoot,
+		[Alias('PSScriptRoot')]
+		[string]$HostScriptRoot,
 		
 		[string]$LogDir,
 		
@@ -46,16 +47,10 @@ function Invoke-FamicomDump {
 		$SessionStartTime.Value = Get-Date
 	}
 	
-	$dumpSuccess = Invoke-NESBasedCartridgeDump -ConsoleFolderName 'famicom' -CartridgeName $CartridgeName -PSScriptRoot $PSScriptRoot -LogDir $LogDir -NESmapperMenu $NESmapperMenu -BrowserNesDelayMs 750 -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest $LastCartDest -LastSramDest $LastSramDest -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime.Value
+	$dumpSuccess = Invoke-NESBasedCartridgeDump -ConsoleFolderName 'famicom' -CartridgeName $CartridgeName -PSScriptRoot $HostScriptRoot -LogDir $LogDir -NESmapperMenu $NESmapperMenu -BrowserNesDelayMs 750 -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest $LastCartDest -LastSramDest $LastSramDest -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime.Value
 	
 	if ($dumpSuccess) {
-		# Display session timing message after successful dump
-		Write-Host ""
-		$sessionTimeFormatted = Format-SessionTime -StartTime $SessionStartTime.Value
-		if ($sessionTimeFormatted -ne "") {
-			Write-Host "====[ During this session, you have created $($TimesDumped.Value) cartridge dump(s) in $sessionTimeFormatted. ]====" -ForegroundColor DarkCyan
-		}
-		ReDump -LastArgsArray $LastArgsArray -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LastHasSRAM $LastHasSRAM -TimesDumped $TimesDumped -BrowserPromptShown $BrowserPromptShown -PSScriptRoot $PSScriptRoot -LogFile $LogFile -SessionStartTime $SessionStartTime.Value -IgnoreDir $IgnoreDir
+		ReDump -LastArgsArray $LastArgsArray -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LastHasSRAM $LastHasSRAM -TimesDumped $TimesDumped -BrowserPromptShown $BrowserPromptShown -PSScriptRoot $HostScriptRoot -LogFile $LogFile -SessionStartTime $SessionStartTime.Value -IgnoreDir $IgnoreDir
 	} else {
 		Write-Host "The dump failed. Please check the error messages above." -ForegroundColor Red
 		Write-Host "Exiting due to failure." -ForegroundColor Red

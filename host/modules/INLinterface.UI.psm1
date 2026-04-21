@@ -27,17 +27,19 @@ function Show-LogFileLocation {
 function Show-Header {
 	Clear-Host
 	
+	# Banner width matches ASCII art row length; credit/version lines are right-aligned to that width.
 	$asciiLines = @(
 		"  __  _   _  _       ____      _                __        _             __                ",
 		" |__|| \ | || |     |  _ \ ___| |_ ____ ___    |__| ____ | |_ ___ ____ / _| ____  ___ ___ ",
 		"  || |  \| || |     | |_) / _ \ __|  __/ _ \    || |  _ \| __/ _ \  __| |_ / _  |/ __/ _ \",
 		"  || | |\  || |___  |  _ <  __/ |_| | | (_) |   || | | | | |_| __/ |  |  _| (_| | (_|  __/",
 		" |__||_| \_||_____| |_| \_\___|\__|_|  \___/   |__||_| |_|\__\___|_|  |_|  \____|\___\___|",
-		" ",
-		"                                                      By: cosmickatamari | @cosmickatamari",
-		"                                                     Last Updated: 12/27/2025 | ver. 0.10q",
-		"------------------------------------------------------------------------------------------"
+		" "
 	)
+	$bannerW = $asciiLines[0].Length
+	$asciiLines += "By: cosmickatamari | @cosmickatamari".PadLeft($bannerW, ' ')
+	$asciiLines += "Last Updated: 04/21/2026 | ver. 0.11a".PadLeft($bannerW, ' ')
+	$asciiLines += ("-" * $bannerW)
 	
 	# Display ASCII art with gradient
 	$gradientColors = @('Cyan', 'Cyan', 'DarkGreen', 'DarkGreen', 'DarkCyan', 'White', 'Yellow', 'Yellow', 'DarkGray')
@@ -78,7 +80,7 @@ function Select-Console {
 	Write-Host "`n 1 - Nintendo Entertainment System" -ForegroundColor White
 	Write-Host " 2 - Nintendo Famicom (Family Computer)" -ForegroundColor White
 	Write-Host " 3 - Super Nintendo Entertainment System" -ForegroundColor White
-	Write-Host " 4 - Nintendo 64" -ForegroundColor DarkGray
+	Write-Host " 4 - Nintendo 64" -ForegroundColor White
 	Write-Host " 5 - Gameboy / Gameboy Advance" -ForegroundColor DarkGray
 	Write-Host " 6 - Sega Genesis" -ForegroundColor DarkGray
 	Write-Host " E - Exit" -ForegroundColor Yellow
@@ -86,6 +88,7 @@ function Select-Console {
 	
 	while ($true) {
 		$choice = Read-Host "Select A Console"
+		Write-Host " "
 		
 		# Check for exit command
 		if ($choice -match '^[eE]$') {
@@ -119,8 +122,9 @@ function Get-CartridgeName {
 	)
 	
 	while ($true) {
-		$name = Read-Host "`nWhat's the name of your $ConsoleName game?"
+		$name = Read-Host "What's the name of your $ConsoleName game?"
 		if ([string]::IsNullOrWhiteSpace($name)) { continue }
+		Write-Host ''
 		return $name.Trim()
 	}
 }

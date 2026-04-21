@@ -4,6 +4,8 @@
 
 # Module-specific constants (scoped to prevent export)
 $script:SIGNATURE_BYTES = 16
+# Same as n64/basic.lua UI_VALUE_COLUMN / Write-AlignedSummaryLine (label + colon padded to this width)
+$script:AnalysisLabelColumnWidth = 30
 
 <#
 	Extracts cartridge information from header output.
@@ -222,7 +224,7 @@ function Get-FileAnalysisText {
 <#
 	Displays file analysis lines with appropriate formatting.
 	Takes an array of analysis text lines and displays them with color-coded formatting:
-	- File size, used space, free space, and file signature lines use cyan labels with magenta values
+	- File size, used space, free space, and file signature lines use cyan labels with dark cyan values
 	- Warning and note lines use dark yellow
 	- Error messages use yellow
 	- Empty lines are preserved for spacing
@@ -241,18 +243,27 @@ function Write-FileAnalysisLines {
 	
 	foreach ($line in $AnalysisLines) {
 		$trimmedLine = $line.TrimStart()
+		$w = $script:AnalysisLabelColumnWidth
 		
 		if ($line -match "^(Game ROM|SRAM) file size:") {
 			$parts = $line -split ":", 2
-			Write-Host ($parts[0] + ": ") -NoNewline -ForegroundColor Cyan
+			$prefix = $parts[0] + ':'
+			if ($prefix.Length -lt $w) {
+				$prefix += (' ' * ($w - $prefix.Length))
+			}
+			Write-Host $prefix -NoNewline -ForegroundColor Cyan
 			if ($parts.Count -eq 2) {
-				Write-Host $parts[1].Trim() -ForegroundColor Magenta
+				Write-Host $parts[1].Trim() -ForegroundColor DarkCyan
 			}
 		} elseif ($line -match "^Used space:|^Free space:|^File Signature:") {
 			$parts = $line -split ":", 2
-			Write-Host ($parts[0] + ": ") -NoNewline -ForegroundColor Cyan
+			$prefix = $parts[0] + ':'
+			if ($prefix.Length -lt $w) {
+				$prefix += (' ' * ($w - $prefix.Length))
+			}
+			Write-Host $prefix -NoNewline -ForegroundColor Cyan
 			if ($parts.Count -eq 2) {
-				Write-Host $parts[1].Trim() -ForegroundColor Magenta
+				Write-Host $parts[1].Trim() -ForegroundColor DarkCyan
 			}
 		} elseif ($trimmedLine -match "^(Leading padding|First non-zero|Note:|The SRAM file signature contains only values of '00'\.|Please confirm that the Used Space field above shows valid data\.|If it does not, the SRAM may not have been captured correctly\.)") {
 			Write-Host $line -ForegroundColor DarkYellow

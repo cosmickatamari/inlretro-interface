@@ -17,6 +17,7 @@ local dict = require "scripts.app.dict"
 local dump = require "scripts.app.dump"
 local flash = require "scripts.app.flash"
 local snes = require "scripts.app.snes"
+local inl_ui = require "scripts.app.inl_ui"
 
 -- Constants
 local HIROM_NAME = 'HiROM'
@@ -433,17 +434,17 @@ function print_header(internal_header)
 	-- Cache version value to avoid duplicate calculation
 	local version = internal_header["version"] or 0
 
-	-- Print header information
-	print("Rom Title:\t\t" .. internal_header["rom_name"])
-	print("Map Mode:\t\t" .. map_mode_str)
-	print("Hardware Type:\t\t" .. rom_type_str)
-	print("Rom Size Upper Bound:\t" .. rom_size_str)
-	print("SRAM Size:\t\t" .. sram_size_str)
-	print("Expansion RAM Size:\t" .. exp_size_str)
-	print("Destination Code:\t" .. destination_code_str)
-	print("Developer:\t\t" .. developer_code_str)
-	print("Version:\t\t" .. string.format("%d.%.1d", version >> 4, version & 0x0F))
-	print("Checksum:\t\t" .. hexfmt(internal_header["checksum"]))
+	local uc = inl_ui.use_ansi()
+	inl_ui.print_kv("Rom Title", internal_header["rom_name"], uc)
+	inl_ui.print_kv("Map Mode", map_mode_str, uc)
+	inl_ui.print_kv("Hardware Type", rom_type_str, uc)
+	inl_ui.print_kv("Rom Size Upper Bound", rom_size_str, uc)
+	inl_ui.print_kv("SRAM Size", sram_size_str, uc)
+	inl_ui.print_kv("Expansion RAM Size", exp_size_str, uc)
+	inl_ui.print_kv("Destination Code", destination_code_str, uc)
+	inl_ui.print_kv("Developer", developer_code_str, uc)
+	inl_ui.print_kv("Version", string.format("%d.%.1d", version >> 4, version & 0x0F), uc)
+	inl_ui.print_kv("Checksum", hexfmt(internal_header["checksum"]), uc)
 end
 
 --- Read and parse SNES ROM header
@@ -836,7 +837,7 @@ local function dump_rom(file, start_bank, rom_size_KB, mapping, debug, internal_
 	-- Dump each bank
 	while read_count < num_reads do
 		if read_count % 8 == 0 then
-			print("Dumping ROM bank: ", read_count, " of ", num_reads - 1)
+			inl_ui.emit_rom_bank_progress(read_count, num_reads - 1)
 		end
 
 		local current_bank = start_bank + read_count
@@ -1264,6 +1265,7 @@ local function process(process_opts, console_opts)
 	-- Cache ROM title once for use throughout function
 	local rom_title = ""
 	if internal_header then
+		print("Super Nintendo Cartridge Header:")
 		print_header(internal_header)
 		rom_title = internal_header["rom_name"] or ""
 	end

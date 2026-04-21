@@ -12,7 +12,8 @@ function Invoke-SNESDump {
 		[Parameter(Mandatory)]
 		[string]$CartridgeName,
 		
-		[string]$PSScriptRoot,
+		[Alias('PSScriptRoot')]
+		[string]$HostScriptRoot,
 		
 		[string]$LogDir,
 		
@@ -40,16 +41,16 @@ function Invoke-SNESDump {
 	)
 	
 	# Dynamically import SNESDetection module when SNES dumping is needed
-	$snesDetectionModule = Join-Path $PSScriptRoot "modules\INLinterface.SNESDetection.psm1"
+	$snesDetectionModule = Join-Path $HostScriptRoot "modules\INLinterface.SNESDetection.psm1"
 	if (-not (Get-Module -Name "INLinterface.SNESDetection")) {
 		Import-Module $snesDetectionModule -Force -DisableNameChecking -ErrorAction Stop
 	}
 	
-	$gamesRoot = Join-Path $PSScriptRoot 'games\snes'
+	$gamesRoot = Join-Path $HostScriptRoot 'games\snes'
 	$sramRoot = Join-Path $gamesRoot 'sram'
 	$cartDest = Join-Path $gamesRoot "$CartridgeName.smc"
 	$sramDest = Join-Path $sramRoot "$CartridgeName.srm"
-	$luaScript = Join-Path $PSScriptRoot 'scripts\inlretro2.lua'
+	$luaScript = Join-Path $HostScriptRoot 'scripts\inlretro2.lua'
 	
 	[void](New-Item -ItemType Directory -Path $gamesRoot -Force)
 	[void](New-Item -ItemType Directory -Path $sramRoot -Force)
@@ -57,7 +58,7 @@ function Invoke-SNESDump {
 
 	# Run cartridge detection
 	$testArgs = @('-s', $luaScript, '-c', 'SNES', '-d', 'NUL', '-a', 'NUL')
-	$testExePath = Join-Path $PSScriptRoot 'inlretro.exe'
+	$testExePath = Join-Path $HostScriptRoot 'inlretro.exe'
 	
 	Write-Host ""
 	
@@ -131,23 +132,18 @@ function Invoke-SNESDump {
 	
 	if ($hasSRAM -and $sramSizeKB -gt 0) {
 		$argsArray += @('-a', $sramDest, '-w', "$sramSizeKB")
-		Write-Host ""
-		Write-Host "Parameters used (game ROM and save data):" -ForegroundColor Cyan
-	} else {
-		Write-Host ""
-		Write-Host "Parameters used (only game ROM, no save data detected):" -ForegroundColor Cyan
 	}
 
-	$dumpSuccess = Invoke-INLRetro -ArgsArray $argsArray -CartDest $cartDest -SramDest $sramDest -HasSRAM $hasSRAM -CartridgeTitle $cartTitle -DetectionInfo $detectionInfo -CorrectVersion $correctVersion -PSScriptRoot $PSScriptRoot -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest $LastCartDest -LastSramDest $LastSramDest -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime.Value
+	$parametersUsedCaption = if ($hasSRAM -and $sramSizeKB -gt 0) {
+		'Parameters used (game ROM and save data):'
+	} else {
+		'Parameters used (only game ROM, no save data detected):'
+	}
+
+	$dumpSuccess = Invoke-INLRetro -ArgsArray $argsArray -CartDest $cartDest -SramDest $sramDest -HasSRAM $hasSRAM -CartridgeTitle $cartTitle -DetectionInfo $detectionInfo -CorrectVersion $correctVersion -ParametersUsedCaption $parametersUsedCaption -PSScriptRoot $HostScriptRoot -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest $LastCartDest -LastSramDest $LastSramDest -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime.Value
 
 	if ($dumpSuccess) {
-		# Display session timing message after successful dump
-		Write-Host ""
-		$sessionTimeFormatted = Format-SessionTime -StartTime $SessionStartTime.Value
-		if ($sessionTimeFormatted -ne "") {
-			Write-Host "====[ During this session, you have created $($TimesDumped.Value) cartridge dump(s) in $sessionTimeFormatted. ]====" -ForegroundColor DarkCyan
-		}
-		ReDump -LastArgsArray $LastArgsArray -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LastHasSRAM $LastHasSRAM -TimesDumped $TimesDumped -BrowserPromptShown $BrowserPromptShown -PSScriptRoot $PSScriptRoot -LogFile $LogFile -SessionStartTime $SessionStartTime.Value -IgnoreDir $IgnoreDir
+		ReDump -LastArgsArray $LastArgsArray -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LastHasSRAM $LastHasSRAM -TimesDumped $TimesDumped -BrowserPromptShown $BrowserPromptShown -PSScriptRoot $HostScriptRoot -LogFile $LogFile -SessionStartTime $SessionStartTime.Value -IgnoreDir $IgnoreDir
 	} else {
 		Write-Host "The dump failed. Please check the error messages above." -ForegroundColor Red
 		Write-Host "Exiting due to failure." -ForegroundColor Red

@@ -222,7 +222,7 @@
 | Super Metroid (Player's Choice Version) | LoROM | Yes (Backs Up) | For game ROM, `00` byte padding is a possibility. |
 | Super Ninja Boy | LoROM | None | None |
 | Super Play Action Football | LoROM | Yes (Backs Up) | None |
-| Super Scope 6 | LoROM | None | None | 
+| Super Scope 6 | LoROM | None | None |
 | Super Street Fighter II - The New Challengers | HiROM | None | None |
 | Super Widget | LoROM | None | None |
 | Taz-Mania | LoROM | None | None |
@@ -242,3 +242,19 @@
 | Young Merlin | LoROM | None | None |
 | Ys III: Wanderers from Ys | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
 | Zoop | LoROM | None | None |
+
+<br/><br/>
+### Nintendo 64
+| Game Name | Product Code | Additional Notes |
+| -- | -- | -- |
+| Cruis'n USA | NUS-NCUE-USA | Revision 2 |
+| Donkey Kong 64 | NUS-NDOE-USA | |
+| Goldeneye 007 | NUS-NGEE-USA | |
+| Legend of Zelda, The: Ocarina of Time | NUS-CZLE-USA | Gold Cartridge |
+| Mega Man 64 | NUS-NM6E-USA | |
+| Mickey's USA Speedway | NUS-NMLE-USA | |
+| New Tetris, The | NUS-NRIE-USA | |
+| Quest 64 | NUS-NETE-USA | |
+| Paper Mario | NUS-NMQE-USA | |
+| Pilot Wings 64 | NUS-NPWE-USA | |
+| Super Mario 64 | NUS-NSME-USA | |

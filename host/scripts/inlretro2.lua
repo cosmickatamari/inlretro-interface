@@ -7,6 +7,8 @@ local function isempty(s)
     return s == nil or s == ''
 end
 
+local inl_ui = require "scripts.app.inl_ui"
+
 -- Wrapper for managing operations for most consoles
 function default_exec(process_opts, console_opts)
     console_opts["console_process_script"].process(process_opts, console_opts)
@@ -83,7 +85,7 @@ function main()
     --  nes_prg_rom_size_kb:  int, size of cartridge PRG-ROM in kilobytes
     --  nes_chr_rom_size_kb:  int, size of cartridge CHR-ROM in kilobytes
     --  nes_wram_size_kb:     int, size of cartridge WRAM in kilobytes
-    --  rom_size_kbyte:       int, size of cartridge ROM in kilobytes
+    --  rom_size_kbyte:       int, size of cartridge ROM in kilobytes (N64: 0 = auto-detect in scripts/n64/basic.lua)
     
     -- TODO: This should probably be one level up
     -- TODO: RAM probably needs a verify file as well
@@ -93,9 +95,19 @@ function main()
     local dict = require "scripts.app.dict"
     local help = require "scripts.app.help"
     local appver = help.hex(dict.bootload("GET_APP_VER", nil, nil, nil, true))
-    print("firmware app ver request:", appver)
+    local uc = inl_ui.use_ansi()
+    if uc then
+        inl_ui.print_kv("Firmware app ver request", appver, true)
+    else
+        print("firmware app ver request:", appver)
+    end
     if appver < "3" then
-        print("firmware is out of date, recommend updating")
+        if uc then
+            io.write(inl_ui.YELLOW .. "firmware is out of date, recommend updating" .. inl_ui.RESET .. "\n")
+            io.flush()
+        else
+            print("firmware is out of date, recommend updating")
+        end
     end
     
     -- This method only works for STM32 based devices and reads version from flash address 0x0800-0800
@@ -160,8 +172,15 @@ function main()
     }
     local console_exec = consoles[console_name]
     local console_process_script = console_scripts[console_name]
-    if console_exec == nil then 
-        print("UNSUPPORTED CONSOLE: ", console_name)
+    if console_exec == nil then
+        local uc = inl_ui.use_ansi()
+        local msg = "UNSUPPORTED CONSOLE: " .. tostring(console_name)
+        if uc then
+            io.write(inl_ui.YELLOW .. msg .. inl_ui.RESET .. "\n")
+            io.flush()
+        else
+            print("UNSUPPORTED CONSOLE: ", console_name)
+        end
     else
         local console_opts = {
             wram_size_kb = nes_wram_size_kb,
@@ -171,7 +190,16 @@ function main()
             console_process_script = console_process_script,
             mapper = mapper_name,
         }
-        console_exec(process_opts, console_opts)
+        -- N64: run without with_styled_print so global print() is not overridden during this
+        -- path (mitigation for suspected USB/IPL header issues). All other consoles use
+        -- inl_ui.with_styled_print; n64/basic.lua still styles output via inl_ui / io.write.
+        if console_name == "n64" then
+            console_exec(process_opts, console_opts)
+        else
+            inl_ui.with_styled_print(function()
+                console_exec(process_opts, console_opts)
+            end)
+        end
     end
 end
 

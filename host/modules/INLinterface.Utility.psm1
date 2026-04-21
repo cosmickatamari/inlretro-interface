@@ -87,8 +87,10 @@ function Read-KB-MultipleOf4 {
 }
 
 <#
-	Formats elapsed time as human-readable string.
-	Converts a DateTime start time into a formatted string showing minutes and seconds elapsed.
+	Formats elapsed session time from a start DateTime.
+	- Under 60 minutes: "Xm Ys" or "Xs"
+	- 60 minutes up to 24 hours: "Xh Ym Zs"
+	- 24 hours or more: "N day(s), Xh Ym Zs"
 	Returns an empty string if the start time is null.
 #>
 function Format-SessionTime {
@@ -96,14 +98,25 @@ function Format-SessionTime {
 	
 	if ($null -eq $StartTime) { return "" }
 	
-	$elapsed = (Get-Date) - $StartTime
-	$minutes = [math]::Floor($elapsed.TotalMinutes)
-	$seconds = [math]::Floor($elapsed.TotalSeconds % 60)
+	$e = (Get-Date) - $StartTime
+	if ($e.TotalSeconds -lt 0) { return "0s" }
 	
-	if ($minutes -gt 0) {
-		return "${minutes}m ${seconds}s"
+	$d = $e.Days
+	$h = $e.Hours
+	$m = $e.Minutes
+	$s = $e.Seconds
+	
+	if ($e.TotalHours -ge 24) {
+		$dayWord = if ($d -eq 1) { 'day' } else { 'days' }
+		return "${d} ${dayWord}, ${h}h ${m}m ${s}s"
 	}
-	return "${seconds}s"
+	if ($e.TotalMinutes -ge 60) {
+		return "${h}h ${m}m ${s}s"
+	}
+	if ($m -gt 0) {
+		return "${m}m ${s}s"
+	}
+	return "${s}s"
 }
 
 <#
@@ -171,5 +184,172 @@ function ConvertTo-RelativePath {
 	return $Path
 }
 
-Export-ModuleMember -Function 'Initialize-IgnoreFolder', 'Remove-IgnoreFolder', 'Read-YesNo', 'Read-Int', 'Read-KB-MultipleOf4', 'Format-SessionTime', 'ConvertTo-SafeFileName', 'ConvertTo-RelativePath'
+# Not exported: ROM bank progress row. Do not emit raw CSI via Console.Out — integrated terminals
+# often print ESC as visible "←["; Write-Host uses the host palette (explicit colors, no escape bytes).
+function Write-INLRomBankVtLine {
+	param(
+		[Parameter(Mandatory)][string]$LabelCol,
+		[Parameter(Mandatory)][string]$ValueText
+	)
+	Write-Host $LabelCol -NoNewline -ForegroundColor White
+	Write-Host $ValueText -ForegroundColor DarkCyan
+}
+
+<#
+	Writes one line that may contain inlretro/Lua SGR sequences (\e[Nm with N in 0,33,36,37,96).
+	Uses Write-Host segments so colors work in integrated terminals (Cursor/VS Code) where
+	raw ESC bytes are shown literally even when Win32 VT is enabled.
+#>
+function Write-INLHostAnsiLine {
+	param(
+		[Parameter(Mandatory = $false)]
+		[AllowEmptyString()]
+		[string]$Line
+	)
+	if ($null -eq $Line) { $Line = '' }
+	$Line = [string]$Line
+	$esc = [char]0x1B
+	$csi = [char]0x9B
+	# Lua emits INL-ROM-BANK\tcurrent\tlast under INLRETRO_INTERFACE=1 (Invoke-INLRetro always sets it).
+	$probeInl = [regex]::Replace($Line, '(?:\x1B|\x9B)\[[0-9;]*m', '').TrimEnd("`r").TrimStart([char]0xFEFF).Trim()
+	if ($probeInl -cmatch 'INL-ROM-BANK\t(\d+)\t(\d+)') {
+		$romLbl = 'Dumping ROM bank:'.PadRight(30)
+		$romVal = "$($matches[1]) of $($matches[2])"
+		Write-INLRomBankVtLine -LabelCol $romLbl -ValueText $romVal
+		return
+	}
+	# Rare: some capture/display paths replace ESC with U+2190 (←); normalize for parsing.
+	$arrow = [char]0x2190
+	if ($Line.IndexOf($esc) -lt 0 -and $Line.IndexOf($arrow) -ge 0) {
+		$Line = $Line.Replace("$arrow[", "$esc[")
+	}
+	# Fallback: human-readable ROM bank line (older Lua or manual runs).
+	$plainRom = [regex]::Replace($Line, '(?:\x1B|\x9B)\[[0-9;]*m', '')
+	$plainRom = $plainRom.TrimEnd("`r")
+	$plainTrim = $plainRom.TrimStart([char]0xFEFF).TrimStart()
+	$bankNeedle = 'Dumping ROM bank:'
+	$bankPos = $plainTrim.IndexOf($bankNeedle, [System.StringComparison]::Ordinal)
+	if ($bankPos -ge 0) {
+		$plainBank = $plainTrim.Substring($bankPos).TrimEnd()
+		$bankM = [regex]::Match($plainBank, '^Dumping ROM bank:(\s*)(\d+ of \d+)\s*$')
+		if ($bankM.Success) {
+			$romBankLbl = ('Dumping ROM bank:' + $bankM.Groups[1].Value)
+			if ($romBankLbl.Length -lt 30) {
+				$romBankLbl = $romBankLbl.PadRight(30)
+			} elseif ($romBankLbl.Length -gt 30) {
+				$romBankLbl = $romBankLbl.Substring(0, 30)
+			}
+			$romBankVal = $bankM.Groups[2].Value
+			Write-INLRomBankVtLine -LabelCol $romBankLbl -ValueText $romBankVal
+			return
+		}
+	}
+	if ($Line.IndexOf($esc) -lt 0 -and $Line.IndexOf($csi) -lt 0) {
+		Write-Host $Line
+		return
+	}
+
+	$pattern = [regex]::new([regex]::Escape($esc) + '\[([0-9;]*)m')
+	$idx = 0
+	$fc = $null
+	foreach ($m in $pattern.Matches($Line)) {
+		if ($m.Index -gt $idx) {
+			$chunk = $Line.Substring($idx, $m.Index - $idx)
+			if ($chunk.Length -gt 0) {
+				if ($null -ne $fc) {
+					Write-Host $chunk -NoNewline -ForegroundColor $fc
+				} else {
+					Write-Host $chunk -NoNewline
+				}
+			}
+		}
+		foreach ($part in ($m.Groups[1].Value -split ';')) {
+			$p = $part.Trim()
+			if ($p -eq '' -or $p -eq '1') { continue }
+			switch ($p) {
+				'0' { $fc = $null }
+				'33' { $fc = 'Yellow' }
+				'36' { $fc = 'DarkCyan' }
+				'37' { $fc = 'White' }
+				'96' { $fc = 'Cyan' }
+				Default { }
+			}
+		}
+		$idx = $m.Index + $m.Length
+	}
+	if ($idx -lt $Line.Length) {
+		$chunk = $Line.Substring($idx)
+		if ($chunk.Length -gt 0) {
+			if ($null -ne $fc) {
+				Write-Host $chunk -NoNewline -ForegroundColor $fc
+			} else {
+				Write-Host $chunk -NoNewline
+			}
+		}
+	}
+	Write-Host ''
+}
+
+<#
+	Session banner after a dump: static prose cyan; dump count and elapsed time dark cyan.
+	Called only from Invoke-INLRetro (all console paths and redumps funnel through it).
+#>
+function Write-INLSessionDumpCountBanner {
+	param(
+		[Parameter(Mandatory)][int]$DumpCount,
+		[Parameter(Mandatory)][AllowEmptyString()][string]$SessionTimeFormatted
+	)
+	if ([string]::IsNullOrWhiteSpace($SessionTimeFormatted)) {
+		return
+	}
+	Write-Host '====[ During this session, you have created ' -NoNewline -ForegroundColor Cyan
+	Write-Host "$DumpCount" -NoNewline -ForegroundColor DarkCyan
+	Write-Host ' cartridge dump(s) in ' -NoNewline -ForegroundColor Cyan
+	Write-Host $SessionTimeFormatted -NoNewline -ForegroundColor DarkCyan
+	Write-Host '. ]====' -ForegroundColor Cyan
+}
+
+<#
+	Enables Windows console virtual-terminal processing (ANSI escape interpretation) on the
+	current process stdout/stderr handles. Required when child process output is captured and
+	re-printed: without this, sequences like ESC[36m show as visible garbage (←[36m).
+	No-op on non-Windows or if the process has no console (e.g. pure redirection).
+#>
+function Enable-INLConsoleVirtualTerminal {
+	if (-not ($IsWindows -or $PSVersionTable.Platform -eq 'Win32NT')) {
+		return
+	}
+	try {
+		if (-not ('INLConsoleVt' -as [type])) {
+			Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class INLConsoleVt {
+	[DllImport("kernel32.dll", SetLastError = true)]
+	public static extern IntPtr GetStdHandle(int nStdHandle);
+	[DllImport("kernel32.dll", SetLastError = true)]
+	public static extern bool GetConsoleMode(IntPtr h, out uint mode);
+	[DllImport("kernel32.dll", SetLastError = true)]
+	public static extern bool SetConsoleMode(IntPtr h, uint mode);
+	public const int STD_OUTPUT_HANDLE = -11;
+	public const int STD_ERROR_HANDLE = -12;
+	public const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
+	public static void TryEnableOutAndErr() {
+		foreach (int std in new int[] { STD_OUTPUT_HANDLE, STD_ERROR_HANDLE }) {
+			IntPtr h = GetStdHandle(std);
+			if (h == IntPtr.Zero || h == new IntPtr(-1)) continue;
+			if (!GetConsoleMode(h, out uint mode)) continue;
+			SetConsoleMode(h, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+		}
+	}
+}
+'@ -ErrorAction Stop
+		}
+		[INLConsoleVt]::TryEnableOutAndErr()
+	} catch {
+		# Ignore: non-console host, older Windows, or security-restricted environments
+	}
+}
+
+Export-ModuleMember -Function 'Initialize-IgnoreFolder', 'Remove-IgnoreFolder', 'Read-YesNo', 'Read-Int', 'Read-KB-MultipleOf4', 'Format-SessionTime', 'ConvertTo-SafeFileName', 'ConvertTo-RelativePath', 'Write-INLHostAnsiLine', 'Write-INLSessionDumpCountBanner', 'Enable-INLConsoleVirtualTerminal'
 

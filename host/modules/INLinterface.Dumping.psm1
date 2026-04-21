@@ -2,6 +2,16 @@
 # Main functions that handle the cartridge dumping process for different console types.
 # This module orchestrates the dumping workflow for NES/Famicom and SNES cartridges.
 
+function Format-INLTotalTimeDisplay {
+	param([double]$Seconds)
+	if ($Seconds -le 60) {
+		return "$Seconds seconds"
+	}
+	$mins = [math]::Floor($Seconds / 60)
+	$rem = [math]::Round($Seconds - ($mins * 60), 2)
+	return "$Seconds seconds ($mins min, $rem seconds)"
+}
+
 <#
 	Handles NES/Famicom cartridge dumping workflow.
 	Guides the user through the NES/Famicom dumping process by prompting for mapper selection,
@@ -17,7 +27,8 @@ function Invoke-NESBasedCartridgeDump {
 		[Parameter(Mandatory)]
 		[string]$CartridgeName,
 		
-		[string]$PSScriptRoot,
+		[Alias('PSScriptRoot')]
+		[string]$HostScriptRoot,
 		
 		[string]$LogDir,
 		
@@ -55,7 +66,7 @@ function Invoke-NESBasedCartridgeDump {
 	$hasSRAM = Read-YesNo "`nDoes the cartridge contain a battery save (Working RAM)?"
 
 	# Paths for storing files
-	$gamesRoot = Join-Path $PSScriptRoot "games\$ConsoleFolderName"
+	$gamesRoot = Join-Path $HostScriptRoot "games\$ConsoleFolderName"
 	$sramRoot = Join-Path $gamesRoot 'sram'
 	$cartDest = Join-Path $gamesRoot "$CartridgeName.nes"
 	$sramDest = Join-Path $sramRoot "$CartridgeName.sav"
@@ -67,7 +78,7 @@ function Invoke-NESBasedCartridgeDump {
 
 	# Arguments passed to the executable
 	$argsArray = @(
-		'-s', (Join-Path $PSScriptRoot 'scripts\inlretro2.lua')
+		'-s', (Join-Path $HostScriptRoot 'scripts\inlretro2.lua')
 		'-c', 'NES'
 		'-m', "$nesmap"
 		'-x', "$prg"
@@ -83,13 +94,38 @@ function Invoke-NESBasedCartridgeDump {
 		$argsArray += @('-a', "$sramDest", '-w', '8')
 	}
 
-	$dumpSuccess = Invoke-INLRetro -ArgsArray $argsArray -CartDest $cartDest -SramDest $sramDest -HasSRAM $hasSRAM -CartridgeTitle "" -PSScriptRoot $PSScriptRoot -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest $LastCartDest -LastSramDest $LastSramDest -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime
+	$parametersUsedCaption = if ($hasSRAM) {
+		'Parameters used (game ROM and save data):'
+	} else {
+		'Parameters used (only game ROM, no save data detected):'
+	}
+
+	$dumpSuccess = Invoke-INLRetro -ArgsArray $argsArray -CartDest $cartDest -SramDest $sramDest -HasSRAM $hasSRAM -CartridgeTitle "" -ParametersUsedCaption $parametersUsedCaption -HostScriptRoot $HostScriptRoot -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest $LastCartDest -LastSramDest $LastSramDest -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime
 	
 	return $dumpSuccess
 }
 
 <#
+	Writes one aligned label/value line (matches n64/basic.lua print_ui_kv column: colon on label).
+#>
+function Write-AlignedSummaryLine {
+	param(
+		[Parameter(Mandatory)][string]$Label,
+		[Parameter(Mandatory)][string]$Value,
+		[int]$Width = 30
+	)
+	$prefix = "${Label}:"
+	if ($prefix.Length -lt $Width) {
+		$prefix += (' ' * ($Width - $prefix.Length))
+	}
+	Write-Host $prefix -NoNewline -ForegroundColor Cyan
+	Write-Host $Value -ForegroundColor DarkCyan
+}
+
+<#
 	Executes inlretro.exe with provided arguments and handles output.
+	On non-redumps, optional ParametersUsedCaption is printed in cyan immediately before the
+	.\inlretro.exe command line (shared styling for all consoles).
 	Runs the inlretro.exe executable with the specified arguments, capturing and displaying output
 	in real-time. Handles version correction in output if a correct version is provided. Saves dump
 	parameters for potential redump operations. After execution, analyzes the dumped ROM and SRAM
@@ -106,7 +142,11 @@ function Invoke-INLRetro {
 		[string]$CartridgeTitle = "",
 		[string]$DetectionInfo = $null,
 		[string]$CorrectVersion = $null,
-		[string]$PSScriptRoot,
+		[string]$ParametersUsedCaption = $null,
+		[string]$PostCommandLineNote = $null,
+		[bool]$DeferParametersBannerToLua = $false,
+		[Alias('PSScriptRoot')]
+		[string]$HostScriptRoot,
 		[ref]$TimesDumped,
 		[ref]$LastArgsArray,
 		[ref]$LastCartDest,
@@ -118,7 +158,7 @@ function Invoke-INLRetro {
 		[DateTime]$SessionStartTime
 	)
 
-	$exePath = Join-Path $PSScriptRoot 'inlretro.exe'
+	$exePath = Join-Path $HostScriptRoot 'inlretro.exe'
 	
 	# Check if executable exists
 	if (-not (Test-Path $exePath)) {
@@ -145,7 +185,7 @@ function Invoke-INLRetro {
 		if ($arg -match '^[A-Za-z]:\\' -or $arg -match '^\\\\') {
 			# Convert absolute path to relative path
 			try {
-				$arg = ConvertTo-RelativePath -Path $arg -ScriptRoot $PSScriptRoot
+				$arg = ConvertTo-RelativePath -Path $arg -ScriptRoot $HostScriptRoot
 			} catch {
 				# If conversion fails, use original path
 			}
@@ -158,29 +198,92 @@ function Invoke-INLRetro {
 	}
 	$pretty = $formattedArgs -join ' '
 
-	# Only show command if not a redump
-	if (-not $IsRedump) {
-		Write-Host ".\inlretro.exe $pretty" -ForegroundColor DarkCyan
-		Write-Host ""
+	$deferParamsBanner = $DeferParametersBannerToLua -and -not $IsRedump -and -not [string]::IsNullOrWhiteSpace($ParametersUsedCaption)
+	if ($deferParamsBanner) {
+		$env:INLRETRO_PARAMS_CAPTION = $ParametersUsedCaption.Trim()
+		$env:INLRETRO_PARAMS_CMD = ".\inlretro.exe $pretty"
 	}
 
-	# Execute with direct call operator to ensure real-time output display
+	# Only show command if not a redump (N64 can defer caption/cmd to Lua after cartridge header; output path is Process Summary only)
+	if (-not $IsRedump) {
+		if (-not $deferParamsBanner) {
+			if (-not [string]::IsNullOrWhiteSpace($ParametersUsedCaption)) {
+				Write-Host ""
+				Write-Host $ParametersUsedCaption.Trim() -ForegroundColor Cyan
+			}
+			Write-Host ".\inlretro.exe $pretty" -ForegroundColor DarkCyan
+			if (-not [string]::IsNullOrWhiteSpace($PostCommandLineNote)) {
+				Write-Host $PostCommandLineNote.Trim() -ForegroundColor DarkYellow
+			}
+			Write-Host ""
+		} elseif (-not [string]::IsNullOrWhiteSpace($PostCommandLineNote)) {
+			Write-Host ""
+			Write-Host $PostCommandLineNote.Trim() -ForegroundColor DarkYellow
+			Write-Host ""
+		}
+	}
+
+	# Child stdout is piped: enable ANSI in Lua via env; wall-clock time for Process Summary.
+	$prevForce = $env:INLRETRO_FORCE_ANSI
+	$prevIface = $env:INLRETRO_INTERFACE
+	$env:INLRETRO_FORCE_ANSI = '1'
+	$env:INLRETRO_INTERFACE = '1'
+	$sw = [System.Diagnostics.Stopwatch]::new()
 	$exitCode = 0
+	$dumpElapsedSec = 0.0
 	
 	try {
+		# Piped child output: parse Lua SGR and emit Write-Host segments (works in Cursor/VS Code
+		# where raw ESC is shown literally). Win32 VT alone is not enough for some integrated hosts.
+		Enable-INLConsoleVirtualTerminal
+		$sw.Start()
 		& $exePath @ArgsArray 2>&1 | ForEach-Object {
-			$line = $_
+			# Native EXE stderr on 2>&1 is often ErrorRecord; Exception.Message is not always the raw line.
+			$line = if ($_ -is [System.Management.Automation.ErrorRecord]) {
+				$er = $_
+				if ($null -ne $er.TargetObject -and "$($er.TargetObject)" -ne '') {
+					"$($er.TargetObject)"
+				} elseif ($er.ErrorDetails -and $er.ErrorDetails.Message) {
+					$er.ErrorDetails.Message.Trim()
+				} elseif ($er.Exception -and $er.Exception.Message) {
+					$er.Exception.Message
+				} else {
+					$er.ToString()
+				}
+			} else {
+				"$_"
+			}
 			# Replace incorrect version in output if correct version is provided
 			if ($CorrectVersion -and $line -match "^Version:\s+0\.0") {
-				# Preserve the spacing format (tabs/spaces after "Version:")
 				$line = $line -replace "Version:\s+0\.0", "Version:`t`t$CorrectVersion"
 			}
-			$line | Write-Host
+			# C host prints plain text (no ANSI); match inl_ui.print_kv alignment (30-col labels).
+			if ($line -match '^\s*Device firmware version:\s*(.+?)\s*$') {
+				Write-AlignedSummaryLine -Label "Device firmware version" -Value $matches[1].Trim()
+				return
+			}
+			Write-INLHostAnsiLine -Line $line
 		}
 		$exitCode = $LASTEXITCODE
 	} catch {
 		Write-Error "Failed to execute inlretro.exe: $($_.Exception.Message)"
 		$exitCode = -1
+	} finally {
+		$sw.Stop()
+		$dumpElapsedSec = [math]::Round($sw.Elapsed.TotalSeconds, 2)
+		if ($null -ne $prevForce) {
+			$env:INLRETRO_FORCE_ANSI = $prevForce
+		} else {
+			Remove-Item Env:INLRETRO_FORCE_ANSI -ErrorAction SilentlyContinue
+		}
+		if ($null -ne $prevIface) {
+			$env:INLRETRO_INTERFACE = $prevIface
+		} else {
+			Remove-Item Env:INLRETRO_INTERFACE -ErrorAction SilentlyContinue
+		}
+		Remove-Item Env:INLRETRO_PARAMS_CAPTION -ErrorAction SilentlyContinue
+		Remove-Item Env:INLRETRO_PARAMS_CMD -ErrorAction SilentlyContinue
+		Remove-Item Env:INLRETRO_PARAMS_OUTPUT -ErrorAction SilentlyContinue
 	}
 	
 	Write-Host
@@ -207,12 +310,11 @@ function Invoke-INLRetro {
 		Write-Host "====[ Process Summary ]====" -ForegroundColor Cyan
 		Write-Host ""
 		$cartDestRelative = if (Get-Command ConvertTo-RelativePath -ErrorAction SilentlyContinue) {
-			ConvertTo-RelativePath -Path $CartDest -ScriptRoot $PSScriptRoot
+			ConvertTo-RelativePath -Path $CartDest -ScriptRoot $HostScriptRoot
 		} else {
 			$CartDest
 		}
-		Write-Host "Cartridge game ROM location: " -NoNewline -ForegroundColor Cyan
-		Write-Host "$cartDestRelative" -ForegroundColor Magenta
+		Write-AlignedSummaryLine -Label 'Cartridge game ROM location' -Value $cartDestRelative
 		
 		# Get ROM file analysis (do this once, reuse for logging)
 		$romAnalysis = @()
@@ -235,12 +337,11 @@ function Invoke-INLRetro {
 		if ($HasSRAM -and (Test-Path $SramDest)) {
 			Write-Host ""
 			$sramDestRelative = if (Get-Command ConvertTo-RelativePath -ErrorAction SilentlyContinue) {
-				ConvertTo-RelativePath -Path $SramDest -ScriptRoot $PSScriptRoot
+				ConvertTo-RelativePath -Path $SramDest -ScriptRoot $HostScriptRoot
 			} else {
 				$SramDest
 			}
-			Write-Host "Cartridge save data location: " -NoNewline -ForegroundColor Cyan
-			Write-Host "$sramDestRelative" -ForegroundColor Magenta
+			Write-AlignedSummaryLine -Label 'Cartridge save data location' -Value $sramDestRelative
 			
 			# Get SRAM file analysis (do this once, reuse for logging)
 			$sramAnalysis = @(Get-FileAnalysisText -FilePath $SramDest -FileType "SRAM")
@@ -262,12 +363,31 @@ function Invoke-INLRetro {
 			Write-Host ""
 		}
 		
+		# Timing last under Process Summary (aligned; Total time is the final line); no blank line
+		# between file analysis (e.g. File Signature) and Average speed.
+		if ((Test-Path -LiteralPath $CartDest) -and $dumpElapsedSec -gt 0) {
+			$romKiB = [math]::Round((Get-Item -LiteralPath $CartDest).Length / 1024, 0)
+			$kbps = [math]::Round($romKiB / $dumpElapsedSec, 2)
+			$totalTimeDisp = Format-INLTotalTimeDisplay -Seconds $dumpElapsedSec
+			Write-AlignedSummaryLine -Label "Average speed" -Value "$kbps KBps"
+			Write-AlignedSummaryLine -Label "Total time" -Value $totalTimeDisp
+			$processSummary += "Average speed: $kbps KBps"
+			$processSummary += "Total time: $totalTimeDisp"
+		}
+		
 		# Log successful dump (after display, using already-computed analysis)
 		if ($IsRedump) {
 			$redumpMessage = "Re-running previous cartridge dump command. Subsequent dump attempts are saved with incrementing identifiers appended to the output file name."
 			Write-DumpLog -CommandString $redumpMessage -CartridgeFile $CartDest -SramFile $SramDest -Success $true -DetectionInfo $DetectionInfo -IsRedump $true -CartridgeTitle $CartridgeTitle -ProcessSummary ($processSummary -join "`n") -TimesDumped $TimesDumped.Value -SessionStartTime $SessionStartTime -LogFile $LogFile
 		} else {
 			Write-DumpLog -CommandString $pretty -CartridgeFile $CartDest -SramFile $SramDest -Success $true -DetectionInfo $DetectionInfo -IsRedump $false -CartridgeTitle $CartridgeTitle -ProcessSummary ($processSummary -join "`n") -TimesDumped $TimesDumped.Value -SessionStartTime $SessionStartTime -LogFile $LogFile
+		}
+		
+		# Session banner: one place for all consoles (NES path, SNES, N64, redumps).
+		Write-Host ""
+		$sessionTimeFormatted = Format-SessionTime -StartTime $SessionStartTime
+		if ($sessionTimeFormatted -ne "") {
+			Write-INLSessionDumpCountBanner -DumpCount $TimesDumped.Value -SessionTimeFormatted $sessionTimeFormatted
 		}
 		
 		return $true
@@ -290,7 +410,8 @@ function ReDump {
 		[ref]$LastHasSRAM,
 		[ref]$TimesDumped,
 		[ref]$BrowserPromptShown,
-		[string]$PSScriptRoot,
+		[Alias('PSScriptRoot')]
+		[string]$HostScriptRoot,
 		[string]$LogFile,
 		[DateTime]$SessionStartTime,
 		[string]$IgnoreDir
@@ -341,7 +462,7 @@ function ReDump {
 				}
 			}
 			
-			$redumpSuccess = Invoke-INLRetro -ArgsArray $newArgsArray -CartDest $newCartDest -SramDest $newSramDest -HasSRAM $LastHasSRAM.Value -IsRedump $true -CartridgeTitle "" -PSScriptRoot $PSScriptRoot -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest ([ref]$newCartDest) -LastSramDest ([ref]$newSramDest) -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime
+			$redumpSuccess = Invoke-INLRetro -ArgsArray $newArgsArray -CartDest $newCartDest -SramDest $newSramDest -HasSRAM $LastHasSRAM.Value -IsRedump $true -CartridgeTitle "" -HostScriptRoot $HostScriptRoot -TimesDumped $TimesDumped -LastArgsArray $LastArgsArray -LastCartDest ([ref]$newCartDest) -LastSramDest ([ref]$newSramDest) -LastHasSRAM $LastHasSRAM -BaseCartDest $BaseCartDest -BaseSramDest $BaseSramDest -LogFile $LogFile -SessionStartTime $SessionStartTime
 			
 			if (-not $redumpSuccess) {
 				Write-Host ""
@@ -349,13 +470,6 @@ function ReDump {
 				Show-LogFileLocation -TimesDumped $TimesDumped.Value -LogFile $LogFile
 				Remove-IgnoreFolder -IgnoreDir $IgnoreDir
 				exit 1
-			}
-			
-			# Display session timing message after successful redump
-			Write-Host ""
-			$sessionTimeFormatted = Format-SessionTime -StartTime $SessionStartTime
-			if ($sessionTimeFormatted -ne "") {
-				Write-Host "====[ During this session, you have created $($TimesDumped.Value) cartridge dump(s) in $sessionTimeFormatted. ]====" -ForegroundColor DarkCyan
 			}
 		
 		} else {
@@ -385,5 +499,5 @@ function ReDump {
 	return $true
 }
 
-Export-ModuleMember -Function Invoke-NESBasedCartridgeDump, Invoke-INLRetro, ReDump
+Export-ModuleMember -Function Invoke-NESBasedCartridgeDump, Write-AlignedSummaryLine, Format-INLTotalTimeDisplay, Invoke-INLRetro, ReDump
 
