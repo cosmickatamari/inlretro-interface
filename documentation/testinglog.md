@@ -1,3 +1,6 @@
+> [!NOTE]
+> Unless otherwise stated, all games listed below have successfully dumped and run within an emulator and MiSTer.
+
 > [!IMPORTANT]
 > Logging and discussion of issues are now in the issues section of the GitHub repository: https://github.com/cosmickatamari/inlretro-interface/issues
 
@@ -15,7 +18,7 @@
 | Balloon Fight | NROM | None | None |
 | Baseball | NROM | None | None |
 | Battletoads | AOROM (using BNROM) | None | None |
-| Battle of Olympus, The | MMC1 | None | Unable to dump cartridge. https://nescartdb.com/profile/view/760/the-battle-of-olympus |
+| Battle of Olympus, The | MMC1 | None | <code style="color : red">Unable to dump cartridge.</code> https://nescartdb.com/profile/view/760/the-battle-of-olympus |
 | Blaster Master | MMC1 | None | None |
 | Bubble Bobble | MMC1 | None | None |
 | Bucky O'Hare | MMC3 | None | None |
@@ -39,7 +42,8 @@
 | Faxanadu | MMC1 | None | None |
 | Felix the Cat | MMC3 | None | None |
 | Final Fantasy | MMC1 |  Yes (Backs Up) | Required original mapper modifications. |
-| Gauntlet II (NES Version) | MMC3 | None | None |
+| Gauntlet | MMC3 | None | None |
+| Gauntlet II (Licensed Version) | MMC3 | None | None |
 | Ice Climber | NROM | None | None |
 | Jeopardy! 25th Anniversary Edition | AOROM (using BNROM) | None | None |
 | Jeopardy! | AOROM (using BNROM) | None | None |
@@ -104,7 +108,7 @@
 | Final Fantasy | MMC1 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
 | Final Fantasy II | MMC1 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
 | Final Fantasy III | MMC3 | Yes (Backs Up) | Cartridge was translated from Japanese to English using [Voultar's Translation Service](https://voultar.com/index.php?route=product/product&path=60&product_id=82). |
-| Mappy-Land | NAMCOT-3415 | None | Unable to dump cartridge. https://nescartdb.com/profile/view/1790/mappy-land |
+| Mappy-Land | NAMCOT-3415 | None | <code style="color : red">Unable to dump cartridge.</code> https://nescartdb.com/profile/view/1790/mappy-land |
 | Pooyan | NROM-256 | None | Required original mapper `NROM` modifications. |
 | Son Son | NROM-256 | None | Required original mapper `NROM` modifications. |
 | Spelunker | NROM-256 | None | Required original mapper `NROM` modifications. |
@@ -123,7 +127,7 @@
 | Aerobiz: SuperSonic | LoROM | Yes (Backs Up) | None |
 | [Disney's] Aladdin | LoROM | None | None |
 | Animaniacs | LoROM | None | None |
-| Arcana | LoROM | Yes (Might Work) | SRAM dump worked after framework cleanup and file modularization but no longer working. At least with my copy, every 128 bytes seems to be different from the working dump. |
+| Arcana | LoROM | Yes (Might Work) | SRAM dump worked after framework cleanup and file modularization but no longer working. At least with my copy, every `128 bytes` seems to be different from the working dump. |
 | Battletoads in Battlemaniacs | LoROM | None | None |
 | B.O.B. | LoROM | None | None |
 | [Disney's] Bonkers | LoROM | None | None |
@@ -146,8 +150,8 @@
 | Eek! The Cat | LoROM | None | None |
 | Equinox | LoROM | Yes (Backs Up) | Potentially, the SRAM and game rom signature will show `00` padding, depending on the amount of data stored. |
 | E.V.O.: The Search for Eden | LoROM | Yes (Backs Up) | None |
-| F-Zero | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0001 |
-| Final Fantasy II (version 1.1) | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0028 |
+| F-Zero | LoROM | Yes (Issues) | <code style="color : red">Game ROM dumps, SRAM will not properly backup.</code> <br>Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0001 |
+| Final Fantasy II (version 1.1) | LoROM | Yes (Issues) | <code style="color : red">Game ROM dumps, SRAM will not properly backup.</code> <br>Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0028 |
 | Final Fantasy III | HiROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Final Fantasy Mystic Quest | LoROM | Yes (Backs Up) | None |
 | Flashback - The Quest for Identity | HiROM | None | Fix for `Write-FileAnalysisLines` when being called and having an empty array. Also, needed to adjust for `00` padding in game ROM. |
@@ -166,22 +170,22 @@
 | Ka-Blooey | LoROM | None | None |
 | Killer Instinct | HiROM | None | For game ROM, `00` byte padding is a possibility. |
 | King Arthur & the Knights of Justice | HiROM | None | None |
-| Kirby Super Star | LoROM (SA-1) | Yes (Unknown) | Header Detection isn't working. https://snescentral.com/pcbboards.php?chip=SHVC-1L3B-11 |
+| Kirby Super Star | LoROM (SA-1) | Yes (Unknown) | <code style="color : red">Header Detection isn't working.</code> https://snescentral.com/pcbboards.php?chip=SHVC-1L3B-11 |
 | Kirby's Avalanche | LoROM | None | None |
 | Kirby's Dream Course | LoROM | Yes (Backs Up) | None |
-| Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0431 |
+| Kirby's Dream Land 3 | LoROM (SA-1) | Yes (Unknown) | <code style="color : red">Header detection isn't working.</code> https://snescentral.com/article.php?id=0431 |
 | Lagoon | LoROM | Yes (Backs Up) | For SRAM, `00` byte padding is a possibility depending on progress made in the game. |
-| Legend of Zelda, The: A Link to the Past | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0164 |
+| Legend of Zelda, The: A Link to the Past | LoROM | Yes (Issues) | <code style="color : red">Game ROM dumps, SRAM will not properly backup.</code> <br>Confirmed possible saved data accessible on console. https://snescentral.com/article.php?id=0164 |
 | Lemmings | LoROM | None | None |
 | Lemmings 2: The Tribes | LoROM | Yes (Backs Up) | Byte offset for SRAM needed to be referenced at `0x6000`. |
-| Lion King, The | HiROM | None | Around banks 32 through 48 seemed to be slower than normal. |
+| Lion King, The | HiROM | None | Around banks `32` through `48` seemed to be slower than normal. |
 | [J.R.R. Tolkien's] The Lord of the Rings, Volume 1 | LoROM | None | None |
 | Lost Vikings, The | LoROM | None | None |
 | Lufia & the Fortress of Doom | LoROM | Yes (Backs Up) | `HiROM` SRAM detection needed tweaking. |
 | Lufia II: Rise of the Sinistrals | LoROM | Yes (Backs Up) | Additional `HiROM` mapper and SRAM detections needed slight tweaking. |
 | Magical Quest Starring Mickey Mouse, The | LoROM | None | None |
 | Maui Mallard In: Cold Shadow | LoROM | None | None |
-| Mario Paint | LoROM | Yes (Potential Issues) | Game ROM dumps but I think there's an issue with my cartridge. Even after replacing the battery, it has a problem retaining data. https://snescentral.com/article.php?id=0035 |
+| Mario Paint | LoROM | Yes (Potential Issues) | <code style="color : red">Game ROM dumps but I think there's an issue with my cartridge. Even after replacing the battery, it has a problem retaining data.</code> https://snescentral.com/article.php?id=0035 |
 | Mega Man X | LoROM | None | None |
 | Mickey Mania: The Timeless Adventures of Mickey Mouse | LoROM | None | None |
 | Mickey's Ultimate Challenge | LoROM | None | None |
@@ -201,24 +205,24 @@
 | Secret of Evermore | HiROM | Yes (Backs Up) | The SRAM correctly dumped after Earthbound fix. |
 | Secret of Mana | HiROM | Yes (Backs Up) | Mapper detection needed to be altered for game ROM. The SRAM correctly dumped after Earthbound fix. |
 | Sim Ant: The Electronic Ant Colony | LoROM | Yes (Backs Up) | Needed to change out battery, but also needed to start at `0x0000` instead of `0x8000`. |
-| Sim City | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Battery had to be replaced, confirmed saved data accessible on console. https://snescentral.com/pcbboards.php?chip=SHVC-1A5B-03 |
+| Sim City | LoROM | Yes (Issues) | <code style="color : red">Game ROM dumps, SRAM will not properly backup. Battery had to be replaced, confirmed saved data accessible on console.</code> https://snescentral.com/pcbboards.php?chip=SHVC-1A5B-03 |
 | Sim Earth: The Living Planet | LoROM | Yes (Backs Up) | Needed to expand SRAM banks, `TOMCAT` signature check. |
-| Soul Blazer | LoROM | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. However, Hex Editor shows character data. https://snescentral.com/article.php?id=0620 |
+| Soul Blazer | LoROM | Yes (Issues) | <code style="color : red">Game ROM dumps, SRAM will not properly backup. However, Hex Editor shows character data.</code> https://snescentral.com/article.php?id=0620 |
 | Space Ace | LoROM | None | None |
 | Spanky's Quest | LoROM | None | None |
 | Spectre | LoROM | None | For game ROM, `00` byte padding is a possibility. |
 | Spindizzy Worlds | LoROM | None | None |
-| Star Fox | LoROM (Super FX - Mario Chip 1) | None | Doesn't correct dump - black screen, and no sound. Signature: `00 00 00 00 00 00 C2 30 A9 FF 7F 8D F4 1F A2 AA` https://snescentral.com/article.php?id=0636 |
+| Star Fox | LoROM (Super FX - Mario Chip 1) | None | <code style="color : red">Doesn't correct dump - black screen, and no sound.</code> <br>Signature: `00 00 00 00 00 00 C2 30 A9 FF 7F 8D F4 1F A2 AA` https://snescentral.com/article.php?id=0636 |
 | Street Fighter II: The World Warrior | LoROM | None | None |
 | Street Fighter II Turbo - Hyper Fighting | HiROM | None | None |
-| Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | Game ROM dumps, SRAM will not properly backup. Gamr ROM will have `00` padding. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0059 |
+| Stunt Racer FX | LoROM (Super FX - GSU-1) | Yes (Issues) | <code style="color : red">Game ROM dumps, SRAM will not properly backup.</code> Game ROM will have `00` padding. Confirmed saved data accessible on console. https://snescentral.com/article.php?id=0059 |
 | Super Adventure Island | LoROM | None | None |
 | Super Bomberman 2 | HiRom | None | None |
 | Super Castlevania IV | LoROM | None | None |
 | Super Mario All-Stars + Super Mario World | LoROM | Yes (Backs Up) | None |
-| Super Mario Kart | HiROM (DSP1) | Yes (Backs Up) | Game ROM dumps, will load with SRAM data (occasional graphics issues). After choosing Speed, Cup and Player, the game freezes or loads with map errors. Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
-| Super Mario RPG: Legend of the Seven Stars | LoROM (SA-1) | Yes (Unknown) | Header detection isn't working. https://snescentral.com/article.php?id=0049 |
-| Super Mario World 2: Yoshi's Island | LoROM Super FX (GSU-2) | Yes (Backs Up) | Required massive modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
+| Super Mario Kart | HiROM (DSP1) | Yes (Backs Up) | <code style="color : red">Game ROM dumps, will load with SRAM data (occasional graphics issues). After choosing Speed, Cup and Player, the game freezes or loads with map errors.</code> Confirmed with Mesen, snes9x and FXPak Pro. https://snescentral.com/article.php?id=0166 |
+| Super Mario RPG: Legend of the Seven Stars | LoROM (SA-1) | Yes (Unknown) | <code style="color : red">Header detection isn't working.</code> https://snescentral.com/article.php?id=0049 |
+| Super Mario World 2: Yoshi's Island | LoROM Super FX (GSU-2) | Yes (Backs Up) | Required **massive** modifications to the SNES mapper for detection. Modifications to SRAM detection method required. |
 | Super Metroid (Player's Choice Version) | LoROM | Yes (Backs Up) | For game ROM, `00` byte padding is a possibility. |
 | Super Ninja Boy | LoROM | None | None |
 | Super Play Action Football | LoROM | Yes (Backs Up) | None |
@@ -229,7 +233,7 @@
 | Teenage Mutant Ninja Turtles IV: Turtles in Time | LoROM | None | None |
 | Tetris Attack | LoROM | None | None |
 | Tiny Toon Adventures: Buster Busts Loose! | LoROM | None | None |
-| [Disney's] Toy Story | HiROM | None | Game ROM signature padding check created. Banks 48-64 seemed to take longer than normal. |
+| [Disney's] Toy Story | HiROM | None | Game ROM signature padding check created. Banks `48` through `64` seemed to take longer than normal. |
 | Troddlers | LoROM | None | None |
 | U.N. Squadron | LoROM | None | None |
 | Ultima: Runes of Virtue II | LoROM | Yes (Backs Up) | None |
@@ -243,18 +247,50 @@
 | Ys III: Wanderers from Ys | LoROM | Yes (Backs Up) | SRAM signature will not contain data until `0x20`. |
 | Zoop | LoROM | None | None |
 
+
 <br/><br/>
 ### Nintendo 64
 | Game Name | Product Code | Additional Notes |
 | -- | -- | -- |
+| 1080° Snowboarding | NUS-NTEA-USA | None |
+| Aidyn Chronicles: The First Mage | NUS-NAYE-USA | None |
+| Banjo-Kazooie | NUS-NBKE-USA | None |
+| Banjo-Tooie | NUS-NB7E-USA | None |
+| Bomberman 64 | NUS-NBME-USA | None |
+| Bust-A-Move 2: Arcade Edition | NUS-NBUE-USA | None |
+| Conker's Bad Fur Day | NUS-NFUE-USA | None |
+| Cruis'n Exotia | NUS-NXOE-USA | <code style="color : red">Screen goes black after logo, game continues to run with Project 64 3.0.1.5664.</code> <br>Works with public MiSTer N64 core. (5/12/2026) |
 | Cruis'n USA | NUS-NCUE-USA | Revision 2 |
-| Donkey Kong 64 | NUS-NDOE-USA | |
-| Goldeneye 007 | NUS-NGEE-USA | |
+| Cruis'n World | NUS-NCWE-USA | None |
+| Diddy Kong Racing | NUS-NDYE-USA | None |
+| Doom 64 | NUS-NDME-USA | None |
+| Donkey Kong 64 | NUS-NDOE-USA | None |
+| Gauntlet Legends | NUS-NGXE-USA | <code style="color : red">Black screen in Project 64 3.0.1.5664.</code> |
+| Gex 3: Deep Cover Gecko | NUS-NX3E-USA | <code style="color : red">Crashes Project 64 3.0.1.5664.</code> <br>Works with public MiSTer N64 core. (5/12/2026) |
+| Gex 64: Enter the Gecko | NUS-NX2E-USA | None |
+| Glover | NUS-NGXE-USA | None |
+| Goldeneye 007 | NUS-NGEE-USA | None |
+| Kirby 64: The Crystal Shards | NUS-NK4E-USA | None |
+| Legend of Zelda, The: Majora's Mask | NUS-NZSE-USA | Gold Cartridge with Holographic Label |
 | Legend of Zelda, The: Ocarina of Time | NUS-CZLE-USA | Gold Cartridge |
-| Mega Man 64 | NUS-NM6E-USA | |
-| Mickey's USA Speedway | NUS-NMLE-USA | |
-| New Tetris, The | NUS-NRIE-USA | |
-| Quest 64 | NUS-NETE-USA | |
-| Paper Mario | NUS-NMQE-USA | |
-| Pilot Wings 64 | NUS-NPWE-USA | |
-| Super Mario 64 | NUS-NSME-USA | |
+| Magical Tetris Challenge | NUS-NMTE-USA | None |
+| Mega Man 64 | NUS-NM6E-USA | None |
+| Mickey's USA Speedway | NUS-NMLE-USA | None |
+| Ms. Pac-Man: Maze Madness | NUS-NP9E-USA | None |
+| New Tetris, The | NUS-NRIE-USA | None |
+| Quest 64 | NUS-NETE-USA | None |
+| Paper Mario | NUS-NMQE-USA | None |
+| Pilot Wings 64 | NUS-NPWE-USA | None |
+| Pokemon Puzzle League | NUS-NPNE-USA | None |
+| Rayman 2: The Great Escape| NUS-NY2E-USA | None |
+| Snowboard Kids 2 | NUS-NK2E-USA | None |
+| Space Station Silicon Valley | NUS-NSVE-USA | None |
+| Starfox 64 | NUS-NFXE-USA | <code style="color : orange"> If loading from a previous game, there's a 4-5px border flash with Project 64 3.0.1.5664.</code> <br>No issues with public MiSTer core. (5/12/2026) |
+| Star Wars: Episode 1 Racer | NUS-NEPE-USA | None |
+| Star Wars: Rogue Squadron | | |
+| Super Mario 64 | NUS-NSME-USA | None |
+| Turok: Dinosaur Hunter | NUS-NTUE-USA | None |
+| Turok 2: Seeds of Evil | NUS-NT2E-USA | Launch Version - Black Cartridge |
+| Turok 2: Seeds of Evil | NUS-NT2E-USA | Revision 2 - Gray Cartridge |
+| Wipeout 64 | NUS-NWPE-USA | None |
+| Yoshi's Story | NUS-NYSE-USA | None |
