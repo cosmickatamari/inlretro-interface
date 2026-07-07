@@ -271,8 +271,8 @@
 | Glover | NUS-NGXE-USA | None |
 | Goldeneye 007 | NUS-NGEE-USA | None |
 | Kirby 64: The Crystal Shards | NUS-NK4E-USA | None |
-| Legend of Zelda, The: Majora's Mask | NUS-NZSE-USA | Gold Cartridge with Holographic Label |
-| Legend of Zelda, The: Ocarina of Time | NUS-CZLE-USA | Gold Cartridge |
+| Legend of Zelda, The: Majora's Mask | NUS-NZSE-USA | Pre Order Version - Gold Cartridge with Holographic Label |
+| Legend of Zelda, The: Ocarina of Time | NUS-CZLE-USA | Pre Order Version - Gold Cartridge |
 | Magical Tetris Challenge | NUS-NMTE-USA | None |
 | Mega Man 64 | NUS-NM6E-USA | None |
 | Mickey's USA Speedway | NUS-NMLE-USA | None |
@@ -285,9 +285,9 @@
 | Rayman 2: The Great Escape| NUS-NY2E-USA | None |
 | Snowboard Kids 2 | NUS-NK2E-USA | None |
 | Space Station Silicon Valley | NUS-NSVE-USA | None |
-| Starfox 64 | NUS-NFXE-USA | <code style="color : orange"> If loading from a previous game, there's a 4-5px border flash with Project 64 3.0.1.5664.</code> <br>No issues with public MiSTer core. (5/12/2026) |
+| Starfox 64 | NUS-NFXE-USA | <code style="color : orange">If loading from a previous game, there's a 4-5px border flash with Project 64 3.0.1.5664.</code> <br>No issues with public MiSTer core. (5/12/2026) |
 | Star Wars: Episode 1 Racer | NUS-NEPE-USA | None |
-| Star Wars: Rogue Squadron | | |
+| Star Wars: Rogue Squadron | NUS-NRSE-USA | Needs to be cleaned before dumping. |
 | Super Mario 64 | NUS-NSME-USA | None |
 | Turok: Dinosaur Hunter | NUS-NTUE-USA | None |
 | Turok 2: Seeds of Evil | NUS-NT2E-USA | Launch Version - Black Cartridge |
